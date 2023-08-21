@@ -2,9 +2,9 @@ import Axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import { ParamsNetwork, ResponseBase } from 'src/models/Api';
 import { StyleSheet } from 'react-native';
 import { TIME_OUT } from 'src/common/api';
-import { RefreshTokenResponseFields } from 'src/models/Auth';
 import { endpoints } from './endpoint';
 import { getState } from 'src/common/redux';
+import { encode } from 'base-64';
 
 const tokenKeyHeader = 'authorization';
 
@@ -81,7 +81,7 @@ function Request<T = Record<string, unknown>>(
   const { env } = getState('app');
   const { access_token } = getState('auth');
 
-  console.log('endpoint: ', `${config.baseUrl}`);
+  console.log('endpoint: ', `${config.baseUrl}${config.url}`);
 
   const defaultConfig: AxiosRequestConfig = {
     baseURL: config.baseUrl ? config.baseUrl : env?.API_URL,
@@ -97,9 +97,13 @@ function Request<T = Record<string, unknown>>(
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res: AxiosResponse<T>) => {
         const response = res.data;
+        console.log('work');
         return rs(response);
       })
       .catch((error: any) => {
+        console.log('lỗi lòi l');
+        console.log(error);
+
         let err;
         if (error && error.response) {
           err = error.response;
@@ -152,6 +156,21 @@ async function PostFormData<T>(params: ParamsNetwork) {
   );
 }
 
+// post FormUrlencoded
+async function PostFormUrlencoded<T>(params: ParamsNetwork) {
+  const credentials = `9ebf1326555f474e8e49a2eba0350278:d2bd2c1558ca4105a59484d29d92e95a`;
+  const base64Credentials = encode(credentials);
+  const authHeader = `Basic ${base64Credentials}`;
+
+  const headers: AxiosRequestConfig['headers'] = {
+    [tokenKeyHeader]: authHeader,
+    'Content-Type': 'application/x-www-form-urlencoded',
+  };
+  return Request<T>(
+    handleParameter<ParameterPostFormData>({ ...params, headers }, 'POST'),
+  );
+}
+
 // put
 async function Put<T>(params: ParamsNetwork) {
   return Request<T>(handleParameter(params, 'PUT'));
@@ -172,4 +191,5 @@ export const NetWorkService = {
   Delete,
   PostFormData,
   Request,
+  PostFormUrlencoded,
 };

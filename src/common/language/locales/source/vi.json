@@ -1,0 +1,52 @@
+{
+  "auth": {
+    "slogan": "Spend Smarter{{value}} Save More",
+    "start": "Bất Đầu",
+    "yourPhone": "Nhập số điện thoại của bạn",
+    "yourPassword": "Mật khẩu",
+    "rePassword": "Nhập lại mật khẩu",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "dontHaveAccount": "Không có tài khoản?",
+    "haveAccount": "Đã có tài khoản?",
+    "or": "Hoặc",
+    "loginFb": "Tiếp tục với Facebook",
+    "loginGoogle": "Tiếp tục với Gooelge",
+    "yourName": "Tên của bạn",
+    "continue": "Tiếp tục",
+    "enterOtp": "Nhập mã OTP đã gửi đến",
+    "notReceive": "Không nhận được mã?",
+    "resendCode": "Gửi lại",
+    "createPassword": "Tạo mật khẩu",
+    "rememberMe": "Lưu đăng nhập",
+    "loginfail": "Sai tài khoản hoặc mật khẩu"
+  },
+  "home": {
+    "hello": "Xin Chào",
+    "income": "Thu nhập",
+    "expense": "Chi Tiêu",
+    "totalbalance": "Tổng số dư",
+    "transHistory": "Lịch sử giao dịch",
+    "seeall": "Xem tất cả"
+  },
+  "validation": {
+    "require": "Trường này là bắt buộc",
+    "phone": "Sai định dạng số điện thoại",
+    "confirmPass": "Mật khẩu không trùng khớp",
+    "password": "Sai định dạng mật khẩu",
+    "minPassword": "Mật khẩu ít nhất 6 ký tự"
+  },
+  "load": {
+    "wait": "Vui lòng chờ chút",
+    "connecting": "Đang kết nối..."
+  },
+  "button": {
+    "verify": "Xác nhận"
+  },
+  "dialog": {
+    "ok": "Đồng ý",
+    "noti": "Thông báo",
+    "errorNoti": "Lỗi",
+    "cancel": "Huỷ"
+  }
+}

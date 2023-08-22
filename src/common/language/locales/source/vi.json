@@ -22,12 +22,7 @@
     "loginfail": "Sai tài khoản hoặc mật khẩu"
   },
   "home": {
-    "hello": "Xin Chào",
-    "income": "Thu nhập",
-    "expense": "Chi Tiêu",
-    "totalbalance": "Tổng số dư",
-    "transHistory": "Lịch sử giao dịch",
-    "seeall": "Xem tất cả"
+    "viewAll": "Xem tất cả"
   },
   "validation": {
     "require": "Trường này là bắt buộc",

@@ -7,6 +7,7 @@ import { useScreenController } from 'src/common/hooks';
 import Colors from 'src/themes/Colors';
 import Layout from 'src/themes/Layout';
 import isEqual from 'react-fast-compare';
+import { TopList } from './TopList';
 
 interface Props {
   item: HomeFileds;
@@ -18,7 +19,7 @@ const HomeItemComponent = ({ item }: Props) => {
 
   const onNavigate = (): void => {};
   return (
-    <View style={{borderWidth:2, borderColor:'red'}}>
+    <View style={{ borderWidth: 2, borderColor: 'red' }}>
       <View
         style={[
           Layout.rowBetween,
@@ -36,6 +37,7 @@ const HomeItemComponent = ({ item }: Props) => {
           </SemiBoldText>
         </TouchableOpacity>
       </View>
+      {(item.type === 'toplist') && <TopList />}
     </View>
   );
 };

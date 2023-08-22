@@ -1,21 +1,22 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 import Layout from 'src/themes/Layout';
 import Colors from 'src/themes/Colors';
 import { scale } from 'src/common/scale';
 import { isIos } from 'src/common/device';
 import SnapCarousel from 'react-native-snap-carousel';
 import { kWidth } from 'src/common/constants';
+import isEqual from 'react-fast-compare';
 
 interface Props {}
 
-const TopList = (props: Props) => {
+const TopListComponent = (props: Props) => {
   return (
     <View style={[Layout.boxShadow, styles.listContainer]}>
       <SnapCarousel
         data={[1, 2, 3, 4, 5]}
         renderItem={({ item }: any) => (
-          <View style={{ backgroundColor: 'white' }}>
+          <View style={{ backgroundColor: 'white', borderWidth:2 }}>
             <Text>Top List</Text>
           </View>
         )}
@@ -34,17 +35,16 @@ const TopList = (props: Props) => {
   );
 };
 
-export default TopList;
+export const TopList = memo(TopListComponent, isEqual);
 
 const styles = StyleSheet.create({
   listContainer: {
     backgroundColor: Colors.white.default,
-    borderRadius: 16,
-    paddingTop: scale(16),
     paddingBottom: isIos ? scale(16) : 0,
-    paddingHorizontal: scale(10),
-    marginHorizontal: scale(16),
-    marginBottom: scale(24),
+    marginHorizontal: scale(10),
+    marginBottom: scale(20),
+    overflow: 'hidden',
+    borderWidth:2, borderColor:'yellow'
   },
   listWrapper: {
     overflow: 'hidden',

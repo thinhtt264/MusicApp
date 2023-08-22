@@ -1,16 +1,35 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Container } from 'src/components/container';
 import { HomeItem } from './Components';
 import Animated from 'react-native-reanimated';
 import { HomeData } from './Components/HomeData';
 import { scale } from 'src/common/scale';
+import { dispatch } from 'src/common/redux';
+import { getHomePlaylist } from 'src/store/action-thunk';
 
-interface Props {}
+interface Props { }
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
 
 const HomeScreen = (props: Props) => {
   const scrollRef = useRef<any>(null);
+
+  const onGetHomeData = async (): Promise<void> => {
+    // setIsLoading(true);
+    Promise.all([
+      dispatch(getHomePlaylist({})),
+    ])
+      .then(() => {
+        //handle success
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    onGetHomeData();
+  }, []);
 
   return (
     <Container>

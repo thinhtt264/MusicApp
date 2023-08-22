@@ -16,3 +16,7 @@ export interface ParamsNetwork {
   body?: any;
   baseUrl?: string;
 }
+
+export interface GetHomePlaylistFields {}
+
+export interface GetHomePlaylistResponseFields {}

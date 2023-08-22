@@ -13,9 +13,6 @@ const initialState: AppState = {
   theme: 'dark',
   env: null,
 };
-export const appInit = createAsyncThunk('app/init', async () => {
-  /* Do Something */
-});
 
 const appSlice = createSlice({
   name: 'app',

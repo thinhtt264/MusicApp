@@ -6,31 +6,16 @@
  */
 
 import React, { Suspense } from 'react';
-import { StyleSheet, Text, UIManager, Button } from 'react-native';
+import { StyleSheet, Text, UIManager, Button, StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import KeyboardManager from 'react-native-keyboard-manager';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import { isIos } from 'src/common/device';
-import { authLogin } from 'src/store/ApiCall/Auth';
 import { store } from 'src/store/store';
-import { useAppDispatch } from './src/common/redux/index';
-
-function Test() {
-  const dispatch = useAppDispatch();
-  const onPress = async () => {
-    const authResponse = await dispatch(
-      authLogin({
-        grant_type: 'client_credentials',
-        client_id: '9ebf1326555f474e8e49a2eba0350278',
-        client_secret: 'd2bd2c1558ca4105a59484d29d92e95a',
-      }),
-    );
-    console.log(authResponse);
-  };
-
-  return <Button title="test" onPress={onPress} />;
-}
+import { AppNavigation } from 'src/navigation/app-navigation';
+import { I18nextProvider } from 'react-i18next';
+import i18next from 'src/common/language/i18n';
 
 const App = () => {
   if (!isIos) {
@@ -53,12 +38,14 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar backgroundColor={'#0c0d0d'} barStyle={'light-content'} />
       <SafeAreaProvider>
         <Provider store={store}>
-          <Suspense fallback={null}>
-            <Text>sadasdasdsa</Text>
-            <Test></Test>
-          </Suspense>
+          <I18nextProvider i18n={i18next}>
+            <Suspense fallback={null}>
+              <AppNavigation />
+            </Suspense>
+          </I18nextProvider>
         </Provider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

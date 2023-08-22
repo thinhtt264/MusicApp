@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'src/common/redux';
 import { navigationRef } from 'src/common/navigation';
 import i18next from 'i18next';
 import { appInit } from 'src/store/action-thunk/AppThunk';
+import RootNavigator from './root-navigator';
 // import { AppLoader } from 'src/components/loader/AppLoader';
 // import { SnackBar } from 'src/components/snack-bar/SnackBar';
 // import { SplashScreen } from 'src/screen/splash';
@@ -13,26 +14,23 @@ import { appInit } from 'src/store/action-thunk/AppThunk';
 // import { Alert } from 'src/components/arlert';
 
 export const AppNavigation = () => {
-  const [isAppInit, setIsAppInit] = useState(true);
   const { loadingApp } = useAppSelector(state => state.app);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    RNBootSplash.hide({ fade: true });
-    // i18next.init();
     const init = async () => {
       const store = await dispatch(appInit());
     };
     init().finally(() => {
       setTimeout(() => {
-        setIsAppInit(false);
-      }, 1800);
+        RNBootSplash.hide({ fade: true });
+      }, 1000);
     });
   }, []);
 
   return (
     <NavigationContainer ref={navigationRef}>
-      {/* {isAppInit ? <SplashScreen /> : <RootNavigator />} */}
+      <RootNavigator />
       {/* Snack bar */}
       {/* <SnackBar /> */}
       {/* Modal Alert */}

@@ -16,23 +16,23 @@ type RXStoreType = {
 
 const storeRef = createRef<RXStoreType>();
 
-// export const RXStore = forwardRef((_, ref) => {
-//   const dispatchRx = useAppDispatch();
-//   const store = useAppSelector(x => x);
-//   useImperativeHandle(
-//     storeRef,
-//     () => ({
-//       dispatch: (action: ActionBase) => {
-//         dispatchRx(action);
-//       },
-//       getState: (state: keyof RootState) => {
-//         return store[state];
-//       },
-//     }),
-//     [dispatchRx, store],
-//   );
-//   return null;
-// });
+export const RXStore = forwardRef((_, ref) => {
+  const dispatchRx = useAppDispatch();
+  useImperativeHandle(
+    storeRef,
+    () => ({
+      dispatch: (action: ActionBase) => {
+        dispatchRx(action);
+      },
+      getState: (state: keyof RootState) => {
+        const store = useAppSelector(x => x);
+        return store[state];
+      },
+    }),
+    [dispatchRx, store],
+  );
+  return null;
+});
 
 export const dispatch = (action: any): any => {
   if (storeRef.current) {

@@ -21,7 +21,7 @@ const authSlice = createSlice({
       state.user_data = payload;
     },
     onRemember: (state: AuthState) => {
-      state.isRemember = true;
+      state.isRemember = true;      
     },
     onLogout: (state: AuthState) => {
       state.isLogin = false;

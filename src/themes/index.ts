@@ -12,7 +12,7 @@ const Light: AppTheme = {
   colors: ColorLight,
 };
 const Dark: AppTheme = {
-  dark: true,
+  dark: false,
   colors: ColorDark,
 };
 export const MyAppTheme = {

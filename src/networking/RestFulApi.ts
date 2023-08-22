@@ -53,27 +53,6 @@ export const handleParameter = <T extends ParamsNetwork>(
 //   },
 // );
 
-// refresh token
-// const refreshToken = async (): Promise<RefreshTokenResponseFields | null> => {
-//   const { refresh_token } = getState('auth');
-//   const { env } = getState('app');
-//   const headers: AxiosRequestConfig['headers'] = {
-//     'Content-Type': 'multipart/form-data',
-//   };
-//   return AxiosInstance.post(
-//     'oauth/token',
-//     {
-//       refresh_token: refresh_token,
-//       grant_type: 'refresh_token',
-//       client_id: env?.CLIENT_ID ?? '',
-//       client_secret: env?.CLIENT_SECRET ?? '',
-//     },
-//     { headers, baseURL: env?.API_URL },
-//   )
-//     .then((res: AxiosResponse) => res.data)
-//     .catch(() => null);
-// };
-
 // base
 function Request<T = Record<string, unknown>>(
   config: AxiosRequestConfig & ParamsNetwork,
@@ -97,13 +76,9 @@ function Request<T = Record<string, unknown>>(
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res: AxiosResponse<T>) => {
         const response = res.data;
-        console.log('work');
         return rs(response);
       })
       .catch((error: any) => {
-        console.log('lỗi lòi l');
-        console.log(error);
-
         let err;
         if (error && error.response) {
           err = error.response;
@@ -113,7 +88,7 @@ function Request<T = Record<string, unknown>>(
         // dispatch(appActions.onLoadAppEnd());
 
         if (
-          config.url === endpoints.auth.login &&
+          config.url === endpoints.auth.token &&
           error.response?.status === 401 &&
           error.response?.data.message !== 'The refresh token is invalid.'
         ) {
@@ -158,7 +133,9 @@ async function PostFormData<T>(params: ParamsNetwork) {
 
 // post FormUrlencoded
 async function PostFormUrlencoded<T>(params: ParamsNetwork) {
-  const credentials = `9ebf1326555f474e8e49a2eba0350278:d2bd2c1558ca4105a59484d29d92e95a`;
+  const { env } = getState('app');
+
+  const credentials = `${env?.CLIENT_ID}:${env?.CLIENT_SECRET}`;
   const base64Credentials = encode(credentials);
   const authHeader = `Basic ${base64Credentials}`;
 

@@ -6,7 +6,7 @@ interface Props {}
 const HomeScreen = (props: Props) => {
   return (
     <View>
-      <Text>HomeScreen</Text>
+      <Text style={{color:'white'}}>HomeScreen</Text>
     </View>
   );
 };

@@ -1,6 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AlertProps } from 'src/components/arlert/type';
 import { AppState } from 'src/models/App';
+import { appInit } from '../action-thunk';
 
 const initialState: AppState = {
   firstTimeLauch: true,
@@ -39,6 +40,10 @@ const appSlice = createSlice({
       state.showToastMessage = true;
     },
   },
-  extraReducers: builder => {},
+  extraReducers: builder => {
+    builder.addCase(appInit.fulfilled, (state, action) => {
+      state.env = action.payload;
+    });
+  },
 });
 export const { reducer: appReducer, actions: appActions } = appSlice;

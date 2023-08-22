@@ -8,7 +8,7 @@ export const appInit = createAsyncThunk('app/init', async () => {
     getMethodType.getString,
     'envConfig',
   ) as string;
-  if (envConfig) {
+  if (envConfig) {    
     env = ENVDynamic(envConfig);
   } else {
     env = ENVDynamic('Dev');

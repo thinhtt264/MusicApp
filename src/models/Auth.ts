@@ -11,11 +11,11 @@ export interface AuthState {
 }
 
 // Login
-export interface LoginFields extends ClientFields {
-  grant_type: string;
+export interface RequestTokenFields extends ClientFields {
+  baseUrl: string;
 }
 
-export interface LoginResponseFields {
+export interface TokenResponseFields {
   token_type: string;
   expires_in: number;
   access_token: string;

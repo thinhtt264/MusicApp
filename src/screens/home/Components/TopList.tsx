@@ -7,16 +7,15 @@ import { isIos } from 'src/common/device';
 import isEqual from 'react-fast-compare';
 import { AnimatedList } from 'src/components/list';
 import { AnimatedImage } from 'src/components/image';
-import { HomeStateType } from 'src/store/action-slices';
 import { HomeDataItemFields } from 'src/models/Api';
 import Divider from 'src/components/divier';
 
-const TopListComponent = ({ homedata }: HomeStateType) => {
+const TopListComponent = ({ homedata }: any) => {
   return (
     <View style={[Layout.boxShadow, styles.listContainer]}>
       <AnimatedList
         flatlistRef={null}
-        data={homedata.items}
+        data={homedata}
         horizontal
         ItemSeparatorComponent={() => <Divider width={scale(8)} />}
         renderItem={({ item }: HomeDataItemFields) => {

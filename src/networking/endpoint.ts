@@ -5,8 +5,9 @@ const endpoints = {
     otpVerify: 'api/otp/$uid/verify',
   },
   home: {
-    getPlaylist:
-      'v1/browse/categories/$type_id/playlists?country=VN',
+    getPlaylist: 'v1/browse/categories/$type_id/playlists?country=VN',
+    getFeaturedPlaylist:
+      'v1/browse/featured-playlists?country=VN&locale=sv_SV&limit=50',
   },
 };
 export { endpoints };

@@ -6,7 +6,8 @@ import Animated from 'react-native-reanimated';
 import { HomeData } from './Components/HomeData';
 import { scale } from 'src/common/scale';
 import { dispatch, useAppSelector } from 'src/common/redux';
-import { getHomePlaylist } from 'src/store/action-thunk';
+import { getFeaturedPlaylist, getHomePlaylist } from 'src/store/action-thunk';
+import { CATEGORY_ID } from 'src/common/api';
 
 interface Props {}
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
@@ -17,7 +18,10 @@ const HomeScreen = (props: Props) => {
 
   const onGetHomeData = async (): Promise<void> => {
     // setIsLoading(true);
-    Promise.all([dispatch(getHomePlaylist({}))])
+    Promise.all([
+      dispatch(getHomePlaylist({ category_id: CATEGORY_ID.VietNamMusic })),
+      dispatch(getFeaturedPlaylist())
+    ])
       .then(() => {
         //handle success
       })

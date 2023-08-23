@@ -17,10 +17,12 @@ export interface ParamsNetwork {
   baseUrl?: string;
 }
 
-export interface GetHomePlaylistFields {}
+export interface GetHomePlaylistFields {
+  category_id: number | string;
+}
 
 export interface GetHomePlaylistResponseFields {
-  playlists: { items: HomeDataItemFields[]; total: number };
+  playlists: { items: HomeDataItemFields[]; total: number; offset: number };
 }
 export interface HomeDataItemFields {
   item: {

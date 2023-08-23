@@ -17,7 +17,11 @@ interface Props {
 
 const HomeItemComponent = ({ item }: Props) => {
   const { dispatch, navigation, translate } = useScreenController();
-  const { homedata } = useAppSelector(state => state.home);
+  const { homedata, playlist } = useAppSelector(state => state.home);
+
+  const toplist = homedata.items.slice(0, 10);
+  const recommend = homedata.items.slice(10);
+  const popular = playlist.items;
 
   const onNavigate = (): void => {};
   return (
@@ -39,7 +43,9 @@ const HomeItemComponent = ({ item }: Props) => {
           </SemiBoldText>
         </TouchableOpacity>
       </View>
-      {item.type === 'toplist' && <TopList homedata={homedata} />}
+      {item.type === 'toplist' && <TopList homedata={toplist} />}
+      {item.type === 'recommend' && <TopList homedata={recommend} />}
+      {item.type === 'popular' && <TopList homedata={popular} />}
     </View>
   );
 };

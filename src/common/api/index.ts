@@ -8,4 +8,5 @@ export const CODE_TIME_OUT = 408;
 
 export const CATEGORY_ID = {
   VietNamMusic: '0JQ5DAqbMKFLIOWOrpNSUR',
+  TopList: 'toplists',
 };

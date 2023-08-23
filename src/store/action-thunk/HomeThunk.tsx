@@ -10,14 +10,25 @@ import { endpoints } from 'src/networking/endpoint';
 export const getHomePlaylist = createAsyncThunk<
   GetHomePlaylistResponseFields,
   GetHomePlaylistFields
->('home/getPlaylist', async fields => {
+>('home/getHomePlaylist', async fields => {
   const response = await NetWorkService.Get<GetHomePlaylistResponseFields>({
     url: endpoints.home.getPlaylist.replace(
       '$type_id',
-      CATEGORY_ID.VietNamMusic.toString(),
+      fields.category_id.toString(),
     ),
-    body: fields,
   });
   console.log(response);
   return response;
 });
+
+export const getFeaturedPlaylist =
+  createAsyncThunk<GetHomePlaylistResponseFields>(
+    'home/getFeaturedPlaylist',
+    async fields => {
+      const response = await NetWorkService.Get<GetHomePlaylistResponseFields>({
+        url: endpoints.home.getFeaturedPlaylist,
+      });
+      console.log(response);
+      return response;
+    },
+  );

@@ -8,6 +8,7 @@ import Colors from 'src/themes/Colors';
 import Layout from 'src/themes/Layout';
 import isEqual from 'react-fast-compare';
 import { TopList } from './TopList';
+import { useAppSelector } from 'src/common/redux';
 
 interface Props {
   item: HomeFileds;
@@ -16,10 +17,11 @@ interface Props {
 
 const HomeItemComponent = ({ item }: Props) => {
   const { dispatch, navigation, translate } = useScreenController();
+  const { homedata } = useAppSelector(state => state.home);
 
   const onNavigate = (): void => {};
   return (
-    <View style={{ borderWidth: 2, borderColor: 'red' }}>
+    <View>
       <View
         style={[
           Layout.rowBetween,
@@ -37,7 +39,7 @@ const HomeItemComponent = ({ item }: Props) => {
           </SemiBoldText>
         </TouchableOpacity>
       </View>
-      {(item.type === 'toplist') && <TopList />}
+      {item.type === 'toplist' && <TopList homedata={homedata} />}
     </View>
   );
 };

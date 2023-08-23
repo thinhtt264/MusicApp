@@ -6,7 +6,7 @@ const endpoints = {
   },
   home: {
     getPlaylist:
-      'v1/browse/featured-playlists?country=VN&timestamp=2023-10-23T00%3A00%3A00',
+      'v1/browse/categories/$type_id/playlists?country=VN',
   },
 };
 export { endpoints };

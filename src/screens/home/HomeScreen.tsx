@@ -5,20 +5,19 @@ import { HomeItem } from './Components';
 import Animated from 'react-native-reanimated';
 import { HomeData } from './Components/HomeData';
 import { scale } from 'src/common/scale';
-import { dispatch } from 'src/common/redux';
+import { dispatch, useAppSelector } from 'src/common/redux';
 import { getHomePlaylist } from 'src/store/action-thunk';
 
-interface Props { }
+interface Props {}
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
 
 const HomeScreen = (props: Props) => {
   const scrollRef = useRef<any>(null);
+  const { access_token } = useAppSelector(state => state.auth);
 
   const onGetHomeData = async (): Promise<void> => {
     // setIsLoading(true);
-    Promise.all([
-      dispatch(getHomePlaylist({})),
-    ])
+    Promise.all([dispatch(getHomePlaylist({}))])
       .then(() => {
         //handle success
       })
@@ -28,8 +27,8 @@ const HomeScreen = (props: Props) => {
   };
 
   useEffect(() => {
-    onGetHomeData();
-  }, []);
+    if (access_token) onGetHomeData();
+  }, [access_token]);
 
   return (
     <Container>

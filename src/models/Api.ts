@@ -19,4 +19,21 @@ export interface ParamsNetwork {
 
 export interface GetHomePlaylistFields {}
 
-export interface GetHomePlaylistResponseFields {}
+export interface GetHomePlaylistResponseFields {
+  playlists: { items: HomeDataItemFields[]; total: number };
+}
+export interface HomeDataItemFields {
+  item: {
+    images: [
+      {
+        url: string;
+      },
+    ];
+    description: string;
+    href: string;
+    id: string;
+    name: string;
+    snapshot_id: string;
+    collaborative: boolean;
+  };
+}

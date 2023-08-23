@@ -60,8 +60,6 @@ function Request<T = Record<string, unknown>>(
   const { env } = getState('app');
   const { access_token } = getState('auth');
 
-  console.log('endpoint: ', `${config.baseUrl}${config.url}`);
-
   const defaultConfig: AxiosRequestConfig = {
     baseURL: config.baseUrl ? config.baseUrl : env?.API_URL,
     timeout: TIME_OUT,
@@ -71,6 +69,8 @@ function Request<T = Record<string, unknown>>(
         access_token && config.isNeedToken ? `Bearer ${access_token}` : '',
     },
   };
+
+  console.log('endpoint: ', `${defaultConfig.baseURL}${config.url}`);
 
   return new Promise<T | any>((rs, rj) => {
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))

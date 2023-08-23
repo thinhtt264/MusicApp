@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistCombineReducers, persistReducer } from 'redux-persist';
-import { appReducer, authReducer } from './action-slices';
+import { appReducer, authReducer, homeReducer } from './action-slices';
 
 const rootPersistConfig = {
   key: 'root',
@@ -23,6 +23,7 @@ const appPersistConfig = {
 const rootReducer = persistCombineReducers(rootPersistConfig, {
   app: persistReducer(appPersistConfig, appReducer),
   auth: persistReducer(authPersistConfig, authReducer),
+  home: homeReducer,
 });
 
 export default rootReducer;

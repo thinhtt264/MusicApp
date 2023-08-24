@@ -7,7 +7,7 @@ import { authRequestToken } from 'src/store/action-thunk';
 const RootStack = createNativeStackNavigator();
 
 const RootNavigator = () => {
-  const { isLogin } = useAppSelector(state => state.auth);
+  const { isLogin, access_token } = useAppSelector(state => state.auth);
   const { env } = useAppSelector(state => state.app);
 
   const requestToken = async () => {
@@ -21,7 +21,7 @@ const RootNavigator = () => {
   };
 
   useEffect(() => {
-    if (!isLogin) requestToken();
+    if (!isLogin && !access_token) requestToken();
   }, [isLogin]);
 
   return (

@@ -4,14 +4,16 @@ import equals from 'react-fast-compare';
 import { CustomTextProps } from './type';
 import { fontScale, scale } from 'src/common/scale';
 import { FONT_FAMILY } from 'src/common/constants';
-import Colors from 'src/themes/Colors';
+import { useTheme } from '@react-navigation/native';
 
 const BoldTextComponents = (props: CustomTextProps) => {
+  const theme = useTheme();
+
   return (
     <Text
       allowFontScaling={false}
       {...props}
-      style={[styles.text, props.textStyle]}>
+      style={[{ color: theme.colors.text }, styles.text, props.textStyle]}>
       {props.children}
     </Text>
   );

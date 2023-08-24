@@ -6,13 +6,13 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { fontScale, scale } from 'src/common/scale/index';
 import { hasNotch } from 'src/common/device';
-import { BoldText } from 'src/components/text';
+import { BoldText, SemiBoldText } from 'src/components/text';
 import { translate } from 'src/common/language/translate';
 
 import Octicons from 'react-native-vector-icons/Octicons';
 import Colors from 'src/themes/Colors';
-import HomeScreen from 'src/screens/home/HomeScreen';
 import { LibraryIcon } from 'src/components/svg';
+import { HomeScreen, SearchScreen } from 'src/screens';
 
 interface Props {
   size: number;
@@ -132,7 +132,7 @@ const HomeTab = () => {
         }}
         tabBar={TabBar}>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Search" component={HomeScreen} />
+        <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Library" component={HomeScreen} />
       </Tab.Navigator>
     </View>

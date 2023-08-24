@@ -11,6 +11,7 @@ export interface HomeStateType {
     items: HomeDataItemFields[];
     total: number;
   };
+  searchData: {};
 }
 const initialState: HomeStateType = {
   homedata: {
@@ -21,6 +22,7 @@ const initialState: HomeStateType = {
     items: [],
     total: 0,
   },
+  searchData: {},
 };
 
 const homeSlice = createSlice({

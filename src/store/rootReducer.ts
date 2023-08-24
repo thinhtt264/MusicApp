@@ -11,7 +11,7 @@ const rootPersistConfig = {
 const authPersistConfig = {
   key: 'auth',
   storage: AsyncStorage,
-  whitelist: ['userInfo', 'isRemember'],
+  blacklist: [],
 };
 
 const appPersistConfig = {

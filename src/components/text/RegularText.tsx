@@ -5,13 +5,15 @@ import { fontScale, scale } from 'src/common/scale';
 import { FONT_FAMILY } from 'src/common/constants';
 import Colors from 'src/themes/Colors';
 import { CustomTextProps } from './type';
+import { useTheme } from '@react-navigation/native';
 
 const RegularTextComponents = (props: CustomTextProps) => {
+  const theme = useTheme();
   return (
     <Text
       allowFontScaling={false}
       {...props}
-      style={[styles.text, props.textStyle]}>
+      style={[{ color: theme.colors.text }, styles.text, props.textStyle]}>
       {props.children}
     </Text>
   );

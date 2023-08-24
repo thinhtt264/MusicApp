@@ -46,5 +46,8 @@
     "noti": "Thông báo",
     "errorNoti": "Lỗi",
     "cancel": "Huỷ"
+  },
+  "search": {
+    "placeholder": "Bạn muốn nghe gì?"
   }
 }

@@ -6,15 +6,22 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { scale } from 'src/common/scale';
 import { Input } from 'src/components/input';
 import { debounce } from 'lodash';
+import { useScreenController } from 'src/common/hooks';
+import { getSearchData } from 'src/store/action-thunk';
 
 interface Props {}
 
 const SearchBoxComponent = (props: Props) => {
+  const { dispatch, navigation, translate } = useScreenController();
   const inputRef = useRef(null);
 
   const debouncedSearch = debounce(query => {
-    // Gọi API tìm kiếm ở đây
-    console.log('Calling API with query:', query);
+    dispatch(
+      getSearchData({
+        keyword: query,
+        type: 'track',
+      }),
+    );
   }, 300);
 
   const onChangeTextValue = (value: any) => {

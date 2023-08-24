@@ -39,3 +39,8 @@ export interface HomeDataItemFields {
     collaborative: boolean;
   };
 }
+
+export interface GetSearchDataFields {
+  keyword: string;
+  type: string;
+}

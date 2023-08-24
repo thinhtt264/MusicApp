@@ -3,6 +3,7 @@ import { CATEGORY_ID } from 'src/common/api';
 import {
   GetHomePlaylistFields,
   GetHomePlaylistResponseFields,
+  GetSearchDataFields,
 } from 'src/models/Api';
 import { NetWorkService } from 'src/networking/RestFulApi';
 import { endpoints } from 'src/networking/endpoint';
@@ -32,3 +33,16 @@ export const getFeaturedPlaylist =
       return response;
     },
   );
+
+export const getSearchData = createAsyncThunk<
+  GetHomePlaylistResponseFields,
+  GetSearchDataFields
+>('home/getSearchData', async fields => {
+  const response = await NetWorkService.Get<GetHomePlaylistResponseFields>({
+    url: endpoints.home.search
+      .replace('$keyword', fields.keyword.toString())
+      .replace('$type', fields.type.toString()),
+  });
+  console.log(response);
+  return response;
+});

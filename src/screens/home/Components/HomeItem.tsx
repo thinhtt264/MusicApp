@@ -45,7 +45,12 @@ const HomeItemComponent = ({ item }: Props) => {
       </View>
       {item.type === 'toplist' && <TopList homedata={toplist} />}
       {item.type === 'recommend' && <TopList homedata={recommend} />}
-      {item.type === 'popular' && <TopList homedata={popular} />}
+      {item.type === 'popular' && (
+        <TopList homedata={popular.slice(0, Math.floor(popular.length / 2))} />
+      )}
+      {item.type === 'popular' && (
+        <TopList homedata={popular.slice(Math.floor(popular.length / 2))} />
+      )}
     </View>
   );
 };
@@ -56,13 +61,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontScale(22),
     marginRight: scale(10),
-    color: Colors.green.default,
+    color: Colors.white.default,
     marginBottom: scale(24),
     flex: 1,
   },
   viewText: {
     fontSize: fontScale(12),
     marginTop: scale(10),
-    color: Colors.green.default,
+    color: Colors.white.default,
   },
 });

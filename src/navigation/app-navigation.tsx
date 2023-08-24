@@ -8,7 +8,7 @@ import RootNavigator from './root-navigator';
 import { MyAppTheme } from 'src/themes';
 
 export const AppNavigation = () => {
-  const { loadingApp, theme } = useAppSelector(state => state.app);
+  const { loadingApp, theme, env } = useAppSelector(state => state.app);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const AppNavigation = () => {
 
   return (
     <NavigationContainer theme={MyAppTheme[theme]} ref={navigationRef}>
-      <RootNavigator />
+      {env && <RootNavigator />}
       {/* Snack bar */}
       {/* <SnackBar /> */}
       {/* Modal Alert */}

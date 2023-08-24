@@ -5,13 +5,14 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { fontScale, scale } from 'src/common/scale/index';
-import { hasNotch, isIos } from 'src/common/device';
-import { RegularText } from 'src/components/text';
+import { hasNotch } from 'src/common/device';
+import { BoldText } from 'src/components/text';
+import { translate } from 'src/common/language/translate';
 
 import Octicons from 'react-native-vector-icons/Octicons';
 import Colors from 'src/themes/Colors';
-import routeNames from '../RouteNames';
 import HomeScreen from 'src/screens/home/HomeScreen';
+import { LibraryIcon } from 'src/components/svg';
 
 interface Props {
   size: number;
@@ -33,11 +34,18 @@ const renderIcon = (props: Props) => {
     case 'Home': {
       return <Octicons name="home" size={size} color={color} />;
     }
-    case 'List': {
-      return <Octicons name="list-unordered" size={size} color={color} />;
+    case 'Search': {
+      return <Octicons name="search" size={size} color={color} />;
     }
-    case 'Camera': {
-      return <Octicons name="device-camera-video" size={size} color={color} />;
+    case 'Library': {
+      return (
+        <LibraryIcon
+          color={color}
+          height={size}
+          width={size}
+          viewBox={`5 0 ${size} ${size}`}
+        />
+      );
     }
   }
 };
@@ -53,23 +61,19 @@ export const TabBar = (props: BottomTabBarProps) => {
               ? options.tabBarLabel
               : options.title !== undefined
               ? options.title
-              : route.name;
+              : translate(`home:${route.name.toLocaleLowerCase()}`);
 
           const isFocused = state.index === index;
 
           const onPress = () => {
-            if (label.toString() !== 'Plus') {
-              const event = navigation.emit({
-                type: 'tabPress',
-                target: route.key,
-                canPreventDefault: true,
-              });
-              if (!isFocused && !event.defaultPrevented) {
-                // The `merge: true` option makes sure that the params inside the tab screen are preserved
-                navigation.navigate(route.name);
-              }
-            } else {
-              navigation.navigate(routeNames.Stacks.AuthStack);
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+              canPreventDefault: true,
+            });
+            if (!isFocused && !event.defaultPrevented) {
+              // The `merge: true` option makes sure that the params inside the tab screen are preserved
+              navigation.navigate(route.name);
             }
           };
 
@@ -90,30 +94,30 @@ export const TabBar = (props: BottomTabBarProps) => {
                 height: TAB_HEIGHT,
               }}>
               <HomeIcon
-                color={isFocused ? '#549994' : Colors.unActive}
-                size={26}
-                name={label.toString()}
+                color={isFocused ? Colors.white.default : Colors.unActive}
+                size={scale(25)}
+                name={route.name}
               />
-              <RegularText
+              <BoldText
                 textStyle={{
-                  fontSize: fontScale(scale(10)),
-                  color: isFocused ? '#549994' : Colors.unActive,
+                  fontSize: fontScale(scale(9)),
+                  color: isFocused ? Colors.white.default : Colors.unActive,
                 }}>
                 {label.toString()}
-              </RegularText>
+              </BoldText>
             </TouchableOpacity>
           );
         })}
       </View>
+      <View style={styles.overlay} />
     </View>
   );
 };
 
 export type HomeTabParamList = {
   Home: undefined;
-  List: undefined;
-  Camera: undefined;
-  Profile: undefined;
+  Search: undefined;
+  Library: undefined;
 };
 
 const Tab = createBottomTabNavigator<HomeTabParamList>();
@@ -128,43 +132,34 @@ const HomeTab = () => {
         }}
         tabBar={TabBar}>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="List" component={HomeScreen} />
-        <Tab.Screen name="Camera" component={HomeScreen} />
+        <Tab.Screen name="Search" component={HomeScreen} />
+        <Tab.Screen name="Library" component={HomeScreen} />
       </Tab.Navigator>
     </View>
   );
 };
 
-const TAB_HEIGHT = hasNotch() ? scale(65) : scale(50);
+const TAB_HEIGHT = hasNotch() ? scale(55) : scale(45);
 const styles = StyleSheet.create({
   container: {
     height: TAB_HEIGHT,
-    shadowOffset: {
-      width: 0,
-      height: -1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 4.0,
-    backgroundColor: 'white',
-    borderTopRightRadius: scale(20),
-    borderTopLeftRadius: scale(20),
-    elevation: 10,
-  },
-  plusIcon: {
     position: 'absolute',
-    top: -scale(27.5),
-    backgroundColor: '#438883',
-    width: scale(55),
-    height: scale(55),
-    borderRadius: scale(27.5),
-    shadowColor: '#549994',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.7,
-    shadowRadius: 10,
-    elevation: 20,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    borderTopWidth: 0,
+    shadowOpacity: 1,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'black',
+    opacity: 0.7,
+    zIndex: -1,
   },
 });
 export default HomeTab;

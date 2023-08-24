@@ -28,7 +28,7 @@ const Colors = {
     backdrop: '#747373',
   },
   red: '#F95B51',
-  unActive: '#AAAAAA',
+  unActive: '#A7A7A7',
   orange: {
     copper: '#FFAB7B',
   },

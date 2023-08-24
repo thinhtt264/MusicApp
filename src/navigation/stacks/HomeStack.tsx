@@ -4,7 +4,7 @@ import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import { HomeScreen } from 'src/screens';
+import { HomeTab } from '../tab';
 
 export type HomeStackParamList = {
   HomeTab: undefined;
@@ -23,7 +23,7 @@ const HomeStack = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="HomeTab" component={HomeScreen} />
+      <Stack.Screen name="HomeTab" component={HomeTab} />
     </Stack.Navigator>
   );
 };

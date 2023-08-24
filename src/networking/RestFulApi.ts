@@ -3,8 +3,10 @@ import { ParamsNetwork, ResponseBase } from 'src/models/Api';
 import { StyleSheet } from 'react-native';
 import { TIME_OUT } from 'src/common/api';
 import { endpoints } from './endpoint';
-import { getState } from 'src/common/redux';
+import { dispatch, getState } from 'src/common/redux';
 import { encode } from 'base-64';
+import { TokenResponseFields } from 'src/models/Auth';
+import { authActions } from 'src/store/action-slices';
 
 const tokenKeyHeader = 'authorization';
 
@@ -26,32 +28,48 @@ export const handleParameter = <T extends ParamsNetwork>(
   };
 };
 
-// AxiosInstance.interceptors.response.use(
-//   response => response,
-//   async function (error) {
-//     const originalRequest = error.config;
-//     if (
-//       error &&
-//       error.response &&
-//       error.response.status === 401 &&
-//       originalRequest.url !== endpoints.auth.login &&
-//       !originalRequest._retry
-//     ) {
-//       console.log('call refresh token');
-//       originalRequest._retry = true;
-//       const newToken: RefreshTokenResponseFields | null = await refreshToken();
-//       if (newToken === null) {
-//         return Promise.reject(error);
-//       }
-//       dispatch(authActions.onSetToken(newToken));
-//       originalRequest.headers[
-//         tokenKeyHeader
-//       ] = `Bearer ${newToken.access_token}`;
-//       return AxiosInstance(originalRequest);
-//     }
-//     return Promise.reject(error);
-//   },
-// );
+AxiosInstance.interceptors.response.use(
+  response => response,
+  async function (error) {
+    const originalRequest = error.config;
+    if (
+      error &&
+      error.response &&
+      error.response.status === 401 &&
+      error.response?.data?.error?.message === 'The access token expired'
+    ) {
+      console.log('call refresh token');
+      const newToken = await refreshToken();
+      if (newToken === null) {
+        return Promise.reject(error);
+      }
+      dispatch(authActions.onSetToken(newToken.access_token));
+
+      originalRequest.headers[
+        tokenKeyHeader
+      ] = `Bearer ${newToken.access_token}`;
+      return AxiosInstance(originalRequest);
+    }
+    return Promise.reject(error);
+  },
+);
+
+// refresh token
+const refreshToken = async (): Promise<TokenResponseFields | null> => {
+  const { env } = getState('app');
+
+  return PostFormUrlencoded<TokenResponseFields>({
+    url: endpoints.auth.token,
+    body: {
+      grant_type: 'client_credentials',
+      client_id: env?.CLIENT_ID,
+      client_secret: env?.CLIENT_SECRET,
+    },
+    baseUrl: env?.AUTH_URL,
+  })
+    .then((res: AxiosResponse) => res.data)
+    .catch(() => null);
+};
 
 // base
 function Request<T = Record<string, unknown>>(
@@ -86,11 +104,9 @@ function Request<T = Record<string, unknown>>(
           err = 'Network error';
         }
         // dispatch(appActions.onLoadAppEnd());
-
         if (
-          config.url === endpoints.auth.token &&
           error.response?.status === 401 &&
-          error.response?.data.message !== 'The refresh token is invalid.'
+          error.response?.data?.error?.message === 'The access token expired'
         ) {
           return rj(err);
         }

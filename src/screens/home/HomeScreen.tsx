@@ -9,7 +9,7 @@ import { dispatch, useAppSelector } from 'src/common/redux';
 import { getFeaturedPlaylist, getHomePlaylist } from 'src/store/action-thunk';
 import { CATEGORY_ID } from 'src/common/api';
 
-interface Props {}
+interface Props { }
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
 
 const HomeScreen = (props: Props) => {
@@ -80,5 +80,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 32,
     borderTopLeftRadius: 32,
     paddingTop: scale(32),
+    marginBottom: scale(45)
   },
 });

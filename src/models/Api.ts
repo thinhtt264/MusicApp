@@ -44,3 +44,20 @@ export interface GetSearchDataFields {
   keyword: string;
   type: string;
 }
+export interface GetSearchDataResponseFields {
+  tracks: {
+    items: SearchDataItemFields[];
+    next: string;
+    offset: number;
+    previous: string;
+    total: number;
+  };
+}
+export interface SearchDataItemFields {
+  href: string;
+  id: string;
+  name: string;
+  album: {
+    images: [{ url: string }];
+  };
+}

@@ -28,6 +28,9 @@ const authSlice = createSlice({
       state.isLogin = false;
       state.isRemember = false;
     },
+    onSetToken: (state: AuthState, { payload }) => {
+      state.access_token = payload
+    }
   },
   extraReducers: builder => {
     builder.addCase(authRequestToken.fulfilled, (state, action) => {

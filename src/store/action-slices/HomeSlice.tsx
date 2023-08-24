@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { getFeaturedPlaylist, getHomePlaylist } from '../action-thunk';
-import { HomeDataItemFields } from 'src/models/Api';
+import { getFeaturedPlaylist, getHomePlaylist, getSearchData } from '../action-thunk';
+import { GetSearchDataResponseFields, HomeDataItemFields } from 'src/models/Api';
 import { uniqBy } from 'lodash';
 export interface HomeStateType {
   homedata: {
@@ -11,7 +11,7 @@ export interface HomeStateType {
     items: HomeDataItemFields[];
     total: number;
   };
-  searchData: {};
+  searchData: GetSearchDataResponseFields;
 }
 const initialState: HomeStateType = {
   homedata: {
@@ -22,7 +22,15 @@ const initialState: HomeStateType = {
     items: [],
     total: 0,
   },
-  searchData: {},
+  searchData: {
+    tracks: {
+      items: [],
+      next: '',
+      offset: 0,
+      previous: '',
+      total: 0
+    }
+  },
 };
 
 const homeSlice = createSlice({
@@ -45,6 +53,9 @@ const homeSlice = createSlice({
       state.playlist.items = items;
       state.playlist.total = total;
     });
+    builder.addCase(getSearchData.fulfilled, (state, action) => {
+      state.searchData = action.payload
+    })
   },
 });
 export const { reducer: homeReducer, actions: homeActions } = homeSlice;

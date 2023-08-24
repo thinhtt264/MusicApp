@@ -9,7 +9,7 @@ import { debounce } from 'lodash';
 import { useScreenController } from 'src/common/hooks';
 import { getSearchData } from 'src/store/action-thunk';
 
-interface Props {}
+interface Props { }
 
 const SearchBoxComponent = (props: Props) => {
   const { dispatch, navigation, translate } = useScreenController();
@@ -31,10 +31,13 @@ const SearchBoxComponent = (props: Props) => {
   return (
     <View style={styles.container}>
       <Input
+        style={styles.inputStyle}
         onChangeTextValue={onChangeTextValue}
+        placeholder={translate('search:placeholder')}
+        placeholderTextColor={'black'}
         ref={inputRef}
         contentLeft={() => (
-          <Octicons name="search" color={'black'} size={scale(20)} />
+          <Octicons name="search" color={'black'} size={scale(18)} />
         )}
         defaultValue=""
       />
@@ -50,12 +53,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(5),
     paddingHorizontal: scale(10),
   },
-  textHolder: {
-    color: Colors.black.default,
-    marginLeft: scale(10),
-    textAlignVertical: 'center',
-    padding: 0,
-    margin: 0,
-    width: '85%',
+  inputStyle: {
+    paddingVertical: scale(4)
   },
 });

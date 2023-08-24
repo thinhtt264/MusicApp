@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { CATEGORY_ID } from 'src/common/api';
 import {
   GetHomePlaylistFields,
   GetHomePlaylistResponseFields,
   GetSearchDataFields,
+  GetSearchDataResponseFields,
 } from 'src/models/Api';
 import { NetWorkService } from 'src/networking/RestFulApi';
 import { endpoints } from 'src/networking/endpoint';
@@ -35,10 +35,10 @@ export const getFeaturedPlaylist =
   );
 
 export const getSearchData = createAsyncThunk<
-  GetHomePlaylistResponseFields,
+  GetSearchDataResponseFields,
   GetSearchDataFields
 >('home/getSearchData', async fields => {
-  const response = await NetWorkService.Get<GetHomePlaylistResponseFields>({
+  const response = await NetWorkService.Get<GetSearchDataResponseFields>({
     url: endpoints.home.search
       .replace('$keyword', fields.keyword.toString())
       .replace('$type', fields.type.toString()),

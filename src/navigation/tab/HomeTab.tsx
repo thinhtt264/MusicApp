@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: 'black',
-    opacity: 0.7,
+    opacity: 0.6,
     zIndex: -1,
   },
 });

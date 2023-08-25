@@ -16,7 +16,7 @@ export const handleParameter = <T extends ParamsNetwork>(
   props: T,
   method: Method,
 ): AxiosRequestConfig & ParamsNetwork => {
-  const { url, body, params, baseUrl, isNeedToken = true } = props;
+  const { url, body, params, baseUrl } = props;
   return {
     ...props,
     method,
@@ -24,7 +24,6 @@ export const handleParameter = <T extends ParamsNetwork>(
     data: body,
     params,
     baseUrl,
-    isNeedToken,
   };
 };
 
@@ -40,6 +39,7 @@ AxiosInstance.interceptors.response.use(
     ) {
       console.log('call refresh token');
       const newToken = await refreshToken();
+
       if (newToken === null) {
         return Promise.reject(error);
       }
@@ -48,7 +48,7 @@ AxiosInstance.interceptors.response.use(
       originalRequest.headers[
         tokenKeyHeader
       ] = `Bearer ${newToken.access_token}`;
-      return AxiosInstance(originalRequest);
+      return AxiosInstance.request(originalRequest);
     }
     return Promise.reject(error);
   },
@@ -67,7 +67,7 @@ const refreshToken = async (): Promise<TokenResponseFields | null> => {
     },
     baseUrl: env?.AUTH_URL,
   })
-    .then((res: AxiosResponse) => res.data)
+    .then((res: any) => res)
     .catch(() => null);
 };
 
@@ -83,8 +83,7 @@ function Request<T = Record<string, unknown>>(
     timeout: TIME_OUT,
     headers: {
       'Content-Type': 'application/json',
-      [tokenKeyHeader]:
-        access_token && config.isNeedToken ? `Bearer ${access_token}` : '',
+      [tokenKeyHeader]: access_token ? `Bearer ${access_token}` : '',
     },
   };
 

@@ -8,6 +8,7 @@ export interface AuthState {
   isRemember: boolean;
   user_data: any;
   access_token: string | null;
+  tokenExpiration: number;
 }
 
 // Login

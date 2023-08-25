@@ -19,3 +19,9 @@ export const onCheckType = (
 ): source is TypesBase => {
   return typeof source === type;
 };
+
+export const expiredTime = (expired: number) => {
+  const currentTime = new Date(Date.now());
+  currentTime.setSeconds(currentTime.getSeconds() + expired);
+  return currentTime.valueOf();
+};

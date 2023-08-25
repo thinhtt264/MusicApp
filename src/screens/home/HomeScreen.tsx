@@ -32,7 +32,7 @@ const HomeScreen = (props: Props) => {
 
   useEffect(() => {
     if (access_token) onGetHomeData();
-  }, [access_token]);
+  }, []);
 
   return (
     <Container>

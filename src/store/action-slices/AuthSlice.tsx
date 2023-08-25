@@ -1,12 +1,14 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AuthState } from 'src/models/Auth';
 import { authRequestToken } from '../action-thunk';
+import { expiredTime } from 'src/common/method';
 
 const initialState: AuthState = {
-  isLogin: false,
+  isLogin: true,
   isRemember: false,
   access_token: null,
   user_data: null,
+  tokenExpiration: 0,
 };
 const authSlice = createSlice({
   name: 'auth',
@@ -29,12 +31,13 @@ const authSlice = createSlice({
       state.isRemember = false;
     },
     onSetToken: (state: AuthState, { payload }) => {
-      state.access_token = payload
-    }
+      state.access_token = payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(authRequestToken.fulfilled, (state, action) => {
       state.access_token = action.payload.access_token;
+      state.tokenExpiration = expiredTime(action.payload.expires_in);
     });
   },
 });

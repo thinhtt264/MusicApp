@@ -2,6 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   GetHomePlaylistFields,
   GetHomePlaylistResponseFields,
+  GetLinkDownLoadFields,
+  GetLinkDownLoadResponseFields,
   GetSearchDataFields,
   GetSearchDataResponseFields,
 } from 'src/models/Api';
@@ -44,5 +46,27 @@ export const getSearchData = createAsyncThunk<
       .replace('$type', fields.type.toString()),
   });
   console.log(response);
-  return response;
+  return {
+    ...response,
+    keyword: fields.keyword.toString(),
+  };
+});
+
+export const getDownloadLink = createAsyncThunk<
+  GetLinkDownLoadResponseFields,
+  GetLinkDownLoadFields
+>('home/getDownloadLink', async fields => {
+  try {
+    const response =
+      await NetWorkService.PostFormUrlencoded<GetLinkDownLoadResponseFields>({
+        url: '',
+        body: { link: fields.link },
+        baseUrl: fields.baseUrl,
+        isNeedToken: false,
+      });
+    console.log(response);
+    return response;
+  } catch (e) {
+    console.log(e);
+  }
 });

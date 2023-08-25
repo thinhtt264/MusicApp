@@ -16,7 +16,7 @@ export const handleParameter = <T extends ParamsNetwork>(
   props: T,
   method: Method,
 ): AxiosRequestConfig & ParamsNetwork => {
-  const { url, body, params, baseUrl } = props;
+  const { url, body, params, baseUrl, isNeedToken = true } = props;
   return {
     ...props,
     method,
@@ -24,6 +24,7 @@ export const handleParameter = <T extends ParamsNetwork>(
     data: body,
     params,
     baseUrl,
+    isNeedToken,
   };
 };
 
@@ -83,7 +84,8 @@ function Request<T = Record<string, unknown>>(
     timeout: TIME_OUT,
     headers: {
       'Content-Type': 'application/json',
-      [tokenKeyHeader]: access_token ? `Bearer ${access_token}` : '',
+      [tokenKeyHeader]:
+        access_token && config.isNeedToken ? `Bearer ${access_token}` : '',
     },
   };
 
@@ -102,6 +104,7 @@ function Request<T = Record<string, unknown>>(
         } else {
           err = 'Network error';
         }
+        console.log(error);
         // dispatch(appActions.onLoadAppEnd());
         if (
           error.response?.status === 401 &&
@@ -155,9 +158,10 @@ async function PostFormUrlencoded<T>(params: ParamsNetwork) {
   const authHeader = `Basic ${base64Credentials}`;
 
   const headers: AxiosRequestConfig['headers'] = {
-    [tokenKeyHeader]: authHeader,
     'Content-Type': 'application/x-www-form-urlencoded',
   };
+  if (params.url === 'api/token') headers[tokenKeyHeader] = authHeader;
+
   return Request<T>(
     handleParameter<ParameterPostFormData>({ ...params, headers }, 'POST'),
   );

@@ -1,7 +1,15 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { getFeaturedPlaylist, getHomePlaylist, getSearchData } from '../action-thunk';
-import { GetSearchDataResponseFields, HomeDataItemFields } from 'src/models/Api';
+import {
+  getFeaturedPlaylist,
+  getHomePlaylist,
+  getSearchData,
+} from '../action-thunk';
+import {
+  GetSearchDataResponseFields,
+  HomeDataItemFields,
+} from 'src/models/Api';
 import { uniqBy } from 'lodash';
+import { isOnlyWhitespace } from 'src/common/regex';
 export interface HomeStateType {
   homedata: {
     items: HomeDataItemFields[];
@@ -23,13 +31,14 @@ const initialState: HomeStateType = {
     total: 0,
   },
   searchData: {
+    keyword: '',
     tracks: {
       items: [],
       next: '',
       offset: 0,
       previous: '',
-      total: 0
-    }
+      total: 0,
+    },
   },
 };
 
@@ -54,8 +63,15 @@ const homeSlice = createSlice({
       state.playlist.total = total;
     });
     builder.addCase(getSearchData.fulfilled, (state, action) => {
-      state.searchData = action.payload
-    })
+      if (
+        action.payload.keyword === '' ||
+        isOnlyWhitespace(action.payload.keyword)
+      ) {
+        state.searchData.tracks.items = [];
+        return;
+      }
+      state.searchData = action.payload;
+    });
   },
 });
 export const { reducer: homeReducer, actions: homeActions } = homeSlice;

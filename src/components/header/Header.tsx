@@ -26,7 +26,7 @@ const HeaderComponent = (props: Props) => {
     <View style={[Layout.rowBetween, styles.container]}>
       <View style={[Layout.rowBetween, styles.leftContent]}>
         <FastImage
-          source={require('src/assests/images/Spotify_Logo_Round.png')}
+          source={require('src/assests/images/Spotify_Logo.png')}
           resizeMode="contain"
           style={styles.image}
         />

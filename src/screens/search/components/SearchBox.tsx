@@ -9,7 +9,7 @@ import { debounce } from 'lodash';
 import { useScreenController } from 'src/common/hooks';
 import { getSearchData } from 'src/store/action-thunk';
 
-interface Props { }
+interface Props {}
 
 const SearchBoxComponent = (props: Props) => {
   const { dispatch, navigation, translate } = useScreenController();
@@ -54,6 +54,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
   },
   inputStyle: {
-    paddingVertical: scale(4)
+    paddingVertical: scale(4),
   },
 });

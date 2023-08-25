@@ -45,6 +45,7 @@ export interface GetSearchDataFields {
   type: string;
 }
 export interface GetSearchDataResponseFields {
+  keyword: string;
   tracks: {
     items: SearchDataItemFields[];
     next: string;
@@ -54,10 +55,26 @@ export interface GetSearchDataResponseFields {
   };
 }
 export interface SearchDataItemFields {
-  href: string;
   id: string;
   name: string;
   album: {
     images: [{ url: string }];
+  };
+  artists: [{ id: string; name: string }];
+  external_urls: {
+    spotify: string;
+  };
+}
+
+export interface GetLinkDownLoadFields {
+  baseUrl: string;
+  link: string;
+}
+
+export interface GetLinkDownLoadResponseFields {
+  name: string;
+  audio: {
+    url: string;
+    size: number;
   };
 }

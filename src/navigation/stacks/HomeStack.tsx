@@ -5,9 +5,11 @@ import {
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import { HomeTab } from '../tab';
+import PlayerStack from './PlayerStack';
 
 export type HomeStackParamList = {
   HomeTab: undefined;
+  PlayerStack: undefined;
 };
 export type HomeStackNavigationProp =
   NativeStackNavigationProp<HomeStackParamList>;
@@ -24,6 +26,7 @@ const HomeStack = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="HomeTab" component={HomeTab} />
+      <Stack.Screen name="PlayerStack" component={PlayerStack} />
     </Stack.Navigator>
   );
 };

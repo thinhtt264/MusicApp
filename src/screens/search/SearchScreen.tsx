@@ -17,6 +17,7 @@ import { kWidth } from 'src/common/constants';
 import { TouchableOpacity } from 'react-native';
 import routeNames from 'src/navigation/RouteNames';
 import { Keyboard } from 'react-native';
+import { getBlurhashColor } from 'src/common/method';
 
 interface Props {}
 
@@ -24,18 +25,24 @@ const SearchScreen = (props: Props) => {
   const { translate, navigation } = useScreenController();
   const { searchData } = useAppSelector(state => state.home);
 
-  const onNavigate = (item: any) => {
+  const onNavigate = async (item: any) => {
+    const bgColor = await getBlurhashColor(item?.album?.images[0]?.url);
+    const image = item?.album?.images[0]?.url;
+    
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
-      params: { trackUrl: item.external_urls.spotify },
+      params: {
+        trackUrl: item?.external_urls?.spotify,
+        name: item?.name,
+        bgColor: bgColor || 'black',
+        image,
+      },
     });
   };
 
   return (
     <Container style={styles.container}>
-      <TouchableWithoutFeedback
-        style={{ flex: 1 }}
-        onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <>
           <Header title={translate('home:search')} />
           <SearchBox />
@@ -70,7 +77,7 @@ const SearchScreen = (props: Props) => {
                   </View>
                   <SimpleLineIcons
                     name="options-vertical"
-                    size={scale(16)}
+                    size={scale(14)}
                     color={Colors.unActive}
                   />
                 </TouchableOpacity>

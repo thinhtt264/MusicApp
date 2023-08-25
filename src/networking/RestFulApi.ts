@@ -6,7 +6,7 @@ import { endpoints } from './endpoint';
 import { dispatch, getState } from 'src/common/redux';
 import { encode } from 'base-64';
 import { TokenResponseFields } from 'src/models/Auth';
-import { authActions } from 'src/store/action-slices';
+import { appActions, authActions } from 'src/store/action-slices';
 
 const tokenKeyHeader = 'authorization';
 
@@ -91,13 +91,18 @@ function Request<T = Record<string, unknown>>(
 
   console.log('endpoint: ', `${defaultConfig.baseURL}${config.url}`);
 
+  dispatch(appActions.onSetLoadApp(true));
+
   return new Promise<T | any>((rs, rj) => {
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res: AxiosResponse<T>) => {
+        dispatch(appActions.onSetLoadApp(false));
+
         const response = res.data;
         return rs(response);
       })
       .catch((error: any) => {
+        dispatch(appActions.onSetLoadApp(false));
         let err;
         if (error && error.response) {
           err = error.response;

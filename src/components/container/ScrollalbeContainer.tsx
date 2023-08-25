@@ -10,19 +10,8 @@ const ScrollContainerComponent = (props: ScrollContainerProps) => {
   const { safeAreaBackground, safeAreaProps, style, contentContainerStyle } =
     props;
   return (
-    <SafeAreaView
-      style={[
-        Layout.fill,
-        {
-          backgroundColor: safeAreaBackground
-            ? safeAreaBackground
-            : Colors.green.default,
-        },
-      ]}
-      edges={['top']}
-      {...safeAreaProps}>
-      <View
-        style={[Layout.fill, { backgroundColor: Colors.green.default }, style]}>
+    <SafeAreaView style={[Layout.fill]} edges={['top']} {...safeAreaProps}>
+      <View style={[Layout.fill, style]}>
         <ScrollView
           contentContainerStyle={contentContainerStyle}
           showsHorizontalScrollIndicator={false}

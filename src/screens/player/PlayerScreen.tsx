@@ -1,21 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getDownloadLink } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
-import { ScrollContainer } from 'src/components/container';
 import { Header } from './components';
 import { Blurhash } from 'react-native-blurhash';
 import { StatusBar } from 'react-native';
-import { kHeight, kWidth } from 'src/common/constants';
+import { kWidth } from 'src/common/constants';
 import FastImage from 'react-native-fast-image';
 import { scale } from 'src/common/scale';
 import { startAudio } from 'src/common/player';
 import { LoadingScreen } from '../loading/LoadingScreen';
+import { useFocusEffect } from '@react-navigation/native';
+import { ProgressBar } from 'src/components/player';
 
 const PlayerScreen = ({ route }: any) => {
   const { trackUrl, name, bgColor, image } = route?.params;
-  const { dispatch, navigation, translate } = useScreenController();
+  const { dispatch, navigation } = useScreenController();
   const { env } = useAppSelector(state => state.app);
 
   const [isLoading, setLoading] = useState(true);
@@ -34,15 +35,20 @@ const PlayerScreen = ({ route }: any) => {
 
   const onGoBack = () => navigation.goBack();
 
+  useFocusEffect(
+    useCallback(() => {
+      Platform.OS === 'android' && StatusBar.setBackgroundColor('transparent');
+      StatusBar.setTranslucent(true);
+    }, []),
+  )
   return isLoading ? (
     <LoadingScreen />
   ) : (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor={'transparent'} />
       <Blurhash
         blurhash={bgColor}
         style={{
-          height: kHeight,
+          height: '100%',
           position: 'absolute',
           top: 0,
           right: 0,
@@ -57,6 +63,7 @@ const PlayerScreen = ({ route }: any) => {
         style={styles.image}
         resizeMode="stretch"
       />
+      <ProgressBar />
     </View>
   );
 };

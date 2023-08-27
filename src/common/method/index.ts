@@ -29,5 +29,11 @@ export const expiredTime = (expired: number) => {
 
 export const getBlurhashColor = async (url: string) => {
   if (!url) return '';
-  return await Blurhash.encode(url, 2, 2);
+
+  const blurhashPromise = await Blurhash.encode(url, 2, 2);
+
+  return Promise.race([
+    blurhashPromise,
+    new Promise(resolve => setTimeout(() => resolve(false), 2000)), // Timeout after 2000ms (2 seconds)
+  ]);
 };

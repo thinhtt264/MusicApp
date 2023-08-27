@@ -12,7 +12,7 @@ import { scale } from 'src/common/scale';
 import { startAudio } from 'src/common/player';
 import { LoadingScreen } from '../loading/LoadingScreen';
 import { useFocusEffect } from '@react-navigation/native';
-import { ProgressBar } from 'src/components/player';
+import { ProgressBar } from './components';
 
 const PlayerScreen = ({ route }: any) => {
   const { trackUrl, name, bgColor, image } = route?.params;
@@ -22,16 +22,16 @@ const PlayerScreen = ({ route }: any) => {
   const [isLoading, setLoading] = useState(true);
 
   const fetchAndStartAudio = async () => {
-    const response = await dispatch(
-      getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
-    ).unwrap();
+    // const response = await dispatch(
+    //   getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
+    // ).unwrap();
     setLoading(false);
-    await startAudio(response.audio.url);
+    await startAudio('response.audio.url');
   };
 
   useEffect(() => {
     fetchAndStartAudio();
-  }, [trackUrl]);
+  }, []);
 
   const onGoBack = () => navigation.goBack();
 
@@ -63,7 +63,7 @@ const PlayerScreen = ({ route }: any) => {
         style={styles.image}
         resizeMode="stretch"
       />
-      <ProgressBar />
+      <ProgressBar style={styles.progessBar} />
     </View>
   );
 };
@@ -78,4 +78,8 @@ const styles = StyleSheet.create({
     marginTop: scale(30),
     borderRadius: scale(4),
   },
+  progessBar: {
+    height: scale(50),
+    width: kWidth - scale(70),
+  }
 });

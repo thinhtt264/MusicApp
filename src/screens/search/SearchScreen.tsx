@@ -19,7 +19,7 @@ import routeNames from 'src/navigation/RouteNames';
 import { Keyboard } from 'react-native';
 import { getBlurhashColor } from 'src/common/method';
 
-interface Props {}
+interface Props { }
 
 const SearchScreen = (props: Props) => {
   const { translate, navigation } = useScreenController();
@@ -28,13 +28,13 @@ const SearchScreen = (props: Props) => {
   const onNavigate = async (item: any) => {
     const bgColor = await getBlurhashColor(item?.album?.images[0]?.url);
     const image = item?.album?.images[0]?.url;
-    
+
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
       params: {
         trackUrl: item?.external_urls?.spotify,
         name: item?.name,
-        bgColor: bgColor || 'black',
+        bgColor: bgColor ?? 'black',
         image,
       },
     });

@@ -6,6 +6,7 @@ import { navigationRef } from 'src/common/navigation';
 import { appInit } from 'src/store/action-thunk/AppThunk';
 import RootNavigator from './root-navigator';
 import { MyAppTheme } from 'src/themes';
+import TrackPlayer from 'react-native-track-player';
 
 export const AppNavigation = () => {
   const { loadingApp, theme, env } = useAppSelector(state => state.app);
@@ -13,7 +14,8 @@ export const AppNavigation = () => {
 
   useEffect(() => {
     const init = async () => {
-      const store = await dispatch(appInit());
+      await dispatch(appInit());
+      await TrackPlayer.setupPlayer();
     };
     init().finally(() => {
       setTimeout(() => {

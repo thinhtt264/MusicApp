@@ -27,13 +27,43 @@ export const expiredTime = (expired: number) => {
   return currentTime.valueOf();
 };
 
-export const getBlurhashColor = async (url: string) => {
-  if (!url) return '';
+export const withTimeout = <T>(
+  millis: number,
+  promise: Promise<T>,
+): Promise<T | string> => {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(
+      () => reject(`Timed out after ${millis} ms`),
+      millis,
+    );
 
-  const blurhashPromise = await Blurhash.encode(url, 2, 2);
+    promise
+      .then(result => {
+        clearTimeout(timeout);
+        resolve(result);
+      })
+      .catch(error => {
+        clearTimeout(timeout);
+        reject(error);
+      });
+  });
+};
 
-  return Promise.race([
-    blurhashPromise,
-    new Promise(resolve => setTimeout(() => resolve(false), 2000)), // Timeout after 2000ms (2 seconds)
-  ]);
+export const getBlurhashColor = async (url: string): Promise<string> => {
+  try {
+    if (!url) return '';
+
+    const blurhashPromise = Blurhash.encode(url, 2, 2);
+
+    const timeoutPromise = new Promise<string>((resolve, reject) =>
+      setTimeout(() => reject(`Timed out after 2000 ms`), 2000)
+    );
+
+    const result = await Promise.race<string>([blurhashPromise, timeoutPromise]);
+
+    return !!result === false ? '' : result;
+  } catch (error) {
+    console.error(error);
+    return '';
+  }
 };

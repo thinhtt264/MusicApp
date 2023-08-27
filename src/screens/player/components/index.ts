@@ -1,2 +1,3 @@
 import { Header } from './Header';
-export { Header };
+import { ProgressBar } from './ProgressBar';
+export { Header, ProgressBar };

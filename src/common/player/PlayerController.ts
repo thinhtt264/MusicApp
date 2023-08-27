@@ -2,8 +2,7 @@ import TrackPlayer from 'react-native-track-player';
 import { downloadTrack } from './TrackDownloader';
 
 export const startAudio = async (downloadUrl: string) => {
-  // Set up the player
-  await TrackPlayer.setupPlayer();
+  await TrackPlayer.reset();
 
   const filePath = await downloadTrack(downloadUrl);
   // Add a track to the queue

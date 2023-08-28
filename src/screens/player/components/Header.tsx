@@ -23,7 +23,7 @@ const HeaderComponent = (props: Props) => {
     title,
     RightContentStyle,
     LeftIcon,
-    onLeftPress = () => {},
+    onLeftPress = () => { },
   } = props;
   const insets = useSafeAreaInsets();
 
@@ -37,7 +37,7 @@ const HeaderComponent = (props: Props) => {
       ) : (
         <View />
       )}
-      <BoldText textStyle={styles.title}>{title}</BoldText>
+      <BoldText numberOfLines={1} textStyle={styles.title}>{title}</BoldText>
       {RightContent ? (
         <View style={[Layout.rowBetween, RightContentStyle]}>
           {RightContent()}

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
@@ -16,29 +16,24 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { kWidth } from 'src/common/constants';
 import { TouchableOpacity } from 'react-native';
 import routeNames from 'src/navigation/RouteNames';
-import { Keyboard } from 'react-native';
-import { decode, decodeBlurhashToRGB, getBlurhashColor } from 'src/common/method';
-import { Blurhash } from 'react-native-blurhash';
+import { getBackGroundPlayer } from 'src/common/method';
 
-interface Props {}
+interface Props { }
 
 const SearchScreen = (props: Props) => {
   const { translate, navigation } = useScreenController();
   const { searchData } = useAppSelector(state => state.home);
 
   const onNavigate = async (item: any) => {
-    const bgColor = await getBlurhashColor(item?.album?.images[0]?.url);
+    const bgColor = await getBackGroundPlayer(item?.album?.images[0]?.url);
     const image = item?.album?.images[0]?.url;
-    const decodedColor = decodeBlurhashToRGB(bgColor);
-    const rgbString = `rgb(${decodedColor[1].r}, ${decodedColor[1].g}, ${decodedColor[0].b})`;;
-    console.log(rgbString);
 
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
       params: {
         trackUrl: item?.external_urls?.spotify,
         name: item?.name,
-        bgColor: rgbString ?? 'black',
+        bgColor: bgColor ?? 'black',
         image,
       },
     });

@@ -19,6 +19,7 @@ import TrackPlayer, {
   State,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
+import LinearGradient from 'react-native-linear-gradient';
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 
@@ -34,6 +35,7 @@ const PlayerScreen = ({ route }: any) => {
       getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
     ).unwrap();
     setLoading(false);
+    setBuffering(true);
     await startAudio(response.audio.url);
   };
 
@@ -70,7 +72,12 @@ const PlayerScreen = ({ route }: any) => {
   return isLoading ? (
     <LoadingScreen />
   ) : (
-    <View style={[styles.container, { backgroundColor: bgColor }]}>
+    <LinearGradient
+      start={{ x: 0, y: 0.3 }}
+      end={{ x: 0, y: 1.0 }}
+      locations={[0, 1]}
+      colors={[bgColor, '#0D0D0D']}
+      style={styles.container}>
       {/* <Blurhash
         blurhash={bgColor}
         style={{
@@ -91,7 +98,7 @@ const PlayerScreen = ({ route }: any) => {
       />
       <ProgressBar style={styles.progessBar} />
       <ControllerBar buffering={buffering} />
-    </View>
+    </LinearGradient>
   );
 };
 

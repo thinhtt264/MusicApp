@@ -77,9 +77,9 @@ export function decodeDC(value: number) {
   const intG = (value >> 8) & 255;
   const intB = value & 255;
   return {
-    r: sRGBToLinear(intR) * 255,
-    g: sRGBToLinear(intG) * 255,
-    b: sRGBToLinear(intB) * 255,
+    r: sRGBToLinear(intR) * 255 + 20,
+    g: sRGBToLinear(intG) * 255 + 20,
+    b: sRGBToLinear(intB) * 255 + 20,
   };
 }
 
@@ -93,40 +93,19 @@ export function decode83(str: string): number {
   return value;
 }
 
-export const decode = (blurhash: string) => {
+export const getBackGroundPlayer = async (link: string) => {
+  const blurhash = await getBlurhashColor(link);
   if (blurhash == null || blurhash.length < 7) return undefined;
 
-  const value = decode83(blurhash.substring(4, 11));
-  return decodeDC(value);
+  const value = decode83(blurhash.substring(2, 6));
+  const rgbString = decodeDC(value);
+  return `rgb(${rgbString.r}, ${rgbString.g}, ${rgbString.b})`;
 };
 
 function sRGBToLinear(value: number): number {
   const v = value / 255;
   if (v <= 0.04045) return v / 12.92;
   else return Math.pow((v + 0.055) / 1.055, 2.4);
-}
-
-export function decodeBlurhashToRGB(blurhash: string): RGB[] {
-  if (!blurhash || blurhash.length < 6) return [];
-
-  const width = decode83(blurhash.slice(0, 2));
-  const height = decode83(blurhash.slice(2, 4));
-  const colorValues = blurhash.slice(4);
-
-  const colors: RGB[] = [];
-
-  for (let i = 0; i < colorValues.length; i += 4) {
-    const colorValue = colorValues.slice(i, i + 4);
-    const value = decode83(colorValue);
-
-    const r = (value >> 16) & 255;
-    const g = (value >> 8) & 255;
-    const b = value & 255;
-
-    colors.push({ r, g, b });
-  }
-
-  return colors;
 }
 
 const digitCharacters = [

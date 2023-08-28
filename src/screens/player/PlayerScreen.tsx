@@ -12,14 +12,22 @@ import { scale } from 'src/common/scale';
 import { startAudio } from 'src/common/player';
 import { LoadingScreen } from '../loading/LoadingScreen';
 import { useFocusEffect } from '@react-navigation/native';
-import { ProgressBar } from './components';
+import { ProgressBar, ControllerBar } from './components';
+import TrackPlayer, {
+  Event,
+  RepeatMode,
+  State,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
+
+const events = [Event.PlaybackState, Event.PlaybackError];
 
 const PlayerScreen = ({ route }: any) => {
   const { trackUrl, name, bgColor, image } = route?.params;
   const { dispatch, navigation } = useScreenController();
   const { env } = useAppSelector(state => state.app);
-
   const [isLoading, setLoading] = useState(true);
+  const [buffering, setBuffering] = useState(false);
 
   const fetchAndStartAudio = async () => {
     // const response = await dispatch(
@@ -40,7 +48,25 @@ const PlayerScreen = ({ route }: any) => {
       Platform.OS === 'android' && StatusBar.setBackgroundColor('transparent');
       StatusBar.setTranslucent(true);
     }, []),
-  )
+  );
+
+  useTrackPlayerEvents(events, async event => {
+    if (event.type === Event.PlaybackError) {
+      console.log('An error occurred while playing the current track.');
+    } else if (event.type === Event.PlaybackState) {
+      if (event.state === State.Buffering || event.state === State.Loading) {
+        setBuffering(true);
+      } else if (event.state === State.Ready) {
+        setBuffering(false);
+      } else if (event.state === State.Ended) {
+        const currentQueue = await TrackPlayer.getQueue();
+        if (currentQueue.length > 1) {
+          TrackPlayer.skipToNext();
+        }
+      }
+    }
+  });
+
   return isLoading ? (
     <LoadingScreen />
   ) : (
@@ -64,6 +90,7 @@ const PlayerScreen = ({ route }: any) => {
         resizeMode="stretch"
       />
       <ProgressBar style={styles.progessBar} />
+      <ControllerBar buffering={buffering} />
     </View>
   );
 };
@@ -81,5 +108,5 @@ const styles = StyleSheet.create({
   progessBar: {
     height: scale(50),
     width: kWidth - scale(70),
-  }
+  },
 });

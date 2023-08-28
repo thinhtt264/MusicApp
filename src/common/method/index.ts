@@ -56,7 +56,7 @@ export const getBlurhashColor = async (url: string): Promise<string> => {
     const blurhashPromise = Blurhash.encode(url, 2, 2);
 
     const timeoutPromise = new Promise<string>((resolve, reject) =>
-      setTimeout(() => reject(`Timed out after 2000 ms`), 2000)
+      setTimeout(() => reject(`Timed out after 3000 ms`), 3000)
     );
 
     const result = await Promise.race<string>([blurhashPromise, timeoutPromise]);

@@ -7,6 +7,7 @@ import { appInit } from 'src/store/action-thunk/AppThunk';
 import RootNavigator from './root-navigator';
 import { MyAppTheme } from 'src/themes';
 import TrackPlayer from 'react-native-track-player';
+import { AppLoader } from 'src/components/loader';
 
 export const AppNavigation = () => {
   const { loadingApp, theme, env } = useAppSelector(state => state.app);

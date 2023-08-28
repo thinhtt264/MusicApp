@@ -19,7 +19,7 @@ import routeNames from 'src/navigation/RouteNames';
 import { Keyboard } from 'react-native';
 import { getBlurhashColor } from 'src/common/method';
 
-interface Props { }
+interface Props {}
 
 const SearchScreen = (props: Props) => {
   const { translate, navigation } = useScreenController();
@@ -95,6 +95,7 @@ export default SearchScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: scale(10),
+    flex: 1,
   },
   image: {
     width: scale(45),

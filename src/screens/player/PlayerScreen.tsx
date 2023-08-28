@@ -70,8 +70,8 @@ const PlayerScreen = ({ route }: any) => {
   return isLoading ? (
     <LoadingScreen />
   ) : (
-    <View style={styles.container}>
-      <Blurhash
+    <View style={[styles.container, { backgroundColor: bgColor }]}>
+      {/* <Blurhash
         blurhash={bgColor}
         style={{
           height: '100%',
@@ -82,7 +82,7 @@ const PlayerScreen = ({ route }: any) => {
           left: 0,
           zIndex: -1,
         }}
-      />
+      /> */}
       <Header title={name} LeftIcon onLeftPress={onGoBack} />
       <FastImage
         source={{ uri: image }}

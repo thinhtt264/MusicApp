@@ -26,6 +26,8 @@ const AnimatedList = (props: AnimatedListProps<any>) => {
       {...(renderHeader && { ListHeaderComponent: renderHeader })}
       initialNumToRender={5}
       onEndReachedThreshold={0.01}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
     />
   );
 };

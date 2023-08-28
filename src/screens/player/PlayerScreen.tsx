@@ -30,11 +30,11 @@ const PlayerScreen = ({ route }: any) => {
   const [buffering, setBuffering] = useState(false);
 
   const fetchAndStartAudio = async () => {
-    // const response = await dispatch(
-    //   getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
-    // ).unwrap();
+    const response = await dispatch(
+      getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
+    ).unwrap();
     setLoading(false);
-    await startAudio('response.audio.url');
+    await startAudio(response.audio.url);
   };
 
   useEffect(() => {

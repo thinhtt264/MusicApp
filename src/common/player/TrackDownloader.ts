@@ -4,17 +4,15 @@ export const downloadTrack = async (downloadUrl: string) => {
   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
   if (downloadUrl === '') return localFilePath;
   try {
-    // const response: any = await RNFS.downloadFile({
-    //   fromUrl: downloadUrl,
-    //   toFile: localFilePath,
-    //   progress: res => {
-    //     console.log(res);
-    //   },
-    // }).promise;
+    const response: any = await RNFS.downloadFile({
+      fromUrl: downloadUrl,
+      toFile: localFilePath,
+      progress: res => {},
+    }).promise;
 
-    // console.log(response);
+    console.log(response);
 
-    if (true) {
+    if (response.statusCode === 200) {
       console.log('Tải và lưu tệp tin thành công');
       const fileExists = await RNFS.exists(localFilePath);
       if (fileExists)

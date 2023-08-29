@@ -19,8 +19,16 @@ const DEFAULT_INFO = {
 export const startAudio = async (downloadUrl = '', info = DEFAULT_INFO) => {
   await TrackPlayer.reset();
 
-  //Tải nhac
-  // const filePath = await downloadTrack(downloadUrl);
+  const filePath = await downloadTrack(downloadUrl, info); //Tải nhac
+
+  if (filePath) {
+    await addPlaylist({
+      ...info,
+      url: `${ANDROID_HEAD_PATH}${filePath}`,
+    });
+  } else {
+    await addPlaylist(info);
+  }
 
   // Start playing it
   await TrackPlayer.play();

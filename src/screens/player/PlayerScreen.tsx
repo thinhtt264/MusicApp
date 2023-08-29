@@ -38,20 +38,21 @@ const PlayerScreen = ({ route }: any) => {
   };
 
   const fetchAndStartAudio = async () => {
-    await getTrackInfo({ doc: id })
-      .then((trackInfoResult) => {
-        console.log(trackInfoResult._data);
-      })
-      .catch(async (e) => {
-        // const response = await dispatch(
-        //   getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
-        // ).unwrap();
-        // await startAudio(response.audio.url, trackInfo);
-        console.log(e);  
-      });
+    const trackResponse: any = await getTrackInfo({ doc: id })
+    if (!trackResponse._data) {
+      const response = await dispatch(
+        getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
+      ).unwrap();
+      setLoading(false);
+      setBuffering(true);
+      await startAudio(response.audio.url, trackInfo);
+    }
+    else {
+      setLoading(false);
+      setBuffering(true);
+      await startAudio(trackResponse._data?.url, trackResponse._data);
+    }
 
-    setLoading(false);
-    setBuffering(true);
   };
 
   useEffect(() => {

@@ -61,5 +61,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: fontScale(18),
     textAlignVertical: 'center',
+    maxWidth: scale(200)
   },
 });

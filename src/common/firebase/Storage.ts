@@ -1,34 +1,32 @@
 import storage, { FirebaseStorageTypes } from '@react-native-firebase/storage';
 import { TrackInfoFields, UploadFileFields } from './type';
-import { getCurrentTimestamp } from '../helper/method/Type';
 import { setTrackInfo } from './FirebaseStore';
+import { getCurrentTimestamp } from '../helper';
+import { unLinkFileMp3 } from '../player';
 
-export const uploadFileToFirebase = ({
+export const uploadFileToFirebase = async ({
   localFilePath,
   data,
 }: UploadFileFields) => {
-  const reference = storage().ref(
-    `/TrackFile/${getCurrentTimestamp()}'_'${data.title}`,
-  );
+  const path = `/TrackFile/${getCurrentTimestamp()}'_'${data.title}`;
+  const reference = storage().ref(path);
 
   try {
-    reference.putFile(localFilePath).then(snapshot => {
-      handleDoneUpload(snapshot, data);
+    await reference.putFile(localFilePath).then(async () => {
+     await handleDoneUpload(path, data);
     });
+
     console.log('Tệp đã được tải lên thành công.');
   } catch (error) {
     console.error('Lỗi khi tải tệp lên Firebase Storage:', error);
   }
 };
 
-const handleDoneUpload = (
-  uploadSnapshot: FirebaseStorageTypes.TaskSnapshot,
-  trackInfo: TrackInfoFields,
-) => {
-  uploadSnapshot.ref.getDownloadURL().then(downloadURL => {
-    setTrackInfo({
-      data: { ...trackInfo, url: downloadURL },
-      doc: trackInfo.id,
-    });
+const handleDoneUpload = async (path: string, trackInfo: TrackInfoFields) => {
+  const url = await storage().ref(path).getDownloadURL();
+  await setTrackInfo({
+    data: { ...trackInfo, url: url },
+    doc: trackInfo.id,
   });
+  unLinkFileMp3();
 };

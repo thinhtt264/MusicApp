@@ -12,12 +12,12 @@ export const getTrackInfo = async ({
   return await firestore().collection(collection).doc(doc).get();
 };
 
-export const setTrackInfo = ({
+export const setTrackInfo = async ({
   collection = 'TrackList',
   doc,
   data,
 }: WriteDataProps) => {
-  firestore()
+  await firestore()
     .collection(collection)
     .doc(doc)
     .set(data)

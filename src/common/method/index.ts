@@ -88,8 +88,6 @@ export const getBackGroundPlayer = async (link: string) => {
   const value = decode83(blurhash.substring(2, 6));
   const rgbString = decodeDC(value);
   const isWhiteColor = isWhiteishRgb(rgbString, 0.65);
-console.log(rgbString);
-console.log(Boolean(isWhiteColor));
 
   if (isWhiteColor) return 'rgb(72,72,72)';
   return `rgb(${rgbString.r}, ${rgbString.g}, ${rgbString.b})`;

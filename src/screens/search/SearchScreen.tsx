@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import React from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
@@ -16,9 +22,9 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { kWidth } from 'src/common/constants';
 import { TouchableOpacity } from 'react-native';
 import routeNames from 'src/navigation/RouteNames';
-import { getBackGroundPlayer } from 'src/common/method';
+import { getBackGroundPlayer, getBlurhashColor } from 'src/common/method';
 
-interface Props { }
+interface Props {}
 
 const SearchScreen = (props: Props) => {
   const { translate, navigation } = useScreenController();
@@ -26,6 +32,12 @@ const SearchScreen = (props: Props) => {
 
   const onNavigate = async (item: any) => {
     const bgColor = await getBackGroundPlayer(item?.album?.images[0]?.url);
+
+    const blurHashColor =
+      bgColor !== 'rgb(72,72,72)'
+        ? await getBlurhashColor(item?.album?.images[0]?.url)
+        : false;
+
     const image = item?.album?.images[0]?.url;
 
     navigation.navigate(routeNames.Stacks.PlayerStack, {
@@ -33,7 +45,7 @@ const SearchScreen = (props: Props) => {
       params: {
         trackUrl: item?.external_urls?.spotify,
         name: item?.name,
-        bgColor: bgColor ?? 'black',
+        bgColor: blurHashColor || bgColor || 'black',
         image,
       },
     });

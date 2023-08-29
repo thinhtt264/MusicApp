@@ -15,11 +15,10 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ProgressBar, ControllerBar } from './components';
 import TrackPlayer, {
   Event,
-  RepeatMode,
   State,
   useTrackPlayerEvents,
 } from 'react-native-track-player';
-import LinearGradient from 'react-native-linear-gradient';
+import Layout from 'src/themes/Layout';
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 
@@ -69,16 +68,11 @@ const PlayerScreen = ({ route }: any) => {
     }
   });
 
-  return isLoading ? (
-    <LoadingScreen />
-  ) : (
-    <LinearGradient
-      start={{ x: 0, y: 0.3 }}
-      end={{ x: 0, y: 1.0 }}
-      locations={[0, 1]}
-      colors={[bgColor, '#0D0D0D']}
-      style={styles.container}>
-      {/* <Blurhash
+  const FragmentView =
+    bgColor === 'rgb(72,72,72)' ? (
+      <View style={[Layout.absolute, { backgroundColor: bgColor }]} />
+    ) : (
+      <Blurhash
         blurhash={bgColor}
         style={{
           height: '100%',
@@ -89,16 +83,25 @@ const PlayerScreen = ({ route }: any) => {
           left: 0,
           zIndex: -1,
         }}
-      /> */}
-      <Header title={name} LeftIcon onLeftPress={onGoBack} />
-      <FastImage
-        source={{ uri: image }}
-        style={styles.image}
-        resizeMode="stretch"
       />
-      <ProgressBar style={styles.progessBar} />
-      <ControllerBar buffering={buffering} />
-    </LinearGradient>
+    );
+
+  return isLoading ? (
+    <LoadingScreen />
+  ) : (
+    <>
+      {FragmentView}
+      <View style={styles.container}>
+        <Header title={name} LeftIcon onLeftPress={onGoBack} />
+        <FastImage
+          source={{ uri: image }}
+          style={styles.image}
+          resizeMode="stretch"
+        />
+        <ProgressBar style={styles.progessBar} />
+        <ControllerBar buffering={buffering} />
+      </View>
+    </>
   );
 };
 

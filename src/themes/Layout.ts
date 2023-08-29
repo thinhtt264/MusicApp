@@ -169,6 +169,13 @@ export default StyleSheet.create({
     position: 'absolute',
     zIndex: 999,
   },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  },
   /* Operation Layout */
   mirror: {
     transform: [{ scaleX: -1 }],

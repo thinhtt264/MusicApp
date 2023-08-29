@@ -1,6 +1,5 @@
 import { Alert, Platform } from 'react-native';
 import { Blurhash } from 'react-native-blurhash';
-import { RGB } from 'react-native-blurhash/lib/typescript/utils';
 
 type TypesBase =
   | 'bigint'
@@ -28,33 +27,22 @@ export const expiredTime = (expired: number) => {
   return currentTime.valueOf();
 };
 
-export const withTimeout = <T>(
-  millis: number,
-  promise: Promise<T>,
-): Promise<T | string> => {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(
-      () => reject(`Timed out after ${millis} ms`),
-      millis,
-    );
-
-    promise
-      .then(result => {
-        clearTimeout(timeout);
-        resolve(result);
-      })
-      .catch(error => {
-        clearTimeout(timeout);
-        reject(error);
-      });
-  });
+const isWhiteishRgb = (
+  rgbObject: { r: number; g: number; b: number },
+  threshold: number,
+) => {
+  return (
+    (rgbObject.r >= 255 * threshold && rgbObject.g >= 255 * threshold) ||
+    (rgbObject.r >= 255 * threshold && rgbObject.b >= 255 * threshold) ||
+    (rgbObject.g >= 255 * threshold && rgbObject.b >= 255 * threshold)
+  );
 };
 
 export const getBlurhashColor = async (url: string): Promise<string> => {
   try {
     if (!url) return '';
 
-    const blurhashPromise = Blurhash.encode(url, 2, 2);
+    const blurhashPromise = Blurhash.encode(url, 1, 2);
 
     const timeoutPromise = new Promise<string>((resolve, reject) =>
       setTimeout(() => reject(`Timed out after 3000 ms`), 3000),
@@ -99,6 +87,11 @@ export const getBackGroundPlayer = async (link: string) => {
 
   const value = decode83(blurhash.substring(2, 6));
   const rgbString = decodeDC(value);
+  const isWhiteColor = isWhiteishRgb(rgbString, 0.65);
+console.log(rgbString);
+console.log(Boolean(isWhiteColor));
+
+  if (isWhiteColor) return 'rgb(72,72,72)';
   return `rgb(${rgbString.r}, ${rgbString.g}, ${rgbString.b})`;
 };
 

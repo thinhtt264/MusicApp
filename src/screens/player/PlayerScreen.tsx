@@ -31,7 +31,7 @@ const PlayerScreen = ({ route }: any) => {
 
   const fetchAndStartAudio = async () => {
     const response = await dispatch(
-      getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
+    getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
     ).unwrap();
     setLoading(false);
     setBuffering(true);
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   image: {
     height: kWidth - scale(70),
     width: kWidth - scale(70),
-    marginTop: scale(30),
+    marginTop: scale(35),
     borderRadius: scale(4),
   },
   progessBar: {

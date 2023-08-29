@@ -19,23 +19,39 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Layout from 'src/themes/Layout';
+import { getTrackInfo } from 'src/common/firebase';
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 
 const PlayerScreen = ({ route }: any) => {
-  const { trackUrl, name, bgColor, image } = route?.params;
+  const { trackUrl, name, bgColor, image, id, artist } = route?.params;
   const { dispatch, navigation } = useScreenController();
   const { env } = useAppSelector(state => state.app);
   const [isLoading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(false);
 
+  const trackInfo = {
+    url: trackUrl,
+    title: name,
+    id,
+    artist,
+  };
+
   const fetchAndStartAudio = async () => {
-    const response = await dispatch(
-    getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
-    ).unwrap();
+    await getTrackInfo({ doc: id })
+      .then((trackInfoResult) => {
+        console.log(trackInfoResult._data);
+      })
+      .catch(async (e) => {
+        // const response = await dispatch(
+        //   getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
+        // ).unwrap();
+        // await startAudio(response.audio.url, trackInfo);
+        console.log(e);  
+      });
+
     setLoading(false);
     setBuffering(true);
-    await startAudio(response.audio.url);
   };
 
   useEffect(() => {

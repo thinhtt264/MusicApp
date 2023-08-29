@@ -10,8 +10,6 @@ export const downloadTrack = async (downloadUrl: string) => {
       progress: res => {},
     }).promise;
 
-    console.log(response);
-
     if (response.statusCode === 200) {
       console.log('Tải và lưu tệp tin thành công');
       const fileExists = await RNFS.exists(localFilePath);

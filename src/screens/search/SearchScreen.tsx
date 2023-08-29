@@ -22,7 +22,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { kWidth } from 'src/common/constants';
 import { TouchableOpacity } from 'react-native';
 import routeNames from 'src/navigation/RouteNames';
-import { getBackGroundPlayer, getBlurhashColor } from 'src/common/method';
+import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 
 interface Props {}
 
@@ -32,22 +32,23 @@ const SearchScreen = (props: Props) => {
 
   const onNavigate = async (item: any) => {
     const bgColor = await getBackGroundPlayer(item?.album?.images[0]?.url);
-
     const blurHashColor =
       bgColor !== 'rgb(72,72,72)'
         ? await getBlurhashColor(item?.album?.images[0]?.url)
         : false;
 
-    const image = item?.album?.images[0]?.url;
+    const playerProps = {
+      trackUrl: item?.external_urls?.spotify,
+      name: item?.name,
+      bgColor: blurHashColor || bgColor || 'black',
+      image: item?.album?.images[0]?.url,
+      id: item?.id,
+      artist: item.artists[0].name,
+    };
 
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
-      params: {
-        trackUrl: item?.external_urls?.spotify,
-        name: item?.name,
-        bgColor: blurHashColor || bgColor || 'black',
-        image,
-      },
+      params: playerProps,
     });
   };
 

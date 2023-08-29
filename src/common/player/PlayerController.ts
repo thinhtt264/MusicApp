@@ -6,21 +6,34 @@ import {
   remove,
   setQueue,
 } from 'react-native-track-player/lib/trackPlayer';
+import { TrackInfoFields } from '../firebase/type';
 
-export const startAudio = async (downloadUrl: string) => {
+const ANDROID_HEAD_PATH = 'file://';
+const DEFAULT_INFO = {
+  id: 'trackId',
+  url: `file://`,
+  title: 'Track Title',
+  artist: 'Track Artist',
+};
+
+export const startAudio = async (downloadUrl = '', info = DEFAULT_INFO) => {
   await TrackPlayer.reset();
 
-  const filePath = await downloadTrack(downloadUrl);
-  // Add a track to the queue
-  await TrackPlayer.add({
-    id: 'trackId',
-    url: `file://${filePath}`,
-    title: 'Track Title',
-    artist: 'Track Artist',
-  });
+  //Tải nhac
+  // const filePath = await downloadTrack(downloadUrl);
 
   // Start playing it
   await TrackPlayer.play();
+};
+
+export const addPlaylist = async (info: TrackInfoFields) => {
+  // Add a track to the queue
+  await TrackPlayer.add({
+    id: info.id,
+    url: info.url,
+    title: info.title,
+    artist: info.artist,
+  });
 };
 
 export async function shuffle(): Promise<Track[]> {

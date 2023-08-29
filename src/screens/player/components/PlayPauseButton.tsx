@@ -18,7 +18,7 @@ export const PlayPauseButton = React.memo(
 
     const play = async () => {
       if (playerState.state === State.Ended) {
-        await startAudio('');
+        await startAudio();
       } else if (playerState.state === State.Paused) {
         await TrackPlayer.play();
       }

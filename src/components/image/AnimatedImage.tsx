@@ -7,7 +7,7 @@ import FastImage, { OnLoadEvent } from 'react-native-fast-image';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import { useSharedTransition } from 'src/common/animated';
-import { onCheckType } from 'src/common/method';
+import { onCheckType } from 'src/common/helper/method/Type';
 import { useAsyncState, useMounted } from 'src/common/hooks/customHook';
 
 import { ImageProps } from './type';

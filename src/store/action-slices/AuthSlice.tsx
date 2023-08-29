@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { AuthState } from 'src/models/Auth';
 import { authRequestToken } from '../action-thunk';
-import { expiredTime } from 'src/common/method';
+import { expiredTime } from 'src/common/helper';
 
 const initialState: AuthState = {
   isLogin: true,

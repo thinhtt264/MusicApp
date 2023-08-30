@@ -3,7 +3,8 @@ export interface ReadDataProps {
   doc: string;
 }
 
-export interface WriteDataProps extends ReadDataProps {
+export interface WriteDataProps {
+  collection?: 'TrackList' | 'UserInfo';
   data: TrackInfoFields;
 }
 

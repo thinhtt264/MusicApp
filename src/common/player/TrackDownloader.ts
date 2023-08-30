@@ -30,14 +30,14 @@ export const downloadTrack = async (downloadUrl: string, data: any) => {
   }
 };
 
-export const unLinkFileMp3 = () => {
-  const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
-  setTimeout(async () => {
-    try {
-      await RNFS.unlink(localFilePath);
-      console.log('Xóa tệp thành công');
-    } catch (error) {
-      console.error('Lỗi khi xóa tệp', error);
-    }
-  }, 3000);
-};
+// export const unLinkFileMp3 = () => {
+//   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
+//   setTimeout(async () => {
+//     try {
+//       await RNFS.unlink(localFilePath);
+//       console.log('Xóa tệp thành công');
+//     } catch (error) {
+//       console.error('Lỗi khi xóa tệp', error);
+//     }
+//   }, 500);
+// };

@@ -1,5 +1,4 @@
 import TrackPlayer, { Track } from 'react-native-track-player';
-import { downloadTrack } from './TrackDownloader';
 import {
   add,
   getActiveTrackIndex,
@@ -7,31 +6,30 @@ import {
   setQueue,
 } from 'react-native-track-player/lib/trackPlayer';
 import { TrackInfoFields } from '../firebase/type';
+import { dispatch, getState } from '../redux';
+import { playerActions } from 'src/store/action-slices';
 
 const ANDROID_HEAD_PATH = 'file://';
-const DEFAULT_INFO = {
-  id: 'trackId',
-  url: `file://`,
-  title: 'Track Title',
-  artist: 'Track Artist',
-};
 
-export const startAudio = async (downloadUrl = '', info = DEFAULT_INFO) => {
+export const startAudio = async ({ info }: { info: TrackInfoFields }) => {
   await TrackPlayer.reset();
+  const { currentTrack } = getState('player');
+  const TrackInfo = info || currentTrack;
+  // const filePath = await downloadTrack(downloadUrl, info); //Tải nhac
 
-  const filePath = await downloadTrack(downloadUrl, info); //Tải nhac
-
-  if (filePath) {
-    await addPlaylist({
-      ...info,
-      url: `${ANDROID_HEAD_PATH}${filePath}`,
-    });
-  } else {
-    await addPlaylist(info);
-  }
+  // if (filePath) {
+  //   await addPlaylist({
+  //     ...info,
+  //     url: `${ANDROID_HEAD_PATH}${filePath}`,
+  //   });
+  // } else {
+  await addPlaylist(TrackInfo);
+  // }
 
   // Start playing it
   await TrackPlayer.play();
+  if (TrackInfo.url !== currentTrack.url)
+    dispatch(playerActions.onSetCurrentTrack(TrackInfo));
 };
 
 export const addPlaylist = async (info: TrackInfoFields) => {

@@ -57,13 +57,12 @@ export const getDownloadLink = createAsyncThunk<
   GetLinkDownLoadFields
 >('home/getDownloadLink', async fields => {
   try {
-    const response =
-      await NetWorkService.PostFormUrlencoded<GetLinkDownLoadResponseFields>({
-        url: '',
-        body: { link: fields.link },
-        baseUrl: fields.baseUrl,
-        isNeedToken: false,
-      });
+    const response = await NetWorkService.Get<GetLinkDownLoadResponseFields>({
+      url: `?track=${fields.link}`,
+      baseUrl: fields.baseUrl,
+      isNeedToken: false,
+    });
+
     console.log(response);
     return response;
   } catch (e) {

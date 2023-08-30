@@ -14,12 +14,11 @@ export const getTrackInfo = async ({
 
 export const setTrackInfo = async ({
   collection = 'TrackList',
-  doc,
   data,
 }: WriteDataProps) => {
   await firestore()
     .collection(collection)
-    .doc(doc)
+    .doc(data.id)
     .set(data)
     .then(() => {
       console.log('Track added');

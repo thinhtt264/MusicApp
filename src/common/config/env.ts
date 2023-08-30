@@ -9,6 +9,8 @@ export interface ENVFields {
   GOOGLE_WED?: string;
   CLIENT_ID?: string;
   CLIENT_SECRET?: string;
+  RAPID_API_KEY?: string;
+  RAPID_API_HOST?: string;
 }
 
 export const ENVDynamic = (env: string) => {
@@ -16,7 +18,10 @@ export const ENVDynamic = (env: string) => {
     Dev: {
       API_URL: 'https://api.spotify.com/',
       AUTH_URL: 'https://accounts.spotify.com/',
-      DOWNLOAD_URL: 'https://api.spotify-downloader.com/',
+      DOWNLOAD_URL:
+        'https://spotify-scraper.p.rapidapi.com/v1/track/download/soundcloud',
+      RAPID_API_KEY: 'e5ff3f9186mshab457c73902107ep15dbbfjsn17f96ce0a3fd',
+      RAPID_API_HOST: 'spotify-scraper.p.rapidapi.com',
       APP_ENV: 'Dev',
       CODE_PUSH_KEY_ANDROID: 'rNoapnOG0dgNLNTl_jFRcm_RiykWU9rm1L_LS',
       CODE_PUSH_KEY_IOS: 'GPZYASdJNN4dHGYI-5ikiDIdwX6m1xy9uKIZp',

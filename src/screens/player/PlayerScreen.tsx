@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getDownloadLink } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
@@ -19,7 +19,7 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Layout from 'src/themes/Layout';
-import { getTrackInfo } from 'src/common/firebase';
+import { getTrackInfo, setTrackInfo } from 'src/common/firebase';
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 
@@ -27,6 +27,8 @@ const PlayerScreen = ({ route }: any) => {
   const { trackUrl, name, bgColor, image, id, artist } = route?.params;
   const { dispatch, navigation } = useScreenController();
   const { env } = useAppSelector(state => state.app);
+  const { currentTrack } = useAppSelector(state => state.player);
+
   const [isLoading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(false);
 
@@ -38,25 +40,40 @@ const PlayerScreen = ({ route }: any) => {
   };
 
   const fetchAndStartAudio = async () => {
-    const trackResponse: any = await getTrackInfo({ doc: id })
-    if (!trackResponse._data) {
-      const response = await dispatch(
-        getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
-      ).unwrap();
-      setLoading(false);
-      setBuffering(true);
-      await startAudio(response.audio.url, trackInfo);
-    }
-    else {
-      setLoading(false);
-      setBuffering(true);
-      await startAudio(trackResponse._data?.url, trackResponse._data);
-    }
+    if (checkCurrentTrack()) {
+      await startMusic(currentTrack);
+    } else {
+      const trackResponse: any = await getTrackInfo({ doc: id });
+      if (trackResponse._data) {
+        await startMusic(trackResponse._data);
+      } else {
+        const response = await dispatch(
+          getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
+        ).unwrap();
 
+        const trackInfoWithUrl = {
+          ...trackInfo,
+          url: response.soundcloudTrack.audio[0].url,
+        };
+        await startMusic(trackInfoWithUrl);
+        setTrackInfo({ data: trackInfoWithUrl });
+      }
+    }
   };
+
+  const checkCurrentTrack = useCallback(() => {
+    if (currentTrack.id === id) return true;
+    return false;
+  }, [currentTrack.url, id]);
 
   useEffect(() => {
     fetchAndStartAudio();
+  }, []);
+
+  const startMusic = useCallback(async (info: any) => {
+    setLoading(false);
+    setBuffering(true);
+    await startAudio({ info });
   }, []);
 
   const onGoBack = () => navigation.goBack();
@@ -71,6 +88,7 @@ const PlayerScreen = ({ route }: any) => {
   useTrackPlayerEvents(events, async event => {
     if (event.type === Event.PlaybackError) {
       console.log('An error occurred while playing the current track.');
+      TrackPlayer.retry();
     } else if (event.type === Event.PlaybackState) {
       if (event.state === State.Buffering || event.state === State.Loading) {
         setBuffering(true);

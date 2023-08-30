@@ -1,8 +1,7 @@
-import storage, { FirebaseStorageTypes } from '@react-native-firebase/storage';
+import storage from '@react-native-firebase/storage';
 import { TrackInfoFields, UploadFileFields } from './type';
 import { setTrackInfo } from './FirebaseStore';
 import { getCurrentTimestamp } from '../helper';
-import { unLinkFileMp3 } from '../player';
 
 export const uploadFileToFirebase = async ({
   localFilePath,
@@ -13,7 +12,7 @@ export const uploadFileToFirebase = async ({
 
   try {
     await reference.putFile(localFilePath).then(async () => {
-     await handleDoneUpload(path, data);
+      handleDoneUpload(path, data);
     });
 
     console.log('Tệp đã được tải lên thành công.');
@@ -26,7 +25,5 @@ const handleDoneUpload = async (path: string, trackInfo: TrackInfoFields) => {
   const url = await storage().ref(path).getDownloadURL();
   await setTrackInfo({
     data: { ...trackInfo, url: url },
-    doc: trackInfo.id,
   });
-  unLinkFileMp3();
 };

@@ -9,6 +9,8 @@ import { TokenResponseFields } from 'src/models/Auth';
 import { appActions, authActions } from 'src/store/action-slices';
 
 const tokenKeyHeader = 'authorization';
+const rapidApiKeyHeader = 'X-RapidAPI-Key';
+const rapidApiHostHeader = 'X-RapidAPI-Host';
 
 const AxiosInstance = Axios.create({});
 
@@ -80,14 +82,23 @@ function Request<T = Record<string, unknown>>(
   const { access_token } = getState('auth');
 
   const defaultConfig: AxiosRequestConfig = {
-    baseURL: config.baseUrl ? config.baseUrl : env?.API_URL,
+    baseURL: config.baseUrl || env?.API_URL,
     timeout: TIME_OUT,
     headers: {
       'Content-Type': 'application/json',
-      [tokenKeyHeader]:
-        access_token && config.isNeedToken ? `Bearer ${access_token}` : '',
     },
   };
+
+  if (defaultConfig.baseURL === env?.DOWNLOAD_URL) {
+    defaultConfig.headers![rapidApiKeyHeader] = env?.RAPID_API_KEY;
+    defaultConfig.headers![rapidApiHostHeader] = env?.RAPID_API_HOST;
+  }
+
+  if (access_token && config.isNeedToken) {
+    (defaultConfig.headers as Record<string, string>)[
+      tokenKeyHeader
+    ] = `Bearer ${access_token}`;
+  }
 
   console.log('endpoint: ', `${defaultConfig.baseURL}${config.url}`);
 

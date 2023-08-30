@@ -72,9 +72,13 @@ export interface GetLinkDownLoadFields {
 }
 
 export interface GetLinkDownLoadResponseFields {
-  name: string;
-  audio: {
-    url: string;
-    size: number;
+  soundcloudTrack: {
+    title: string;
+    audio: [
+      {
+        url: string;
+        durationMs: number;
+      },
+    ];
   };
 }

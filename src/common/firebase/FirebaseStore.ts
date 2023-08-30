@@ -24,3 +24,10 @@ export const setTrackInfo = async ({
       console.log('Track added');
     });
 };
+
+export const getRapidApiKey = async ({
+  collection = 'RapidApi',
+  doc = 'RapidKey',
+}: ReadDataProps) => {
+  return await firestore().collection(collection).doc(doc).get();
+};

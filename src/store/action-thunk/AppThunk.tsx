@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ENVDynamic, ENVFields } from 'src/common/config/env';
+import { getRapidApiKey } from 'src/common/firebase';
 import { getMethodType, getValueFromStorage } from 'src/common/storage';
 
 export const appInit = createAsyncThunk('app/init', async () => {
@@ -8,10 +9,12 @@ export const appInit = createAsyncThunk('app/init', async () => {
     getMethodType.getString,
     'envConfig',
   ) as string;
-  if (envConfig) {    
+  if (envConfig) {
     env = ENVDynamic(envConfig);
   } else {
     env = ENVDynamic('Dev');
   }
-  return env;
+  const response = await getRapidApiKey({});
+
+  return { ...env, RAPID_API_KEY: response?.data()?.key ?? env?.RAPID_API_KEY };
 });

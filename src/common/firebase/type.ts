@@ -1,6 +1,6 @@
 export interface ReadDataProps {
-  collection?: 'TrackList' | 'UserInfo';
-  doc: string;
+  collection?: 'TrackList' | 'RapidApi';
+  doc?: string;
 }
 
 export interface WriteDataProps {

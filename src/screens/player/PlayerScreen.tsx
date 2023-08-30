@@ -20,30 +20,28 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import Layout from 'src/themes/Layout';
 import { getTrackInfo, setTrackInfo } from 'src/common/firebase';
+import { formatSearchData } from 'src/store/action-slices';
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 
 const PlayerScreen = ({ route }: any) => {
-  const { trackUrl, name, bgColor, image, id, artist } = route?.params;
   const { dispatch, navigation } = useScreenController();
+
+  const { item, bgColor } = route?.params;
+  const { albumImage, trackUrl, trackName, trackId, artistName } =
+    formatSearchData(item);
+
   const { env } = useAppSelector(state => state.app);
   const { currentTrack } = useAppSelector(state => state.player);
 
   const [isLoading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(false);
 
-  const trackInfo = {
-    url: trackUrl,
-    title: name,
-    id,
-    artist,
-  };
-
   const fetchAndStartAudio = async () => {
     if (checkCurrentTrack()) {
       await startMusic(currentTrack);
     } else {
-      const trackResponse: any = await getTrackInfo({ doc: id });
+      const trackResponse: any = await getTrackInfo({ doc: trackId });
       if (trackResponse._data) {
         await startMusic(trackResponse._data);
       } else {
@@ -52,7 +50,7 @@ const PlayerScreen = ({ route }: any) => {
         ).unwrap();
 
         const trackInfoWithUrl = {
-          ...trackInfo,
+          ...item,
           url: response.soundcloudTrack.audio[0].url,
         };
         await startMusic(trackInfoWithUrl);
@@ -62,9 +60,9 @@ const PlayerScreen = ({ route }: any) => {
   };
 
   const checkCurrentTrack = useCallback(() => {
-    if (currentTrack.id === id) return true;
+    if (currentTrack.id === trackId) return true;
     return false;
-  }, [currentTrack.url, id]);
+  }, [currentTrack.url, trackId]);
 
   useEffect(() => {
     fetchAndStartAudio();
@@ -127,9 +125,9 @@ const PlayerScreen = ({ route }: any) => {
     <>
       {FragmentView}
       <View style={styles.container}>
-        <Header title={name} LeftIcon onLeftPress={onGoBack} />
+        <Header title={trackName} LeftIcon onLeftPress={onGoBack} />
         <FastImage
-          source={{ uri: image }}
+          source={{ uri: albumImage }}
           style={styles.image}
           resizeMode="stretch"
         />

@@ -10,6 +10,7 @@ import {
 } from 'src/models/Api';
 import { uniqBy } from 'lodash';
 import { isOnlyWhitespace } from 'src/common/regex';
+import { SearchDataItemFields } from 'src/models/Search';
 export interface HomeStateType {
   homedata: {
     items: HomeDataItemFields[];
@@ -40,6 +41,26 @@ const initialState: HomeStateType = {
       total: 0,
     },
   },
+};
+
+export const formatSearchData = (item: SearchDataItemFields) => {
+  const albumImage = item?.album?.images[0]?.url;
+  const trackName = item?.name;
+  const trackId = item?.id;
+  const artistName = item?.artists[0].name;
+  const artist = item?.artists;
+  const album = item?.album;
+  const trackUrl = item?.external_urls.spotify;
+
+  return {
+    albumImage,
+    trackName,
+    trackId,
+    artistName,
+    artist,
+    album,
+    trackUrl,
+  };
 };
 
 const homeSlice = createSlice({

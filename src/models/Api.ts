@@ -1,3 +1,5 @@
+import { SearchDataItemFields } from "./Search";
+
 export interface ResponseBase<T = any> {
   code: number;
 
@@ -52,17 +54,6 @@ export interface GetSearchDataResponseFields {
     offset: number;
     previous: string;
     total: number;
-  };
-}
-export interface SearchDataItemFields {
-  id: string;
-  name: string;
-  album: {
-    images: [{ url: string }];
-  };
-  artists: [{ id: string; name: string }];
-  external_urls: {
-    spotify: string;
   };
 }
 

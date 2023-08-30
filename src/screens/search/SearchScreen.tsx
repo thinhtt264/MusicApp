@@ -37,18 +37,9 @@ const SearchScreen = (props: Props) => {
         ? await getBlurhashColor(item?.album?.images[0]?.url)
         : false;
 
-    const playerProps = {
-      trackUrl: item?.external_urls?.spotify,
-      name: item?.name,
-      bgColor: blurHashColor || bgColor || 'black',
-      image: item?.album?.images[0]?.url,
-      id: item?.id,
-      artist: item.artists[0].name,
-    };
-
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
-      params: playerProps,
+      params: { item, bgColor: blurHashColor || bgColor || 'black' },
     });
   };
 

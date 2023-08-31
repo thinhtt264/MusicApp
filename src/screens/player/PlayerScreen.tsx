@@ -43,6 +43,7 @@ const PlayerScreen = ({ route }: any) => {
     } else {
       const trackResponse: any = await getTrackInfo({ doc: trackId });
       if (trackResponse._data) {
+        console.log('phát từ firebase');
         await startMusic(trackResponse._data);
       } else {
         const response = await dispatch(

@@ -24,7 +24,9 @@ const SearchBoxComponent = (props: Props) => {
         type: 'track',
       }),
     );
-    props.onSearchChange(query);
+    setTimeout(() => {
+      props.onSearchChange(query);
+    }, 500);
   }, 300);
 
   const onChangeTextValue = (value: any) => {

@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
-import TrackPlayer, {
-  Event,
-  RepeatMode,
-  State,
-} from 'react-native-track-player';
+import { RepeatMode } from 'react-native-track-player';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { shuffle } from 'src/common/player';
+import { checkRepeatMode, setRepeatMode, shuffle } from 'src/common/player';
 import { scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 
@@ -18,24 +14,26 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
   ({ option }) => {
     const [applyOption, setstate] = useState(false);
 
-    const onPressRepeat = async () => {
-      const repeatMode = await TrackPlayer.getRepeatMode();
-      if (repeatMode === RepeatMode.Off) {
-        await TrackPlayer.setRepeatMode(RepeatMode.Queue);
-        setstate(true);
-      } else {
-        await TrackPlayer.setRepeatMode(RepeatMode.Off);
-        setstate(false);
-      }
+    const onPressRepeat = () => {
+      checkRepeatMode(mode => {
+        if (mode === RepeatMode.Off) {
+          setRepeatMode('Queue');
+          setstate(true);
+        } else {
+          setRepeatMode('Off');
+          setstate(false);
+        }
+      });
     };
 
-    const getRepeatMode = async () => {
-      const repeatMode = await TrackPlayer.getRepeatMode();
-      if (repeatMode === RepeatMode.Off) {
-        setstate(false);
-      } else {
-        setstate(true);
-      }
+    const getRepeatMode = () => {
+      checkRepeatMode(mode => {
+        if (mode === RepeatMode.Off) {
+          setstate(false);
+        } else {
+          setstate(true);
+        }
+      });
     };
 
     const onPressShuffle = async () => await shuffle();

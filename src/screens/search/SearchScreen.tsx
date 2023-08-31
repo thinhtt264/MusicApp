@@ -1,11 +1,10 @@
 import {
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
@@ -13,22 +12,21 @@ import { fontScale, scale } from 'src/common/scale';
 import { SearchBox } from './components';
 import { AnimatedList } from 'src/components/list';
 import { useAppSelector } from 'src/common/redux';
-import Layout from 'src/themes/Layout';
-import FastImage from 'react-native-fast-image';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
-import { MediumText } from 'src/components/text';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+import { BoldText } from 'src/components/text';
 import { kWidth } from 'src/common/constants';
-import { TouchableOpacity } from 'react-native';
 import routeNames from 'src/navigation/RouteNames';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
+import { SearchItemResult } from './components/SearchItemResult';
 
 interface Props {}
 
 const SearchScreen = (props: Props) => {
   const { translate, navigation } = useScreenController();
-  const { searchData } = useAppSelector(state => state.home);
+  const { searchData, searchRecentData } = useAppSelector(state => state.home);
+
+  const [searchValue, setSearchValue] = useState('');
 
   const onNavigate = async (item: any) => {
     const bgColor = await getBackGroundPlayer(item?.album?.images[0]?.url);
@@ -43,49 +41,43 @@ const SearchScreen = (props: Props) => {
     });
   };
 
+  const renderItem = useCallback((item: any) => {
+    return (
+      <SearchItemResult
+        onNavigate={onNavigate}
+        item={item}
+        isRecentList={!searchValue}
+      />
+    );
+  }, []);
+
   return (
     <Container style={styles.container}>
       <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
         <>
           <Header title={translate('home:search')} />
-          <SearchBox />
+          <SearchBox onSearchChange={value => setSearchValue(value)} />
+          {!searchValue && (
+            <View style={{ marginTop: scale(20) }}>
+              <BoldText textStyle={{ fontSize: fontScale(18) }}>
+                {translate('search:recent')}
+              </BoldText>
+            </View>
+          )}
           <AnimatedList
             onScroll={Keyboard.dismiss}
             style={styles.item}
             flatlistRef={null}
-            data={searchData?.tracks?.items}
+            data={
+              searchValue
+                ? searchData?.tracks?.items
+                : searchRecentData?.tracks?.items
+            }
             ItemSeparatorComponent={() => <Divider height={15} />}
             renderFooter={() => {
               return <View style={{ marginBottom: scale(55) }} />;
             }}
-            renderItem={({ item }: any) => {
-              return (
-                <TouchableOpacity
-                  style={Layout.rowBetween}
-                  onPress={() => onNavigate(item)}>
-                  <View style={[Layout.row]}>
-                    <FastImage
-                      source={{ uri: item?.album?.images[0]?.url }}
-                      style={styles.image}
-                      resizeMode="cover"
-                    />
-                    <View style={styles.info}>
-                      <MediumText numberOfLines={1} textStyle={styles.songname}>
-                        {item.name}
-                      </MediumText>
-                      <MediumText numberOfLines={1} textStyle={styles.artists}>
-                        {item.artists[0].name}
-                      </MediumText>
-                    </View>
-                  </View>
-                  <SimpleLineIcons
-                    name="options-vertical"
-                    size={scale(14)}
-                    color={Colors.unActive}
-                  />
-                </TouchableOpacity>
-              );
-            }}
+            renderItem={({ item }: any) => renderItem(item)}
           />
         </>
       </TouchableWithoutFeedback>

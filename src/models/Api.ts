@@ -47,7 +47,7 @@ export interface GetSearchDataFields {
   type: string;
 }
 export interface GetSearchDataResponseFields {
-  keyword: string;
+  keyword?: string;
   tracks: {
     items: SearchDataItemFields[];
     next: string;

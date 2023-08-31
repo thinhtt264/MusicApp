@@ -5,6 +5,7 @@ export const rxPassword =
 export const rxPhone =
   /^(?:\+84|0)(?:1\d{9}|3\d{8}|5\d{8}|7\d{8}|8\d{8}|9\d{8})$/;
 
-export const isOnlyWhitespace = (str: string) => {
+export const isOnlyWhitespace = (str?: string) => {
+  if (!str) return;
   return /^\s*$/.test(str);
 };

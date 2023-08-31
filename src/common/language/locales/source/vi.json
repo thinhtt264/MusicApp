@@ -48,6 +48,7 @@
     "cancel": "Huỷ"
   },
   "search": {
-    "placeholder": "Bạn muốn nghe gì?"
+    "placeholder": "Bạn muốn nghe gì?",
+    "recent": "Các tìm kiếm gần đây"
   }
 }

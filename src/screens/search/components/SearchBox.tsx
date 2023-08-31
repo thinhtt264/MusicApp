@@ -9,7 +9,9 @@ import { debounce } from 'lodash';
 import { useScreenController } from 'src/common/hooks';
 import { getSearchData } from 'src/store/action-thunk';
 
-interface Props {}
+interface Props {
+  onSearchChange: (value: string) => void;
+}
 
 const SearchBoxComponent = (props: Props) => {
   const { dispatch, navigation, translate } = useScreenController();
@@ -22,6 +24,7 @@ const SearchBoxComponent = (props: Props) => {
         type: 'track',
       }),
     );
+    props.onSearchChange(query);
   }, 300);
 
   const onChangeTextValue = (value: any) => {

@@ -31,10 +31,16 @@ const playerPersistConfig = {
   blacklist: [],
 };
 
+const homePersistConfig = {
+  key: 'home',
+  storage: AsyncStorage,
+  whitelist: ['searchRecentData'],
+};
+
 const rootReducer = persistCombineReducers(rootPersistConfig, {
   app: persistReducer(appPersistConfig, appReducer),
   auth: persistReducer(authPersistConfig, authReducer),
-  home: homeReducer,
+  home: persistReducer(homePersistConfig, homeReducer),
   player: persistReducer(playerPersistConfig, playerReducer),
 });
 

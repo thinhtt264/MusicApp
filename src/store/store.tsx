@@ -2,12 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { persistStore } from 'redux-persist';
 import rootReducer from './rootReducer';
+import { playerMiddleware } from './middle-ware';
 // import rootSaga from './rootSaga';
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({ serializableCheck: false }),
+    getDefaultMiddleware({ serializableCheck: false }).concat(playerMiddleware),
 });
 
 const persistor = persistStore(store);

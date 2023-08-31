@@ -21,6 +21,7 @@ export interface HomeStateType {
     total: number;
   };
   searchData: GetSearchDataResponseFields;
+  searchRecentData: GetSearchDataResponseFields;
 }
 const initialState: HomeStateType = {
   homedata: {
@@ -33,6 +34,15 @@ const initialState: HomeStateType = {
   },
   searchData: {
     keyword: '',
+    tracks: {
+      items: [],
+      next: '',
+      offset: 0,
+      previous: '',
+      total: 0,
+    },
+  },
+  searchRecentData: {
     tracks: {
       items: [],
       next: '',
@@ -68,7 +78,22 @@ export const formatSearchData = (item: TrackDataFields) => {
 const homeSlice = createSlice({
   name: 'home',
   initialState,
-  reducers: {},
+  reducers: {
+    addSearchRecentList: (
+      state,
+      { payload }: PayloadAction<TrackDataFields>,
+    ) => {
+      const existingIndex = state.searchRecentData.tracks.items.findIndex(
+        item => item.id === payload.id,
+      );
+
+      if (existingIndex === -1) {
+        state.searchRecentData.tracks.items.unshift(payload);
+        state.searchRecentData.tracks.total += 1;
+      }
+    },
+  },
+
   extraReducers: builder => {
     builder.addCase(getHomePlaylist.fulfilled, (state, action) => {
       const { items, total, offset } = action.payload.playlists;
@@ -97,4 +122,5 @@ const homeSlice = createSlice({
     });
   },
 });
+
 export const { reducer: homeReducer, actions: homeActions } = homeSlice;

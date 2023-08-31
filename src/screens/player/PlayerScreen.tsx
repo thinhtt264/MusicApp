@@ -54,7 +54,7 @@ const PlayerScreen = ({ route }: any) => {
           url: response.soundcloudTrack.audio[0].url,
         };
         await startMusic(trackInfoWithUrl);
-        setTrackInfo({ data: trackInfoWithUrl });
+        setTrackInfo({ data: trackInfoWithUrl, doc: trackId });
       }
     }
   };

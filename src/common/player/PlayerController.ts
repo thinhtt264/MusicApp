@@ -7,14 +7,19 @@ import {
 } from 'react-native-track-player/lib/trackPlayer';
 import { TrackInfoFields } from '../firebase/type';
 import { dispatch, getState } from '../redux';
-import { playerActions } from 'src/store/action-slices';
+import { formatSearchData, playerActions } from 'src/store/action-slices';
+import { TrackDataFields } from 'src/models/Search';
 
 const ANDROID_HEAD_PATH = 'file://';
 
-export const startAudio = async ({ info }: { info: TrackInfoFields }) => {
+export const startAudio = async ({ info }: { info: TrackDataFields | false }) => {
   await TrackPlayer.reset();
   const { currentTrack } = getState('player');
   const TrackInfo = info || currentTrack;
+
+  const { playUrl, trackName, trackId, artistName } =
+    formatSearchData(TrackInfo);
+
   // const filePath = await downloadTrack(downloadUrl, info); //Tải nhac
 
   // if (filePath) {
@@ -23,7 +28,12 @@ export const startAudio = async ({ info }: { info: TrackInfoFields }) => {
   //     url: `${ANDROID_HEAD_PATH}${filePath}`,
   //   });
   // } else {
-  await addPlaylist(TrackInfo);
+  await addPlaylist({
+    id: trackId ?? '',
+    url: playUrl,
+    artist: artistName,
+    title: trackName ?? '',
+  });
   // }
 
   // Start playing it

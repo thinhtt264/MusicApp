@@ -1,15 +1,14 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { TrackInfoFields } from 'src/common/firebase/type';
+import { TrackDataFields } from 'src/models/Search';
 
 interface PlayerState {
-  currentTrack: TrackInfoFields;
+  currentTrack: TrackDataFields;
 }
 
 const DEFAULT_INFO = {
-  id: 'trackId',
   url: `file://`,
-  title: 'Track Title',
-  artist: 'Track Artist',
+  artists: [],
+  external_urls: { spotify: '' },
 };
 
 const initialState: PlayerState = {
@@ -20,7 +19,7 @@ const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    onSetCurrentTrack: (state, { payload }: PayloadAction<TrackInfoFields>) => {
+    onSetCurrentTrack: (state, { payload }: PayloadAction<TrackDataFields>) => {
       if (state.currentTrack.url !== payload.url) state.currentTrack = payload;
     },
   },

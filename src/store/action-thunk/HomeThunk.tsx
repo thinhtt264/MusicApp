@@ -46,8 +46,6 @@ export const getSearchData = createAsyncThunk<
     .replace('$type', fields.type.toString())
     .replace('$offset', fields.offset.toString());
 
-  console.log(fields);
-
   if (fields.keyword.toString() === '' && fields.offset > 0)
     url = fields.next
       .replace(ENVDynamic('Dev').API_URL, '')
@@ -59,8 +57,6 @@ export const getSearchData = createAsyncThunk<
   const response = await NetWorkService.Get<GetSearchDataResponseFields>({
     url: url,
   });
-
-  console.log(response);
 
   return {
     ...response,

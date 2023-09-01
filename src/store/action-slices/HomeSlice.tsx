@@ -93,7 +93,7 @@ const homeSlice = createSlice({
         state.searchRecentData.tracks.total += 1;
       }
     },
-    
+
     removeSearchRecentList: (state, { payload }) => {
       const indexToRemove = state.searchRecentData.tracks.items.findIndex(
         item => item.id === payload,
@@ -129,7 +129,6 @@ const homeSlice = createSlice({
         (payload.keyword === '' || isOnlyWhitespace(payload.keyword)) &&
         payload.offset === 0
       ) {
-        console.log('zo');
         state.searchData.tracks.items = [];
         return;
       }

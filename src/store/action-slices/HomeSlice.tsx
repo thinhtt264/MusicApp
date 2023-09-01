@@ -93,6 +93,17 @@ const homeSlice = createSlice({
         state.searchRecentData.tracks.total += 1;
       }
     },
+    
+    removeSearchRecentList: (state, { payload }) => {
+      const indexToRemove = state.searchRecentData.tracks.items.findIndex(
+        item => item.id === payload,
+      );
+
+      if (indexToRemove !== -1) {
+        state.searchRecentData.tracks.items.splice(indexToRemove, 1);
+        state.searchRecentData.tracks.total -= 1;
+      }
+    },
   },
 
   extraReducers: builder => {

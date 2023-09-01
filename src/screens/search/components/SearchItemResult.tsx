@@ -1,4 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
 import Layout from 'src/themes/Layout';
@@ -11,6 +17,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import { kWidth } from 'src/common/constants';
+import { dispatch } from 'src/common/redux';
+import { homeActions } from 'src/store/action-slices';
 
 interface Props {
   onNavigate: (item: SearchDataItemFields) => void;
@@ -20,10 +28,10 @@ interface Props {
 
 const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
   return (
-    <TouchableOpacity
-      style={[Layout.rowBetween, styles.container]}
-      onPress={() => onNavigate(item)}>
-      <View style={[Layout.row]}>
+    <View style={[Layout.rowBetween, styles.container]}>
+      <TouchableOpacity
+        style={[Layout.row, { flex: 1 }]}
+        onPress={() => onNavigate(item)}>
         <FastImage
           source={{ uri: item?.album?.images[0]?.url }}
           style={styles.image}
@@ -37,24 +45,30 @@ const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
             {item.artists[0].name}
           </MediumText>
         </View>
+      </TouchableOpacity>
 
-        <View style={styles.rightIcon}>
-          {isRecentList ? (
-            <MaterialIcons
-              size={scale(24)}
-              color={Colors.unActive}
-              name="close"
-            />
-          ) : (
-            <SimpleLineIcons
-              name="options-vertical"
-              size={scale(15)}
-              color={Colors.unActive}
-            />
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.rightIcon}
+        onPress={() => {
+          dispatch(
+            homeActions.removeSearchRecentList(isRecentList ? item.id : ''),
+          );
+        }}>
+        {isRecentList ? (
+          <MaterialIcons
+            size={scale(24)}
+            color={Colors.unActive}
+            name="close"
+          />
+        ) : (
+          <SimpleLineIcons
+            name="options-vertical"
+            size={scale(16)}
+            color={Colors.unActive}
+          />
+        )}
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -64,6 +78,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'space-between',
+    flex: 1,
   },
   image: {
     width: scale(55),
@@ -82,13 +97,13 @@ const styles = StyleSheet.create({
     maxWidth: kWidth - scale(100),
   },
   info: {
-    flex: 1,
     marginLeft: scale(10),
     justifyContent: 'center',
+    flex: 1,
   },
   rightIcon: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: scale(20),
+    marginLeft: scale(30),
   },
 });

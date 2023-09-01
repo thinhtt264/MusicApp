@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { ENVDynamic } from 'src/common/config/env';
 import {
   GetHomePlaylistFields,
   GetHomePlaylistResponseFields,
@@ -40,15 +41,31 @@ export const getSearchData = createAsyncThunk<
   GetSearchDataResponseFields,
   GetSearchDataFields
 >('home/getSearchData', async fields => {
+  let url = endpoints.home.search
+    .replace('$keyword', fields.keyword.toString())
+    .replace('$type', fields.type.toString())
+    .replace('$offset', fields.offset.toString());
+
+  console.log(fields);
+
+  if (fields.keyword.toString() === '' && fields.offset > 0)
+    url = fields.next
+      .replace(ENVDynamic('Dev').API_URL, '')
+      .replace('query', 'q');
+  else if (fields.keyword.toString() === '') {
+    return { keyword: '', offset: 0 };
+  }
+
   const response = await NetWorkService.Get<GetSearchDataResponseFields>({
-    url: endpoints.home.search
-      .replace('$keyword', fields.keyword.toString())
-      .replace('$type', fields.type.toString()),
+    url: url,
   });
+
   console.log(response);
+
   return {
     ...response,
     keyword: fields.keyword.toString(),
+    offset: fields.offset,
   };
 });
 

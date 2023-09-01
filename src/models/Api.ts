@@ -1,4 +1,4 @@
-import { SearchDataItemFields } from "./Search";
+import { SearchDataItemFields } from './Search';
 
 export interface ResponseBase<T = any> {
   code: number;
@@ -45,8 +45,11 @@ export interface HomeDataItemFields {
 export interface GetSearchDataFields {
   keyword: string;
   type: string;
+  offset: number;
+  next: string;
 }
 export interface GetSearchDataResponseFields {
+  offset?: number;
   keyword?: string;
   tracks: {
     items: SearchDataItemFields[];

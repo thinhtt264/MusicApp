@@ -1,12 +1,13 @@
-import { ComponentType, Ref } from 'react';
+import { Ref, RefObject } from 'react';
 import { FlatListProps } from 'react-native';
 
 export interface LoadMoreListProps<T> extends AnimatedListProps<T> {
   totalPages: number;
-  page: number;
-  handleLoadMore: Function;
-  refresh: boolean;
-  handleRefresh: Function;
+  // page: number;
+  // handleLoadMore: Function;
+  // refresh: boolean;
+  // handleRefresh: Function;
+  onGetData: (pageNumber: number) => void;
 }
 
 export interface AnimatedListProps<T> extends FlatListProps<any> {
@@ -14,5 +15,5 @@ export interface AnimatedListProps<T> extends FlatListProps<any> {
   renderHeader?: any;
   renderFooter?: any;
   renderItem: any;
-  flatlistRef: Ref<any>;
+  flatlistRef: RefObject<any>;
 }

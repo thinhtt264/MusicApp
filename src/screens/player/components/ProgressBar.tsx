@@ -1,9 +1,6 @@
 import { StyleSheet, Text, View, StyleProp, ViewStyle } from 'react-native';
-import React, { memo, useCallback, useEffect } from 'react';
-import TrackPlayer, {
-  RepeatMode,
-  useProgress,
-} from 'react-native-track-player';
+import React, { memo, useEffect } from 'react';
+import TrackPlayer, { useProgress } from 'react-native-track-player';
 import isEqual from 'react-fast-compare';
 import Slider, { SliderProps } from '@react-native-community/slider';
 import { scale } from 'src/common/scale';
@@ -12,7 +9,6 @@ import { Spacer } from 'src/components/spacer';
 import Colors from 'src/themes/Colors';
 import { dispatch } from 'src/common/redux';
 import { appActions } from 'src/store/action-slices';
-import { usePlayerSate } from 'src/common/hooks';
 
 interface Props extends SliderProps {
   style?: StyleProp<ViewStyle>;
@@ -23,7 +19,6 @@ const formatSeconds = (time: number) =>
 
 const ProgressBarComponent = ({ style, ...props }: Props) => {
   const { position, duration, buffered } = useProgress();
-  const { isEnded } = usePlayerSate();
 
   const forceValuePosition = position >= duration ? 0 : position;
 
@@ -38,7 +33,7 @@ const ProgressBarComponent = ({ style, ...props }: Props) => {
       <>
         <Slider
           style={styles.slider}
-          value={isEnded ? 0 : forceValuePosition}
+          value={forceValuePosition}
           minimumValue={0}
           maximumValue={duration}
           thumbTintColor={Colors.white.default}
@@ -78,6 +73,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   labelText: {
-    color: Colors.unActive,
+    color: Colors.white.default,
   },
 });

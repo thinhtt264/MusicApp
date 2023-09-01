@@ -4,13 +4,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useRef, useCallback, useMemo, useState } from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { fontScale, scale } from 'src/common/scale';
 import { SearchBox } from './components';
-import { AnimatedList } from 'src/components/list';
 import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
@@ -19,14 +18,18 @@ import { kWidth } from 'src/common/constants';
 import routeNames from 'src/navigation/RouteNames';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import { SearchItemResult } from './components/SearchItemResult';
+import LoadMoreList from 'src/components/list/LoadMoreList';
+import { getSearchData } from 'src/store/action-thunk';
+import { AnimatedList } from 'src/components/list';
 
 interface Props {}
 
 const SearchScreen = (props: Props) => {
-  const { translate, navigation } = useScreenController();
+  const { translate, navigation, dispatch } = useScreenController();
   const { searchData, searchRecentData } = useAppSelector(state => state.home);
-
   const [searchValue, setSearchValue] = useState('');
+
+  const flatListRef = useRef<any>(null);
 
   const onNavigate = async (item: any) => {
     const bgColor = await getBackGroundPlayer(item?.album?.images[0]?.url);
@@ -41,46 +44,78 @@ const SearchScreen = (props: Props) => {
     });
   };
 
-  const renderItem = useCallback((item: any) => {
-    return (
-      <SearchItemResult
-        onNavigate={onNavigate}
-        item={item}
-        isRecentList={!searchValue}
-      />
-    );
-  }, []);
+  const renderItem = useCallback(
+    ({ item, isRecentList = false }: { item: any; isRecentList?: boolean }) => {
+      return (
+        <SearchItemResult
+          onNavigate={onNavigate}
+          item={item}
+          isRecentList={isRecentList}
+        />
+      );
+    },
+    [],
+  );
+
+  const onGetData = useCallback(
+    async ({ query = '', pageNumber = 0 }) => {
+      await dispatch(
+        getSearchData({
+          keyword: query,
+          type: 'track',
+          offset: pageNumber,
+          next: searchData?.tracks?.next,
+        }),
+      );
+    },
+    [searchData?.tracks?.next],
+  );
 
   return (
     <Container style={styles.container}>
-      <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
-        <>
-          <Header title={translate('home:search')} />
-          <SearchBox onSearchChange={value => setSearchValue(value)} />
-          {!searchValue && (
+      <>
+        <Header title={translate('home:search')} />
+        <SearchBox
+          onGetData={value => onGetData({ query: value })}
+          setSearchValue={setSearchValue}
+        />
+
+        {searchValue ? (
+          <LoadMoreList
+            onGetData={page => onGetData({ pageNumber: page })}
+            totalPages={searchData.tracks.total}
+            style={styles.item}
+            flatlistRef={flatListRef}
+            data={searchData?.tracks?.items ?? []}
+            ItemSeparatorComponent={() => <Divider height={15} />}
+            renderFooter={() => {
+              return <View style={{ marginBottom: scale(55) }} />;
+            }}
+            renderItem={({ item }: any) => renderItem({ item: item })}
+          />
+        ) : (
+          <>
             <View style={{ marginTop: scale(20) }}>
               <BoldText textStyle={{ fontSize: fontScale(18) }}>
                 {translate('search:recent')}
               </BoldText>
             </View>
-          )}
-          <AnimatedList
-            onScroll={Keyboard.dismiss}
-            style={styles.item}
-            flatlistRef={null}
-            data={
-              searchValue
-                ? searchData?.tracks?.items
-                : searchRecentData?.tracks?.items
-            }
-            ItemSeparatorComponent={() => <Divider height={15} />}
-            renderFooter={() => {
-              return <View style={{ marginBottom: scale(55) }} />;
-            }}
-            renderItem={({ item }: any) => renderItem(item)}
-          />
-        </>
-      </TouchableWithoutFeedback>
+
+            <AnimatedList
+              style={styles.item}
+              flatlistRef={flatListRef}
+              data={searchRecentData?.tracks?.items}
+              ItemSeparatorComponent={() => <Divider height={15} />}
+              renderFooter={() => {
+                return <View style={{ marginBottom: scale(55) }} />;
+              }}
+              renderItem={({ item }: any) =>
+                renderItem({ item: item, isRecentList: true })
+              }
+            />
+          </>
+        )}
+      </>
     </Container>
   );
 };

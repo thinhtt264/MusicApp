@@ -34,6 +34,7 @@ const initialState: HomeStateType = {
   },
   searchData: {
     keyword: '',
+    offset: 0,
     tracks: {
       items: [],
       next: '',
@@ -105,20 +106,31 @@ const homeSlice = createSlice({
         state.homedata.items = [...state.homedata.items, ...uniqueItems];
       }
     });
+
     builder.addCase(getFeaturedPlaylist.fulfilled, (state, action) => {
       const { items, total } = action.payload.playlists;
       state.playlist.items = items;
       state.playlist.total = total;
     });
-    builder.addCase(getSearchData.fulfilled, (state, action) => {
+
+    builder.addCase(getSearchData.fulfilled, (state, { payload }) => {
       if (
-        action.payload.keyword === '' ||
-        isOnlyWhitespace(action.payload.keyword)
+        (payload.keyword === '' || isOnlyWhitespace(payload.keyword)) &&
+        payload.offset === 0
       ) {
+        console.log('zo');
         state.searchData.tracks.items = [];
         return;
       }
-      state.searchData = action.payload;
+
+      if (payload.offset === 0) {
+        state.searchData = payload;
+      } else {
+        state.searchData.tracks.items = [
+          ...state.searchData.tracks.items,
+          ...payload.tracks.items,
+        ];
+      }
     });
   },
 });

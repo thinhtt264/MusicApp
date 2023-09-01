@@ -1,2 +1,3 @@
 import { AppLoader } from './AppLoader';
-export { AppLoader };
+import { LoatMoreFooter } from './LoadMoreFooter';
+export { AppLoader, LoatMoreFooter };

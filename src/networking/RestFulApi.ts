@@ -46,6 +46,9 @@ AxiosInstance.interceptors.response.use(
       if (newToken === null) {
         return Promise.reject(error);
       }
+      console.log('new token');
+      console.log(newToken.access_token);
+      
       dispatch(authActions.onSetToken(newToken.access_token));
 
       originalRequest.headers[
@@ -71,7 +74,7 @@ const refreshToken = async (): Promise<TokenResponseFields | null> => {
     baseUrl: env?.AUTH_URL,
   })
     .then((res: any) => res)
-    .catch(() => null);
+    .catch(e => console.log(e));
 };
 
 // base

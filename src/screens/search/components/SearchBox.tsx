@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { memo, useRef } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import isEqual from 'react-fast-compare';
 import Colors from 'src/themes/Colors';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -7,26 +7,19 @@ import { scale } from 'src/common/scale';
 import { Input } from 'src/components/input';
 import { debounce } from 'lodash';
 import { useScreenController } from 'src/common/hooks';
-import { getSearchData } from 'src/store/action-thunk';
 
 interface Props {
-  onSearchChange: (value: string) => void;
+  onGetData: (query: string) => void;
+  setSearchValue: (value: string) => void;
 }
-
-const SearchBoxComponent = (props: Props) => {
-  const { dispatch, navigation, translate } = useScreenController();
-  const inputRef = useRef(null);
+const SearchBoxComponent = ({ onGetData, setSearchValue }: Props) => {
+  const { translate } = useScreenController();
 
   const debouncedSearch = debounce(query => {
-    dispatch(
-      getSearchData({
-        keyword: query,
-        type: 'track',
-      }),
-    );
+    onGetData(query);
     setTimeout(() => {
-      props.onSearchChange(query);
-    }, 500);
+      setSearchValue(query);
+    }, 200);
   }, 300);
 
   const onChangeTextValue = (value: any) => {
@@ -40,7 +33,6 @@ const SearchBoxComponent = (props: Props) => {
         onChangeTextValue={onChangeTextValue}
         placeholder={translate('search:placeholder')}
         placeholderTextColor={'black'}
-        ref={inputRef}
         contentLeft={() => (
           <Octicons name="search" color={'black'} size={scale(18)} />
         )}

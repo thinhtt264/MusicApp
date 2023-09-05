@@ -1,15 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import {
-  getFeaturedPlaylist,
-  getHomePlaylist,
-  getSearchData,
-} from '../action-thunk';
-import {
-  GetSearchDataResponseFields,
-  HomeDataItemFields,
-} from 'src/models/Api';
+import { getFeaturedPlaylist, getHomePlaylist } from '../action-thunk';
+import { HomeDataItemFields } from 'src/models/Api';
 import { uniqBy } from 'lodash';
-import { isOnlyWhitespace } from 'src/common/regex';
 import { TrackDataFields } from 'src/models/Search';
 export interface HomeStateType {
   homedata: {
@@ -20,8 +12,6 @@ export interface HomeStateType {
     items: HomeDataItemFields[];
     total: number;
   };
-  searchData: GetSearchDataResponseFields;
-  searchRecentData: GetSearchDataResponseFields;
 }
 const initialState: HomeStateType = {
   homedata: {
@@ -31,26 +21,6 @@ const initialState: HomeStateType = {
   playlist: {
     items: [],
     total: 0,
-  },
-  searchData: {
-    keyword: '',
-    offset: 0,
-    tracks: {
-      items: [],
-      next: '',
-      offset: 0,
-      previous: '',
-      total: 0,
-    },
-  },
-  searchRecentData: {
-    tracks: {
-      items: [],
-      next: '',
-      offset: 0,
-      previous: '',
-      total: 0,
-    },
   },
 };
 
@@ -79,32 +49,7 @@ export const formatSearchData = (item: TrackDataFields) => {
 const homeSlice = createSlice({
   name: 'home',
   initialState,
-  reducers: {
-    addSearchRecentList: (
-      state,
-      { payload }: PayloadAction<TrackDataFields>,
-    ) => {
-      const existingIndex = state.searchRecentData.tracks.items.findIndex(
-        item => item.id === payload.id,
-      );
-
-      if (existingIndex === -1) {
-        state.searchRecentData.tracks.items.unshift(payload);
-        state.searchRecentData.tracks.total += 1;
-      }
-    },
-
-    removeSearchRecentList: (state, { payload }) => {
-      const indexToRemove = state.searchRecentData.tracks.items.findIndex(
-        item => item.id === payload,
-      );
-
-      if (indexToRemove !== -1) {
-        state.searchRecentData.tracks.items.splice(indexToRemove, 1);
-        state.searchRecentData.tracks.total -= 1;
-      }
-    },
-  },
+  reducers: {},
 
   extraReducers: builder => {
     builder.addCase(getHomePlaylist.fulfilled, (state, action) => {
@@ -122,25 +67,6 @@ const homeSlice = createSlice({
       const { items, total } = action.payload.playlists;
       state.playlist.items = items;
       state.playlist.total = total;
-    });
-
-    builder.addCase(getSearchData.fulfilled, (state, { payload }) => {
-      if (
-        (payload.keyword === '' || isOnlyWhitespace(payload.keyword)) &&
-        payload.offset === 0
-      ) {
-        state.searchData.tracks.items = [];
-        return;
-      }
-
-      if (payload.offset === 0) {
-        state.searchData = payload;
-      } else {
-        state.searchData.tracks.items = [
-          ...state.searchData.tracks.items,
-          ...payload.tracks.items,
-        ];
-      }
     });
   },
 });

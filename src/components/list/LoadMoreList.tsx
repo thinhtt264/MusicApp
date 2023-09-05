@@ -59,7 +59,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
     } finally {
       setRefresh(false);
     }
-  }, []);
+  }, [onGetData]);
 
   const handleGetData = useCallback(async (pageNumber = 0): Promise<void> => {
     try {
@@ -70,7 +70,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
         setIsLoadMore(false);
       }, 200);
     }
-  }, []);
+  }, [onGetData]);
 
   return (
     <>

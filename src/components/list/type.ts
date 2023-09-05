@@ -15,5 +15,5 @@ export interface AnimatedListProps<T> extends FlatListProps<any> {
   renderHeader?: any;
   renderFooter?: any;
   renderItem: any;
-  flatlistRef: RefObject<any>;
+  flatlistRef?: RefObject<any>;
 }

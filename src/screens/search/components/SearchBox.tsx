@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
 import Colors from 'src/themes/Colors';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -7,19 +7,17 @@ import { scale } from 'src/common/scale';
 import { Input } from 'src/components/input';
 import { debounce } from 'lodash';
 import { useScreenController } from 'src/common/hooks';
+import { searchActions } from 'src/store/action-slices';
 
 interface Props {
   onGetData: (query: string) => void;
-  setSearchValue: (value: string) => void;
 }
-const SearchBoxComponent = ({ onGetData, setSearchValue }: Props) => {
-  const { translate } = useScreenController();
+const SearchBoxComponent = ({ onGetData }: Props) => {
+  const { translate, dispatch } = useScreenController();
 
   const debouncedSearch = debounce(query => {
+    dispatch(searchActions.setKeyword(query));
     onGetData(query);
-    setTimeout(() => {
-      setSearchValue(query);
-    }, 200);
   }, 300);
 
   const onChangeTextValue = (value: any) => {

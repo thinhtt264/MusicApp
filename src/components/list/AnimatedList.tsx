@@ -11,7 +11,7 @@ const AnimatedList = (props: AnimatedListProps<any>) => {
     renderItem,
     renderFooter = null,
     renderHeader,
-    flatlistRef,
+    flatlistRef = null,
   } = props;
 
   return (

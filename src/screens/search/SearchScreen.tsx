@@ -4,7 +4,13 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import React, { useRef, useCallback, useMemo, useState } from 'react';
+import React, {
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+} from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
@@ -26,8 +32,9 @@ interface Props {}
 
 const SearchScreen = (props: Props) => {
   const { translate, navigation, dispatch } = useScreenController();
-  const { searchData, searchRecentData } = useAppSelector(state => state.home);
-  const [searchValue, setSearchValue] = useState('');
+  const { searchData, searchRecentData } = useAppSelector(
+    state => state.search,
+  );
 
   const flatListRef = useRef<any>(null);
 
@@ -61,26 +68,22 @@ const SearchScreen = (props: Props) => {
     async ({ query = '', pageNumber = 0 }) => {
       await dispatch(
         getSearchData({
-          keyword: query,
+          keyword: query || searchData.keyword,
           type: 'track',
           offset: pageNumber,
-          next: searchData?.tracks?.next,
         }),
       );
     },
-    [searchData?.tracks?.next],
+    [searchData.keyword],
   );
 
   return (
     <Container style={styles.container}>
       <>
         <Header title={translate('home:search')} />
-        <SearchBox
-          onGetData={value => onGetData({ query: value })}
-          setSearchValue={setSearchValue}
-        />
+        <SearchBox onGetData={value => onGetData({ query: value })} />
 
-        {searchValue ? (
+        {searchData.keyword ? (
           <LoadMoreList
             onGetData={page => onGetData({ pageNumber: page })}
             totalPages={searchData.tracks.total}
@@ -88,9 +91,6 @@ const SearchScreen = (props: Props) => {
             flatlistRef={flatListRef}
             data={searchData?.tracks?.items ?? []}
             ItemSeparatorComponent={() => <Divider height={15} />}
-            renderFooter={() => {
-              return <View style={{ marginBottom: scale(55) }} />;
-            }}
             renderItem={({ item }: any) => renderItem({ item: item })}
           />
         ) : (
@@ -103,8 +103,7 @@ const SearchScreen = (props: Props) => {
 
             <AnimatedList
               style={styles.item}
-              flatlistRef={flatListRef}
-              data={searchRecentData?.tracks?.items}
+              data={searchRecentData?.tracks?.items ?? []}
               ItemSeparatorComponent={() => <Divider height={15} />}
               renderFooter={() => {
                 return <View style={{ marginBottom: scale(55) }} />;

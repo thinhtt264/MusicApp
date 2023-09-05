@@ -46,11 +46,10 @@ export interface GetSearchDataFields {
   keyword: string;
   type: string;
   offset: number;
-  next: string;
 }
 export interface GetSearchDataResponseFields {
   offset?: number;
-  keyword?: string;
+  keyword: string;
   tracks: {
     items: SearchDataItemFields[];
     next: string;

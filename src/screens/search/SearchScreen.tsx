@@ -47,7 +47,11 @@ const SearchScreen = (props: Props) => {
 
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
-      params: { item, bgColor: blurHashColor || bgColor || 'black' },
+      params: {
+        item,
+        bgColor: blurHashColor || bgColor || 'black',
+        from: 'search',
+      },
     });
   };
 

@@ -1,5 +1,5 @@
 import storage from '@react-native-firebase/storage';
-import { TrackInfoFields, UploadFileFields } from './type';
+import { UploadFileFields } from './type';
 import { setTrackInfo } from './FirebaseStore';
 import { getCurrentTimestamp } from '../helper';
 
@@ -7,12 +7,12 @@ export const uploadFileToFirebase = async ({
   localFilePath,
   data,
 }: UploadFileFields) => {
-  const path = `/TrackFile/${getCurrentTimestamp()}'_'${data.title}`;
+  const path = `/TrackFile/${getCurrentTimestamp()}'_'${data.name}`;
   const reference = storage().ref(path);
 
   try {
     await reference.putFile(localFilePath).then(async () => {
-      handleDoneUpload(path, data);
+      handleDoneUpload({ localFilePath: path, data });
     });
 
     console.log('Tệp đã được tải lên thành công.');
@@ -21,9 +21,10 @@ export const uploadFileToFirebase = async ({
   }
 };
 
-const handleDoneUpload = async (path: string, trackInfo: TrackInfoFields) => {
-  const url = await storage().ref(path).getDownloadURL();
+const handleDoneUpload = async ({ localFilePath, data }: UploadFileFields) => {
+  const url = await storage().ref(localFilePath).getDownloadURL();
   await setTrackInfo({
-    data: { ...trackInfo, url: url },
+    data: { ...data, url: url },
+    doc: data.id,
   });
 };

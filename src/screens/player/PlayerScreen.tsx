@@ -9,7 +9,7 @@ import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
 import FastImage from 'react-native-fast-image';
 import { scale } from 'src/common/scale';
-import { startAudio } from 'src/common/player';
+import { downloadTrack, startAudio } from 'src/common/player';
 import { LoadingScreen } from '../loading/LoadingScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { ProgressBar, ControllerBar } from './components';
@@ -27,7 +27,7 @@ const events = [Event.PlaybackState, Event.PlaybackError];
 const PlayerScreen = ({ route }: any) => {
   const { dispatch, navigation } = useScreenController();
 
-  const { item, bgColor } = route?.params;
+  const { item, bgColor, from } = route?.params;
   const { albumImage, trackUrl, trackName, trackId, artistName } =
     formatSearchData(item);
 
@@ -54,7 +54,8 @@ const PlayerScreen = ({ route }: any) => {
           ...item,
           url: response.soundcloudTrack.audio[0].url,
         };
-        setTrackInfo({ data: trackInfoWithUrl, doc: trackId });
+        // setTrackInfo({ data: trackInfoWithUrl, doc: trackId });
+        downloadTrack(trackInfoWithUrl);
         await startMusic(trackInfoWithUrl);
       }
     }
@@ -126,7 +127,7 @@ const PlayerScreen = ({ route }: any) => {
     <>
       {FragmentView}
       <View style={styles.container}>
-        <Header title={trackName} LeftIcon onLeftPress={onGoBack} />
+        <Header LeftIcon onLeftPress={onGoBack} from={from} />
         <FastImage
           source={{ uri: albumImage }}
           style={styles.image}

@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { fontScale, scale } from 'src/common/scale/index';
 import { hasNotch } from 'src/common/device';
-import { BoldText, SemiBoldText } from 'src/components/text';
+import { BoldText } from 'src/components/text';
 import { translate } from 'src/common/language/translate';
 
 import Octicons from 'react-native-vector-icons/Octicons';

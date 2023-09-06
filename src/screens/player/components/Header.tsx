@@ -1,31 +1,42 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
 import { StyleProp } from 'react-native';
 import { ViewStyle } from 'react-native';
 import Layout from 'src/themes/Layout';
-import { BoldText } from 'src/components/text';
+import { RegularText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
+import { translate } from 'src/common/language/translate';
 
 interface Props {
   LeftIcon?: boolean;
   RightContent?: () => React.ReactNode;
-  title: string;
   RightContentStyle?: StyleProp<ViewStyle>;
   onLeftPress?: () => void;
+  from: 'search' | 'playlist';
 }
+
 const HeaderComponent = (props: Props) => {
   const {
     RightContent,
-    title,
     RightContentStyle,
     LeftIcon,
-    onLeftPress = () => { },
+    onLeftPress = () => {},
+    from,
   } = props;
   const insets = useSafeAreaInsets();
+
+  const titleRender = () => {
+    switch (from) {
+      case 'search':
+        return translate('player:fromSearch');
+      default:
+        break;
+    }
+  };
 
   return (
     <View
@@ -37,7 +48,9 @@ const HeaderComponent = (props: Props) => {
       ) : (
         <View />
       )}
-      <BoldText numberOfLines={1} textStyle={styles.title}>{title}</BoldText>
+      <RegularText numberOfLines={1} textStyle={styles.title}>
+        {titleRender()}
+      </RegularText>
       {RightContent ? (
         <View style={[Layout.rowBetween, RightContentStyle]}>
           {RightContent()}
@@ -59,8 +72,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: fontScale(18),
+    fontSize: fontScale(12),
     textAlignVertical: 'center',
-    maxWidth: scale(200)
+    maxWidth: scale(200),
   },
 });

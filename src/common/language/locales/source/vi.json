@@ -50,5 +50,8 @@
   "search": {
     "placeholder": "Bạn muốn nghe gì?",
     "recent": "Các tìm kiếm gần đây"
+  },
+  "player": {
+    "fromSearch": "ĐANG PHÁT TỪ TÌM KIẾM"
   }
 }

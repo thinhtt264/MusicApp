@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
 import Layout from 'src/themes/Layout';
@@ -18,7 +12,7 @@ import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import { kWidth } from 'src/common/constants';
 import { dispatch } from 'src/common/redux';
-import { homeActions } from 'src/store/action-slices';
+import { searchActions } from 'src/store/action-slices';
 
 interface Props {
   onNavigate: (item: SearchDataItemFields) => void;
@@ -51,7 +45,7 @@ const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
         style={styles.rightIcon}
         onPress={() => {
           dispatch(
-            homeActions.removeSearchRecentList(isRecentList ? item.id : ''),
+            searchActions.removeSearchRecentList(isRecentList ? item.id : ''),
           );
         }}>
         {isRecentList ? (

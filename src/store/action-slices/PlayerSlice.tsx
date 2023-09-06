@@ -1,7 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { TrackDataFields } from 'src/models/Search';
 
-
 interface PlayerState {
   currentTrack: TrackDataFields;
 }
@@ -22,6 +21,13 @@ const playerSlice = createSlice({
   reducers: {
     onSetCurrentTrack: (state, { payload }: PayloadAction<TrackDataFields>) => {
       if (state.currentTrack.url !== payload.url) state.currentTrack = payload;
+    },
+    onRemoveCurrentTrack: (
+      state,
+      { payload }: PayloadAction<TrackDataFields>,
+    ) => {
+      if (state.currentTrack.url === payload.url)
+        state.currentTrack = DEFAULT_INFO;
     },
   },
   extraReducers: builder => {},

@@ -1,16 +1,21 @@
 import RNFS from 'react-native-fs';
 import { isFirebaseUrl } from '../helper';
 import { uploadFileToFirebase } from '../firebase';
+import { TrackDataFields } from 'src/models/Search';
 
-export const downloadTrack = async (downloadUrl: string, data: any) => {
+export const downloadTrack = async (data: TrackDataFields) => {
   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
-  if (isFirebaseUrl(downloadUrl) || downloadUrl === '') return '';
+  if (isFirebaseUrl(data.url) || data.url === '') return '';
   try {
+    console.log(data.url);
+    
     const response: any = await RNFS.downloadFile({
-      fromUrl: downloadUrl,
+      fromUrl: data.url,
       toFile: localFilePath,
       progress: res => {},
     }).promise;
+
+    console.log(response);
 
     if (response.statusCode === 200) {
       console.log('Tải và lưu tệp tin thành công');

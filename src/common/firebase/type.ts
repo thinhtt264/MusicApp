@@ -1,10 +1,12 @@
+import { TrackDataFields } from "src/models/Search";
+
 export interface ReadDataProps {
   collection?: 'TrackList' | 'RapidApi';
   doc?: string;
 }
 
 export interface WriteDataProps extends ReadDataProps {
-  data: TrackInfoFields;
+  data: TrackDataFields;
 }
 
 export interface TrackInfoFields {
@@ -16,5 +18,5 @@ export interface TrackInfoFields {
 
 export interface UploadFileFields {
   localFilePath: string;
-  data: TrackInfoFields;
+  data: TrackDataFields;
 }

@@ -12,7 +12,11 @@ import { TrackDataFields } from 'src/models/Search';
 
 const ANDROID_HEAD_PATH = 'file://';
 
-export const startAudio = async ({ info }: { info: TrackDataFields | false }) => {
+export const startAudio = async ({
+  info,
+}: {
+  info: TrackDataFields | false;
+}) => {
   await TrackPlayer.reset();
   const { currentTrack } = getState('player');
   const TrackInfo = info || currentTrack;
@@ -37,7 +41,7 @@ export const startAudio = async ({ info }: { info: TrackDataFields | false }) =>
   // }
 
   // Start playing it
-  await TrackPlayer.play();
+  await TrackPlayer.setPlayWhenReady(true);
   if (TrackInfo.url !== currentTrack.url)
     dispatch(playerActions.onSetCurrentTrack(TrackInfo));
 };

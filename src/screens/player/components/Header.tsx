@@ -67,7 +67,6 @@ export const Header = memo(HeaderComponent, isEqual);
 const styles = StyleSheet.create({
   container: {
     paddingVertical: scale(15),
-    paddingHorizontal: scale(10),
     alignItems: 'center',
     width: '100%',
   },

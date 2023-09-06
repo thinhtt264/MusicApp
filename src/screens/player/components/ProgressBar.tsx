@@ -68,6 +68,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
+    marginTop: scale(5),
   },
   labelContainer: {
     flexDirection: 'row',

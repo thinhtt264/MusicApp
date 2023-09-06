@@ -6,10 +6,11 @@ export const playerMiddleware: Middleware =
     if (action.type === playerActions.onSetCurrentTrack.type) {
       const payload = action.payload;
       store.dispatch(searchActions.addSearchRecentList(payload));
-    } else if (action.type === searchActions.removeSearchRecentList.type) {
-      const payload = action.payload;
-      store.dispatch(playerActions.onRemoveCurrentTrack(payload));
-    }
+    } 
+    // else if (action.type === searchActions.removeSearchRecentList.type) {
+    //   const payload = action.payload;
+    //   store.dispatch(playerActions.onRemoveCurrentTrack(payload));
+    // }
 
     return next(action);
   };

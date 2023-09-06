@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getDownloadLink } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
-import { Header } from './components';
+import { Header, TrackInfo } from './components';
 import { Blurhash } from 'react-native-blurhash';
 import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
@@ -133,6 +133,7 @@ const PlayerScreen = ({ route }: any) => {
           style={styles.image}
           resizeMode="stretch"
         />
+        <TrackInfo artistName={artistName} trackName={trackName} />
         <ProgressBar style={styles.progessBar} />
         <ControllerBar buffering={buffering} />
       </View>
@@ -143,7 +144,7 @@ const PlayerScreen = ({ route }: any) => {
 export default PlayerScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center' },
+  container: { flex: 1, alignItems: 'center', paddingHorizontal: scale(30) },
   image: {
     height: kWidth - scale(70),
     width: kWidth - scale(70),

@@ -7,15 +7,11 @@ export const downloadTrack = async (data: TrackDataFields) => {
   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
   if (isFirebaseUrl(data.url) || data.url === '') return '';
   try {
-    console.log(data.url);
-    
     const response: any = await RNFS.downloadFile({
       fromUrl: data.url,
       toFile: localFilePath,
       progress: res => {},
     }).promise;
-
-    console.log(response);
 
     if (response.statusCode === 200) {
       console.log('Tải và lưu tệp tin thành công');

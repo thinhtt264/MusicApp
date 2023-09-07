@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { ENVDynamic } from 'src/common/config/env';
 import {
   GetHomePlaylistFields,
   GetHomePlaylistResponseFields,
@@ -72,5 +71,6 @@ export const getDownloadLink = createAsyncThunk<
     return response;
   } catch (e) {
     console.log(e);
+    throw e;
   }
 });

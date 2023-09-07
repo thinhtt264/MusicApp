@@ -29,7 +29,7 @@ const appPersistConfig = {
 const playerPersistConfig = {
   key: 'player',
   storage: AsyncStorage,
-  blacklist: [],
+  whitelist: ['currentTrack'],
 };
 
 const searchPersistConfig = {

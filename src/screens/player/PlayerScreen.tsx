@@ -14,7 +14,12 @@ import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
 import FastImage from 'react-native-fast-image';
 import { scale } from 'src/common/scale';
-import { addPlaylist, downloadTrack, startAudio } from 'src/common/player';
+import {
+  addPlaylist,
+  downloadTrack,
+  onSwitchTrack,
+  startAudio,
+} from 'src/common/player';
 import { LoadingScreen } from '../loading/LoadingScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { ProgressBar, ControllerBar } from './components';
@@ -25,9 +30,10 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import Layout from 'src/themes/Layout';
 import { getTrackInfo, setTrackInfo } from 'src/common/firebase';
-import { formatSearchData } from 'src/store/action-slices';
+import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
+import { TrackDataFields, TrackDataItemFields } from 'src/models/Track';
 
 const events = [
   Event.PlaybackState,
@@ -40,13 +46,13 @@ const PlayerScreen = ({ route }: any) => {
 
   const { from } = route?.params;
   const { env } = useAppSelector(state => state.app);
-  const { currentTrack } = useAppSelector(state => state.player);
+  const { currentTrack, trackQueue } = useAppSelector(state => state.player);
 
   // const [isLoading, setLoading] = useState(true);
-  const [buffering, setBuffering] = useState(false);
+  const [buffering, setBuffering] = useState(true);
   const [bgColor, setBgColor] = useState('');
 
-  const { albumImage, trackUrl, trackName, trackId, artistName, artistId } =
+  const { albumImage, trackName, trackId, trackUrl, artistName, artistId } =
     formatSearchData(currentTrack);
 
   useLayoutEffect(() => {
@@ -63,29 +69,8 @@ const PlayerScreen = ({ route }: any) => {
     setBgColor(blurHashColor || bgColor || Colors.grey.player);
   };
 
-  const fetchAndStartAudio = async () => {
-    setBuffering(true);
-    const trackResponse: any = await getTrackInfo({ doc: trackId });
-    if (trackResponse._data) {
-      console.log('phát từ firebase');
-      await startMusic(trackResponse._data);
-    } else {
-      const response = await dispatch(
-        getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
-      ).unwrap();
-
-      const trackInfoWithUrl = {
-        ...currentTrack,
-        url: response.soundcloudTrack.audio[0].url,
-      };
-      // setTrackInfo({ data: trackInfoWithUrl, doc: trackId });
-      downloadTrack(trackInfoWithUrl);
-      await startMusic(trackInfoWithUrl);
-    }
-  };
-
   useEffect(() => {
-    fetchAndStartAudio();
+    TrackPlayer.setPlayWhenReady(true);
     dispatch(
       getRecommend({
         artists: artistId,
@@ -94,9 +79,35 @@ const PlayerScreen = ({ route }: any) => {
     );
   }, []);
 
-  const startMusic = useCallback(async (info: any) => {
-    await startAudio({ info });
-  }, []);
+  const fetchAudio = async ({
+    info,
+    env,
+  }: {
+    info: TrackDataFields;
+    env?: any;
+  }) => {
+    const TrackInfo = info ?? {};
+    const trackResponse: any = await getTrackInfo({ doc: TrackInfo.id });
+
+    if (trackResponse._data !== undefined) {
+      console.log('phát từ firebase');
+      return trackResponse._data;
+    } else {
+      const response = await dispatch(
+        getDownloadLink({
+          link: TrackInfo.external_urls.spotify,
+          baseUrl: env?.DOWNLOAD_URL ?? '',
+        }),
+      );
+
+      const trackInfoWithUrl = {
+        ...TrackInfo,
+        url: response.payload.soundcloudTrack.audio[0].url,
+      };
+      downloadTrack(trackInfoWithUrl);
+      return trackInfoWithUrl;
+    }
+  };
 
   const onGoBack = () => navigation.goBack();
 
@@ -117,9 +128,14 @@ const PlayerScreen = ({ route }: any) => {
       } else if (event.state === State.Ready) {
         setBuffering(false);
       } else if (event.state === State.Ended) {
-        const currentQueue = await TrackPlayer.getQueue();
-        if (currentQueue.length > 1) {
-          TrackPlayer.skipToNext();
+        if (trackQueue.length > 1) {
+          await dispatch(
+            playerActions.onChangeCurrentTrack({
+              id: trackId,
+              option: 'next',
+            }),
+          );
+          await onSwitchTrack('next');
         }
       }
     } else if (event.type === Event.PlaybackActiveTrackChanged) {

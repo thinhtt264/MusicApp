@@ -26,7 +26,7 @@ import { SearchItemResult } from './components/SearchItemResult';
 import LoadMoreList from 'src/components/list/LoadMoreList';
 import { getSearchData } from 'src/store/action-thunk';
 import { AnimatedList } from 'src/components/list';
-import { playerActions } from 'src/store/action-slices';
+import { startAudio } from 'src/common/player';
 
 interface Props {}
 
@@ -39,7 +39,7 @@ const SearchScreen = (props: Props) => {
   const flatListRef = useRef<any>(null);
 
   const onNavigate = async (item: any) => {
-    await dispatch(playerActions.onSetCurrentTrack(item));
+    await startAudio({ info: item });
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
       params: {

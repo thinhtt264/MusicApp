@@ -32,7 +32,7 @@ interface ExternalIds {
 }
 
 export interface TrackDataFields extends TrackDataItemFields {
-  url: string;
+  url?: string;
 }
 
 export interface TrackDataItemFields {

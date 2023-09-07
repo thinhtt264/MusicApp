@@ -49,3 +49,5 @@ export const ENVDynamic = (env: string) => {
   };
   return config[env];
 };
+
+export const envFlex = (env: string) => ENVDynamic(env);

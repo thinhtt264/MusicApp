@@ -32,7 +32,7 @@ export const formatSearchData = (item: TrackDataFields) => {
   const artistId = item?.artists[0].id;
   const album = item?.album;
   const trackUrl = item?.external_urls.spotify;
-  const playUrl = item?.url;
+  const playUrl = item?.url ?? '';
 
   return {
     albumImage,

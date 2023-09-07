@@ -5,38 +5,68 @@ import {
   remove,
   setQueue,
 } from 'react-native-track-player/lib/trackPlayer';
-import { TrackInfoFields } from '../firebase/type';
 import { dispatch, getState } from '../redux';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { TrackDataFields } from 'src/models/Track';
+import { downloadTrack } from './TrackDownloader';
+import { getTrackInfo } from '../firebase';
+import { getDownloadLink } from 'src/store/action-thunk';
+import { envFlex } from '../config/env';
 
 const ANDROID_HEAD_PATH = 'file://';
 
-export const startAudio = async ({
-  info,
-}: {
-  info: TrackDataFields | false;
-}) => {
+export const startAudio = async ({ info }: { info: TrackDataFields }) => {
   await TrackPlayer.reset();
-  const { currentTrack } = getState('player');
-  const TrackInfo = info || currentTrack;
 
-  // const filePath = await downloadTrack(downloadUrl, info); //Tải nhac
-
-  // if (filePath) {
-  //   await addPlaylist({
-  //     ...info,
-  //     url: `${ANDROID_HEAD_PATH}${filePath}`,
-  //   });
-  // } else {
+  const TrackInfo = await fetchAudio({ info });
   await addPlaylist(TrackInfo);
   // }
 
   // Start playing it
-  await TrackPlayer.setPlayWhenReady(true);
-  if (TrackInfo.url !== currentTrack.url) {
-    console.log('set current track');
-    dispatch(playerActions.onSetCurrentTrack(TrackInfo));
+  // await TrackPlayer.setPlayWhenReady(true);
+  dispatch(playerActions.onSetCurrentTrack(TrackInfo));
+};
+
+export const onSwitchTrack = async (options: 'next' | 'previous') => {
+  const { currentTrack } = getState('player');
+
+  if (options === 'next') {
+    const TrackInfo = await fetchAudio({ info: currentTrack });
+    await addPlaylist(TrackInfo);
+    TrackPlayer.skipToNext();
+  } else {
+    TrackPlayer.skipToPrevious();
+  }
+};
+
+export const fetchAudio = async ({
+  info,
+  env,
+}: {
+  info: TrackDataFields;
+  env?: any;
+}) => {
+  let TrackInfo = info ?? {};
+  const trackResponse: any = await getTrackInfo({ doc: TrackInfo.id });
+
+  if (trackResponse._data !== undefined) {
+    console.log('phát từ firebase');
+    TrackInfo = trackResponse._data;
+    return TrackInfo;
+  } else {
+    const response = await dispatch(
+      getDownloadLink({
+        link: TrackInfo.external_urls.spotify,
+        baseUrl: env?.DOWNLOAD_URL ?? envFlex('Dev')?.DOWNLOAD_URL,
+      }),
+    );
+
+    TrackInfo = {
+      ...TrackInfo,
+      url: response.payload.soundcloudTrack.audio[0].url,
+    };
+    downloadTrack(TrackInfo);
+    return TrackInfo;
   }
 };
 

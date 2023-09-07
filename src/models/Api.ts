@@ -76,11 +76,11 @@ export interface GetLinkDownLoadResponseFields {
   };
 }
 
-export interface getRecommendFields {
+export interface GetRecommendFields {
   tracks: string | string[];
   artists: string | string[];
 }
 
-export interface getRecommendResponseFields {
+export interface GetRecommendResponseFields {
   tracks: TrackDataItemFields[]
 }

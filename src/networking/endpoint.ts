@@ -8,5 +8,9 @@ const endpoints = {
       'v1/browse/featured-playlists?country=VN&locale=sv_SV&limit=50',
     search: 'v1/search?q=track%3A$keyword&type=$type&limit=10&offset=$offset',
   },
+  player: {
+    getRecommend:
+      'v1/recommendations?market=VN&seed_artists=$artists&seed_tracks=$tracks&limit=10',
+  },
 };
 export { endpoints };

@@ -9,7 +9,7 @@ interface Album {
   external_urls: ExternalUrls;
   href: string;
   id: string;
-  images: any[]; // You can define an interface for images if needed
+  images: [{ url: string }]; // You can define an interface for images if needed
   name: string;
   release_date: string;
   release_date_precision: string;
@@ -31,11 +31,11 @@ interface ExternalIds {
   isrc: string;
 }
 
-export interface TrackDataFields extends SearchDataItemFields {
+export interface TrackDataFields extends TrackDataItemFields {
   url: string;
 }
 
-export interface SearchDataItemFields {
+export interface TrackDataItemFields {
   album?: Album;
   artists: Artist[];
   available_markets?: string[];

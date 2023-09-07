@@ -1,4 +1,4 @@
-import { TrackDataFields } from "src/models/Search";
+import { TrackDataFields } from "src/models/Track";
 
 export interface ReadDataProps {
   collection?: 'TrackList' | 'RapidApi';

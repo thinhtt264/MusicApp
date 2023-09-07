@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useScreenController } from 'src/common/hooks';
-import { getDownloadLink } from 'src/store/action-thunk';
+import { getDownloadLink, getRecommend } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
 import { Header, TrackInfo } from './components';
 import { Blurhash } from 'react-native-blurhash';
@@ -14,7 +14,7 @@ import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
 import FastImage from 'react-native-fast-image';
 import { scale } from 'src/common/scale';
-import { downloadTrack, startAudio } from 'src/common/player';
+import { addPlaylist, downloadTrack, startAudio } from 'src/common/player';
 import { LoadingScreen } from '../loading/LoadingScreen';
 import { useFocusEffect } from '@react-navigation/native';
 import { ProgressBar, ControllerBar } from './components';
@@ -29,7 +29,11 @@ import { formatSearchData } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
 
-const events = [Event.PlaybackState, Event.PlaybackError];
+const events = [
+  Event.PlaybackState,
+  Event.PlaybackError,
+  Event.PlaybackActiveTrackChanged,
+];
 
 const PlayerScreen = ({ route }: any) => {
   const { dispatch, navigation } = useScreenController();
@@ -42,7 +46,7 @@ const PlayerScreen = ({ route }: any) => {
   const [buffering, setBuffering] = useState(false);
   const [bgColor, setBgColor] = useState('');
 
-  const { albumImage, trackUrl, trackName, trackId, artistName } =
+  const { albumImage, trackUrl, trackName, trackId, artistName, artistId } =
     formatSearchData(currentTrack);
 
   useLayoutEffect(() => {
@@ -82,6 +86,12 @@ const PlayerScreen = ({ route }: any) => {
 
   useEffect(() => {
     fetchAndStartAudio();
+    dispatch(
+      getRecommend({
+        artists: artistId,
+        tracks: trackId,
+      }),
+    );
   }, []);
 
   const startMusic = useCallback(async (info: any) => {
@@ -112,6 +122,8 @@ const PlayerScreen = ({ route }: any) => {
           TrackPlayer.skipToNext();
         }
       }
+    } else if (event.type === Event.PlaybackActiveTrackChanged) {
+      console.log('đổi bài');
     }
   });
 

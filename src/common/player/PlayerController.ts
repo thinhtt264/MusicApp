@@ -8,7 +8,7 @@ import {
 import { TrackInfoFields } from '../firebase/type';
 import { dispatch, getState } from '../redux';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
-import { TrackDataFields } from 'src/models/Search';
+import { TrackDataFields } from 'src/models/Track';
 
 const ANDROID_HEAD_PATH = 'file://';
 
@@ -21,9 +21,6 @@ export const startAudio = async ({
   const { currentTrack } = getState('player');
   const TrackInfo = info || currentTrack;
 
-  const { playUrl, trackName, trackId, artistName } =
-    formatSearchData(TrackInfo);
-
   // const filePath = await downloadTrack(downloadUrl, info); //Tải nhac
 
   // if (filePath) {
@@ -32,12 +29,7 @@ export const startAudio = async ({
   //     url: `${ANDROID_HEAD_PATH}${filePath}`,
   //   });
   // } else {
-  await addPlaylist({
-    id: trackId ?? '',
-    url: playUrl,
-    artist: artistName,
-    title: trackName ?? '',
-  });
+  await addPlaylist(TrackInfo);
   // }
 
   // Start playing it
@@ -48,13 +40,14 @@ export const startAudio = async ({
   }
 };
 
-export const addPlaylist = async (info: TrackInfoFields) => {
+export const addPlaylist = async (info: TrackDataFields) => {
+  const { playUrl, trackName, trackId, artistName } = formatSearchData(info);
   // Add a track to the queue
   await TrackPlayer.add({
-    id: info.id,
-    url: info.url,
-    title: info.title,
-    artist: info.artist,
+    id: trackId,
+    url: playUrl,
+    title: trackName,
+    artist: artistName,
   });
 };
 

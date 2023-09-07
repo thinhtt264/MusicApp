@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { TrackDataFields } from 'src/models/Search';
+import { TrackDataFields } from 'src/models/Track';
 
 interface PlayerState {
   currentTrack: TrackDataFields;

@@ -1,4 +1,4 @@
-import { SearchDataItemFields } from './Search';
+import { TrackDataItemFields } from "./Track";
 
 export interface ResponseBase<T = any> {
   code: number;
@@ -51,7 +51,7 @@ export interface GetSearchDataResponseFields {
   offset?: number;
   keyword: string;
   tracks: {
-    items: SearchDataItemFields[];
+    items: TrackDataItemFields[];
     next: string;
     offset: number;
     previous: string;
@@ -74,4 +74,13 @@ export interface GetLinkDownLoadResponseFields {
       },
     ];
   };
+}
+
+export interface getRecommendFields {
+  tracks: string | string[];
+  artists: string | string[];
+}
+
+export interface getRecommendResponseFields {
+  tracks: TrackDataItemFields[]
 }

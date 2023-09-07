@@ -31,7 +31,8 @@ const authSlice = createSlice({
       state.isRemember = false;
     },
     onSetToken: (state: AuthState, { payload }) => {
-      state.access_token = payload;
+      state.access_token = payload.access_token;
+      state.tokenExpiration = expiredTime(payload.expires_in);
     },
   },
   extraReducers: builder => {

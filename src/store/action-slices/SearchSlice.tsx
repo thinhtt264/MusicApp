@@ -3,7 +3,7 @@ import { getSearchData } from '../action-thunk';
 import { GetSearchDataResponseFields } from 'src/models/Api';
 import { uniqBy } from 'lodash';
 import { isOnlyWhitespace } from 'src/common/regex';
-import { TrackDataFields } from 'src/models/Search';
+import { TrackDataFields } from 'src/models/Track';
 
 export interface SearchStateType {
   searchData: GetSearchDataResponseFields;

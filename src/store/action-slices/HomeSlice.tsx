@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { getFeaturedPlaylist, getHomePlaylist } from '../action-thunk';
 import { HomeDataItemFields } from 'src/models/Api';
 import { uniqBy } from 'lodash';
-import { TrackDataFields } from 'src/models/Search';
+import { TrackDataFields } from 'src/models/Track';
 export interface HomeStateType {
   homedata: {
     items: HomeDataItemFields[];
@@ -25,11 +25,11 @@ const initialState: HomeStateType = {
 };
 
 export const formatSearchData = (item: TrackDataFields) => {
-  const albumImage = item?.album?.images[0]?.url;
+  const albumImage = item?.album?.images[0]?.url ?? '';
   const trackName = item?.name ?? '';
-  const trackId = item?.id;
+  const trackId = item?.id ?? '';
   const artistName = item?.artists[0].name ?? '';
-  const artist = item?.artists;
+  const artistId = item?.artists[0].id;
   const album = item?.album;
   const trackUrl = item?.external_urls.spotify;
   const playUrl = item?.url;
@@ -39,7 +39,7 @@ export const formatSearchData = (item: TrackDataFields) => {
     trackName,
     trackId,
     artistName,
-    artist,
+    artistId,
     album,
     trackUrl,
     playUrl,

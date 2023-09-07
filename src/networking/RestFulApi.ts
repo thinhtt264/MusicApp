@@ -47,16 +47,23 @@ AxiosInstance.interceptors.response.use(
         return Promise.reject(error);
       }
       console.log('new token');
-      console.log(newToken.access_token);
-      
-      dispatch(authActions.onSetToken(newToken.access_token));
+      console.log(newToken);
+
+      dispatch(authActions.onSetToken(newToken));
 
       originalRequest.headers[
         tokenKeyHeader
       ] = `Bearer ${newToken.access_token}`;
-      return AxiosInstance.request(originalRequest);
+      return AxiosInstance.request(originalRequest)
+        .then(() => {
+          console.log('call r');
+        })
+        .catch(e => {
+          console.log('lỗi lòi l ');
+          console.log(e);
+        });
     }
-    return Promise.reject(error);
+    // return Promise.reject(error);
   },
 );
 

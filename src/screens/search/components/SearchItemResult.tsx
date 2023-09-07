@@ -3,11 +3,10 @@ import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
 import Layout from 'src/themes/Layout';
 import FastImage from 'react-native-fast-image';
-import { SearchDataItemFields } from 'src/models/Search';
 import { MediumText } from 'src/components/text';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
+import { TrackDataItemFields } from 'src/models/Track';
 import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import { kWidth } from 'src/common/constants';
@@ -15,8 +14,8 @@ import { dispatch } from 'src/common/redux';
 import { searchActions } from 'src/store/action-slices';
 
 interface Props {
-  onNavigate: (item: SearchDataItemFields) => void;
-  item: SearchDataItemFields;
+  onNavigate: (item: TrackDataItemFields) => void;
+  item: TrackDataItemFields;
   isRecentList: boolean;
 }
 

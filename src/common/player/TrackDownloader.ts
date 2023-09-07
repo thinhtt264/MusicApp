@@ -1,7 +1,7 @@
 import RNFS from 'react-native-fs';
 import { isFirebaseUrl } from '../helper';
 import { uploadFileToFirebase } from '../firebase';
-import { TrackDataFields } from 'src/models/Search';
+import { TrackDataFields } from 'src/models/Track';
 
 export const downloadTrack = async (data: TrackDataFields) => {
   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;

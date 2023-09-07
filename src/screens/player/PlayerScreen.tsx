@@ -1,5 +1,10 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import { Platform, StyleSheet, View, ScrollView } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getDownloadLink } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
@@ -21,58 +26,65 @@ import TrackPlayer, {
 import Layout from 'src/themes/Layout';
 import { getTrackInfo, setTrackInfo } from 'src/common/firebase';
 import { formatSearchData } from 'src/store/action-slices';
+import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
+import Colors from 'src/themes/Colors';
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 
 const PlayerScreen = ({ route }: any) => {
   const { dispatch, navigation } = useScreenController();
 
-  const { item, bgColor, from } = route?.params;
-  const { albumImage, trackUrl, trackName, trackId, artistName } =
-    formatSearchData(item);
-
+  const { from } = route?.params;
   const { env } = useAppSelector(state => state.app);
   const { currentTrack } = useAppSelector(state => state.player);
 
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(false);
+  const [bgColor, setBgColor] = useState('');
 
-  const fetchAndStartAudio = async () => {
-    if (checkCurrentTrack()) {
-      await startMusic(currentTrack);
-    } else {
-      const trackResponse: any = await getTrackInfo({ doc: trackId });
-      if (trackResponse._data) {
-        console.log('phát từ firebase');
-        await startMusic(trackResponse._data);
-      } else {
-        const response = await dispatch(
-          getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
-        ).unwrap();
+  const { albumImage, trackUrl, trackName, trackId, artistName } =
+    formatSearchData(currentTrack);
 
-        const trackInfoWithUrl = {
-          ...item,
-          url: response.soundcloudTrack.audio[0].url,
-        };
-        // setTrackInfo({ data: trackInfoWithUrl, doc: trackId });
-        downloadTrack(trackInfoWithUrl);
-        await startMusic(trackInfoWithUrl);
-      }
-    }
+  useLayoutEffect(() => {
+    getBgColor();
+    return () => {};
+  }, [albumImage]);
+
+  const getBgColor = async () => {
+    const bgColor = await getBackGroundPlayer(albumImage);
+    const blurHashColor =
+      bgColor !== Colors.grey.player
+        ? await getBlurhashColor(albumImage)
+        : false;
+    setBgColor(blurHashColor || bgColor || Colors.grey.player);
   };
 
-  const checkCurrentTrack = useCallback(() => {
-    if (currentTrack.id === trackId) return true;
-    return false;
-  }, [currentTrack.url, trackId]);
+  const fetchAndStartAudio = async () => {
+    setBuffering(true);
+    const trackResponse: any = await getTrackInfo({ doc: trackId });
+    if (trackResponse._data) {
+      console.log('phát từ firebase');
+      await startMusic(trackResponse._data);
+    } else {
+      const response = await dispatch(
+        getDownloadLink({ link: trackUrl, baseUrl: env?.DOWNLOAD_URL ?? '' }),
+      ).unwrap();
+
+      const trackInfoWithUrl = {
+        ...currentTrack,
+        url: response.soundcloudTrack.audio[0].url,
+      };
+      // setTrackInfo({ data: trackInfoWithUrl, doc: trackId });
+      downloadTrack(trackInfoWithUrl);
+      await startMusic(trackInfoWithUrl);
+    }
+  };
 
   useEffect(() => {
     fetchAndStartAudio();
   }, []);
 
   const startMusic = useCallback(async (info: any) => {
-    setLoading(false);
-    setBuffering(true);
     await startAudio({ info });
   }, []);
 
@@ -104,29 +116,18 @@ const PlayerScreen = ({ route }: any) => {
   });
 
   const FragmentView =
-    bgColor === 'rgb(72,72,72)' ? (
+    bgColor === Colors.grey.player ? (
       <View style={[Layout.absolute, { backgroundColor: bgColor }]} />
     ) : (
-      <Blurhash
-        blurhash={bgColor}
-        style={{
-          height: '100%',
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-          zIndex: -1,
-        }}
-      />
+      <Blurhash blurhash={bgColor} style={styles.blurHashBackground} />
     );
 
-  return isLoading ? (
-    <LoadingScreen />
+  return !bgColor ? (
+    <></>
   ) : (
     <>
       {FragmentView}
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Header LeftIcon onLeftPress={onGoBack} from={from} />
         <FastImage
           source={{ uri: albumImage }}
@@ -136,7 +137,7 @@ const PlayerScreen = ({ route }: any) => {
         <TrackInfo artistName={artistName} trackName={trackName} />
         <ProgressBar style={styles.progessBar} />
         <ControllerBar buffering={buffering} />
-      </View>
+      </ScrollView>
     </>
   );
 };
@@ -146,17 +147,25 @@ export default PlayerScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingHorizontal: scale(25),
   },
   image: {
     height: kWidth - scale(70),
-    width: kWidth - scale(60),
+    width: kWidth,
     marginTop: scale(35),
     borderRadius: scale(4),
   },
   progessBar: {
     height: scale(50),
-    width: kWidth - scale(70),
+  },
+  blurHashBackground: {
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    zIndex: -1,
   },
 });

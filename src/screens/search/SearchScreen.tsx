@@ -22,11 +22,11 @@ import Colors from 'src/themes/Colors';
 import { BoldText } from 'src/components/text';
 import { kWidth } from 'src/common/constants';
 import routeNames from 'src/navigation/RouteNames';
-import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import { SearchItemResult } from './components/SearchItemResult';
 import LoadMoreList from 'src/components/list/LoadMoreList';
 import { getSearchData } from 'src/store/action-thunk';
 import { AnimatedList } from 'src/components/list';
+import { playerActions } from 'src/store/action-slices';
 
 interface Props {}
 
@@ -39,17 +39,10 @@ const SearchScreen = (props: Props) => {
   const flatListRef = useRef<any>(null);
 
   const onNavigate = async (item: any) => {
-    const bgColor = await getBackGroundPlayer(item?.album?.images[0]?.url);
-    const blurHashColor =
-      bgColor !== 'rgb(72,72,72)'
-        ? await getBlurhashColor(item?.album?.images[0]?.url)
-        : false;
-
+    await dispatch(playerActions.onSetCurrentTrack(item));
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
       params: {
-        item,
-        bgColor: blurHashColor || bgColor || 'black',
         from: 'search',
       },
     });

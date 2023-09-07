@@ -16,7 +16,7 @@ const Colors = {
     body: '#4D545B',
     placeHolder: '#AFB3BF',
     stroke: '#D5D7DB',
-    blueStroke: 'rgba(199, 221, 255,0.1)',
+    player: 'rgb(72,72,72)',
     disable: '#D5DBE2',
     remember: '#717478',
   },

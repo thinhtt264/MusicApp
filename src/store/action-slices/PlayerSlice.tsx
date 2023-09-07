@@ -20,7 +20,8 @@ const playerSlice = createSlice({
   initialState,
   reducers: {
     onSetCurrentTrack: (state, { payload }: PayloadAction<TrackDataFields>) => {
-      if (state.currentTrack.url !== payload.url) state.currentTrack = payload;
+      if (state.currentTrack.url !== payload.url)
+        state.currentTrack = { ...state.currentTrack, ...payload };
     },
     onRemoveCurrentTrack: (
       state,

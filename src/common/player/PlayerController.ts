@@ -42,8 +42,10 @@ export const startAudio = async ({
 
   // Start playing it
   await TrackPlayer.setPlayWhenReady(true);
-  if (TrackInfo.url !== currentTrack.url)
+  if (TrackInfo.url !== currentTrack.url) {
+    console.log('set current track');
     dispatch(playerActions.onSetCurrentTrack(TrackInfo));
+  }
 };
 
 export const addPlaylist = async (info: TrackInfoFields) => {

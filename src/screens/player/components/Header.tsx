@@ -43,7 +43,12 @@ const HeaderComponent = (props: Props) => {
       style={[Layout.rowBetween, styles.container, { marginTop: insets.top }]}>
       {LeftIcon ? (
         <TouchableOpacity onPress={onLeftPress}>
-          <Ionicons name="chevron-back" color={'white'} size={scale(20)} />
+          <Ionicons
+            name="chevron-back"
+            color={'white'}
+            size={scale(20)}
+            style={{ marginLeft: -scale(5) }}
+          />
         </TouchableOpacity>
       ) : (
         <View />

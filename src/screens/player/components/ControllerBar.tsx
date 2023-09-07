@@ -12,7 +12,6 @@ interface Props {
 }
 
 const ControllerBarComponent = ({ buffering }: Props) => {
-  
   return (
     <View style={styles.container}>
       <ShuffleRepeatButton option="shuffle" />
@@ -29,7 +28,7 @@ export const ControllerBar = memo(ControllerBarComponent, isEqual);
 const styles = StyleSheet.create({
   container: {
     height: scale(50),
-    width: kWidth - scale(70),
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',

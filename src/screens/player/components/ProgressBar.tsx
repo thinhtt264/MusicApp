@@ -63,7 +63,7 @@ export const ProgressBar = memo(ProgressBarComponent, isEqual);
 
 const styles = StyleSheet.create({
   slider: {
-    width: kWidth - scale(40),
+    width: kWidth - scale(24),
   },
   container: {
     alignItems: 'center',
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     flexDirection: 'row',
+    marginHorizontal: -scale(10),
   },
   labelText: {
     color: Colors.white.default,

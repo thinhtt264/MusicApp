@@ -131,7 +131,7 @@ const PlayerScreen = ({ route }: any) => {
         <FastImage
           source={{ uri: albumImage }}
           style={styles.image}
-          resizeMode="stretch"
+          resizeMode="cover"
         />
         <TrackInfo artistName={artistName} trackName={trackName} />
         <ProgressBar style={styles.progessBar} />
@@ -144,10 +144,14 @@ const PlayerScreen = ({ route }: any) => {
 export default PlayerScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', paddingHorizontal: scale(30) },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: scale(25),
+  },
   image: {
     height: kWidth - scale(70),
-    width: kWidth - scale(70),
+    width: kWidth - scale(60),
     marginTop: scale(35),
     borderRadius: scale(4),
   },

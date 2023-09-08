@@ -1,9 +1,11 @@
 import React, { createRef, forwardRef, useImperativeHandle } from 'react';
 import { AppDispatch, RootState, store } from 'src/store/store';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { select } from 'redux-saga/effects';
 
 export const useAppDispatch = () => useDispatch<AppDispatch | any>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const selector: TypedUseSelectorHook<RootState> = select;
 
 type ActionBase<T = any> = {
   type: string;

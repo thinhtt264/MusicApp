@@ -5,7 +5,8 @@ import { TrackDataFields } from 'src/models/Track';
 
 export const downloadTrack = async (data: TrackDataFields) => {
   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
-  if (isFirebaseUrl(data.url) || data.url === '') return '';
+  if (!data.url || isFirebaseUrl(data.url) || data.url === '') return '';
+
   try {
     const response: any = await RNFS.downloadFile({
       fromUrl: data.url,
@@ -13,6 +14,13 @@ export const downloadTrack = async (data: TrackDataFields) => {
       progress: res => {},
     }).promise;
 
+    if (response.statusCode === 202) {
+      setTimeout(() => {
+        downloadTrack(data);
+      }, 1000);
+      return;
+    }
+    
     if (response.statusCode === 200) {
       console.log('Tải và lưu tệp tin thành công');
       const fileExists = await RNFS.exists(localFilePath);

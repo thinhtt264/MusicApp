@@ -79,36 +79,6 @@ const PlayerScreen = ({ route }: any) => {
     );
   }, []);
 
-  const fetchAudio = async ({
-    info,
-    env,
-  }: {
-    info: TrackDataFields;
-    env?: any;
-  }) => {
-    const TrackInfo = info ?? {};
-    const trackResponse: any = await getTrackInfo({ doc: TrackInfo.id });
-
-    if (trackResponse._data !== undefined) {
-      console.log('phát từ firebase');
-      return trackResponse._data;
-    } else {
-      const response = await dispatch(
-        getDownloadLink({
-          link: TrackInfo.external_urls.spotify,
-          baseUrl: env?.DOWNLOAD_URL ?? '',
-        }),
-      );
-
-      const trackInfoWithUrl = {
-        ...TrackInfo,
-        url: response.payload.soundcloudTrack.audio[0].url,
-      };
-      downloadTrack(trackInfoWithUrl);
-      return trackInfoWithUrl;
-    }
-  };
-
   const onGoBack = () => navigation.goBack();
 
   useFocusEffect(

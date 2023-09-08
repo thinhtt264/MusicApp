@@ -12,28 +12,39 @@ import { downloadTrack } from './TrackDownloader';
 import { getTrackInfo } from '../firebase';
 import { getDownloadLink } from 'src/store/action-thunk';
 import { envFlex } from '../config/env';
+import { fetchAudioSagaAction } from 'src/store/action-saga';
 
 const ANDROID_HEAD_PATH = 'file://';
 
 export const startAudio = async ({ info }: { info: TrackDataFields }) => {
   await TrackPlayer.reset();
 
-  const TrackInfo = await fetchAudio({ info });
-  await addPlaylist(TrackInfo);
+  dispatch(
+    fetchAudioSagaAction.fetch({
+      callback: async TrackInfo => {
+        downloadTrack(TrackInfo);
+        await addPlaylist(TrackInfo);
+      },
+    }),
+  );
   // }
 
   // Start playing it
   // await TrackPlayer.setPlayWhenReady(true);
-  dispatch(playerActions.onSetCurrentTrack(TrackInfo));
 };
 
 export const onSwitchTrack = async (options: 'next' | 'previous') => {
-  const { currentTrack } = getState('player');
 
   if (options === 'next') {
-    const TrackInfo = await fetchAudio({ info: currentTrack });
-    await addPlaylist(TrackInfo);
-    TrackPlayer.skipToNext();
+    dispatch(
+      fetchAudioSagaAction.fetch({
+        callback: async TrackInfo => {
+          downloadTrack(TrackInfo);
+          await addPlaylist(TrackInfo);
+          TrackPlayer.skipToNext();
+        },
+      }),
+    );
   } else {
     TrackPlayer.skipToPrevious();
   }

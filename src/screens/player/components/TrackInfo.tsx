@@ -24,25 +24,28 @@ const TrackInfo = ({ trackName = '', artistName = '' }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.trackInfo}>
-        <BoldText numberOfLines={1} textStyle={styles.artist}>
+        <BoldText numberOfLines={1} textStyle={styles.name}>
           {trackName}
         </BoldText>
-        <RegularText numberOfLines={1} textStyle={styles.name}>
+        <RegularText numberOfLines={1} textStyle={styles.artist}>
           {artistName}
         </RegularText>
       </View>
-      <TouchableOpacity activeOpacity={1} onPress={onPressIcon}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onPressIcon}
+        style={styles.icon}>
         {!liked ? (
           <AnimatedIcon1
             name={'heart-outline'}
-            size={scale(28)}
+            size={scale(26)}
             style={{ color: 'white' }}
             entering={BounceIn.duration(400)}
           />
         ) : (
           <AnimatedIcon
             name={'heart-sharp'}
-            size={scale(28)}
+            size={scale(26)}
             style={{ color: Colors.green.default }}
             exiting={BounceOut.duration(400)}
             entering={BounceIn.duration(400)}
@@ -67,12 +70,20 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'baseline',
+    flex: 1,
+    marginRight: scale(5),
   },
   artist: {
-    fontSize: fontScale(18),
-  },
-  name: {
     fontSize: fontScale(12),
     marginTop: scale(2),
+  },
+  name: {
+    fontSize: fontScale(18),
+  },
+  icon: {
+    width: scale(30),
+    height: scale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

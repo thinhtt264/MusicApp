@@ -5,6 +5,7 @@ import { getTrackInfo } from 'src/common/firebase';
 import { NetWorkService } from 'src/networking/RestFulApi';
 import { selector } from 'src/common/redux';
 import { playerActions } from '../action-slices';
+import { downloadTrack } from 'src/common/player';
 
 function* fetchAudioWorker(
   action: ReturnType<typeof fetchAudioSagaAction.fetch>,
@@ -19,12 +20,14 @@ function* fetchAudioWorker(
       isNeedToken: false,
     });
 
-  const trackResponse: any = yield call(getTrackInfo, { doc: TrackInfo.id });
+  const trackFormFirebase: any = yield call(getTrackInfo, {
+    doc: TrackInfo.id,
+  });
 
-  if (trackResponse._data !== undefined) {
+  if (trackFormFirebase._data !== undefined) {
     console.log('phát từ firebase');
-    action.payload.callback?.(trackResponse._data);
-    put(playerActions.onSetCurrentTrack(trackResponse._data));
+    action.payload.callback?.(trackFormFirebase._data);
+    put(playerActions.onSetCurrentTrack(trackFormFirebase._data));
   } else {
     const response: any = yield call(fetchApi);
 
@@ -37,6 +40,7 @@ function* fetchAudioWorker(
       yield delay(500);
       put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
       action.payload.callback?.(TrackInfoWithUrl);
+      downloadTrack(TrackInfoWithUrl);
     }
   }
 }

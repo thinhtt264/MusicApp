@@ -45,7 +45,6 @@ const PlayerScreen = ({ route }: any) => {
   const { dispatch, navigation } = useScreenController();
 
   const { from } = route?.params;
-  const { env } = useAppSelector(state => state.app);
   const { currentTrack, trackQueue } = useAppSelector(state => state.player);
 
   // const [isLoading, setLoading] = useState(true);
@@ -88,6 +87,19 @@ const PlayerScreen = ({ route }: any) => {
     }, []),
   );
 
+  const switchTrack = async (option: 'next' | 'previous') => {
+    if (trackQueue.length > 1) {
+      await dispatch(
+        playerActions.onChangeCurrentTrack({
+          id: trackId,
+          option: option,
+        }),
+      );
+      setBuffering(true);
+      await onSwitchTrack(option);
+    }
+  };
+
   useTrackPlayerEvents(events, async event => {
     if (event.type === Event.PlaybackError) {
       console.log('An error occurred while playing the current track.');
@@ -98,15 +110,7 @@ const PlayerScreen = ({ route }: any) => {
       } else if (event.state === State.Ready) {
         setBuffering(false);
       } else if (event.state === State.Ended) {
-        if (trackQueue.length > 1) {
-          await dispatch(
-            playerActions.onChangeCurrentTrack({
-              id: trackId,
-              option: 'next',
-            }),
-          );
-          await onSwitchTrack('next');
-        }
+        switchTrack('next');
       }
     } else if (event.type === Event.PlaybackActiveTrackChanged) {
       console.log('đổi bài');
@@ -134,7 +138,10 @@ const PlayerScreen = ({ route }: any) => {
         />
         <TrackInfo artistName={artistName} trackName={trackName} />
         <ProgressBar style={styles.progessBar} />
-        <ControllerBar buffering={buffering} />
+        <ControllerBar
+          buffering={buffering}
+          switchTrack={option => switchTrack(option)}
+        />
       </ScrollView>
     </>
   );

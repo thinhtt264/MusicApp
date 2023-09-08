@@ -9,15 +9,19 @@ import ShuffleRepeatButton from './ShuffleRepeatButton';
 
 interface Props {
   buffering: boolean;
+  switchTrack: (option: 'next' | 'previous') => void;
 }
 
-const ControllerBarComponent = ({ buffering }: Props) => {
+const ControllerBarComponent = ({ buffering, switchTrack }: Props) => {
   return (
     <View style={styles.container}>
       <ShuffleRepeatButton option="shuffle" />
-      <SkipButton direction="previous" />
+      <SkipButton
+        direction="previous"
+        switchTrack={() => switchTrack('previous')}
+      />
       <PlayPauseButton buffering={buffering} />
-      <SkipButton direction="next" />
+      <SkipButton direction="next" switchTrack={() => switchTrack('next')} />
       <ShuffleRepeatButton option="repeat" />
     </View>
   );

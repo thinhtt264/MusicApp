@@ -19,29 +19,29 @@ const ANDROID_HEAD_PATH = 'file://';
 export const startAudio = async ({ info }: { info: TrackDataFields }) => {
   await TrackPlayer.reset();
 
+  await dispatch(playerActions.onSetCurrentTrack(info));
+
   dispatch(
     fetchAudioSagaAction.fetch({
       callback: async TrackInfo => {
-        downloadTrack(TrackInfo);
         await addPlaylist(TrackInfo);
       },
     }),
   );
   // }
-
   // Start playing it
   // await TrackPlayer.setPlayWhenReady(true);
 };
 
 export const onSwitchTrack = async (options: 'next' | 'previous') => {
-
   if (options === 'next') {
+    TrackPlayer.pause();
     dispatch(
       fetchAudioSagaAction.fetch({
         callback: async TrackInfo => {
-          downloadTrack(TrackInfo);
           await addPlaylist(TrackInfo);
           TrackPlayer.skipToNext();
+          TrackPlayer.play();
         },
       }),
     );

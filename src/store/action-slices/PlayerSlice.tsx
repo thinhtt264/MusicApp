@@ -57,6 +57,8 @@ const playerSlice = createSlice({
       getRecommend.fulfilled,
       (state, { payload }: PayloadAction<GetRecommendResponseFields>) => {
         state.trackQueue = [state.currentTrack, ...payload.tracks];
+        console.log(state.trackQueue);
+        
       },
     );
   },

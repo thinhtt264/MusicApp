@@ -1,16 +1,36 @@
 import { Blurhash } from 'react-native-blurhash';
 
-
 const isWhiteishRgb = (
   rgbObject: { r: number; g: number; b: number },
   threshold: number,
 ) => {
   return (
-    (rgbObject.r >= 255 * threshold && rgbObject.g >= 255 * threshold) ||
-    (rgbObject.r >= 255 * threshold && rgbObject.b >= 255 * threshold) ||
+    (rgbObject.r >= 255 * (threshold + 0.1) &&
+      rgbObject.g >= 255 * threshold) ||
+    (rgbObject.r >= 255 * (threshold + 0.1) &&
+      rgbObject.b >= 255 * threshold) ||
     (rgbObject.g >= 255 * threshold && rgbObject.b >= 255 * threshold)
   );
 };
+
+function isColorBright(
+  rgbObject: { r: number; g: number; b: number },
+  thresholdPercentage: number,
+) {
+  // Chuyển đổi màu RGB thành các giá trị màu đỏ (R), xanh lá cây (G) và xanh dương (B)
+  const r = rgbObject.r;
+  const g = rgbObject.g;
+  const b = rgbObject.b;
+
+  // Tính độ sáng theo công thức trung bình cộng
+  const brightness = (r + g + b) / 3;
+
+  // Tính ngưỡng dựa trên phần trăm
+  const threshold = thresholdPercentage * 255; // 255 là giá trị độ sáng tối đa
+
+  // So sánh độ sáng với ngưỡng
+  return brightness >= threshold;
+}
 
 export const getBlurhashColor = async (url: string): Promise<string> => {
   try {

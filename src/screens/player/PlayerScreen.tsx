@@ -149,9 +149,10 @@ const styles = StyleSheet.create({
   },
   image: {
     height: kWidth - scale(70),
-    width: kWidth,
     marginTop: scale(35),
     borderRadius: scale(4),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   progessBar: {
     height: scale(50),

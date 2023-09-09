@@ -6,7 +6,7 @@ import {
   setQueue,
 } from 'react-native-track-player/lib/trackPlayer';
 import { dispatch } from '../redux';
-import { formatSearchData, playerActions } from 'src/store/action-slices';
+import { formatSearchData } from 'src/store/action-slices';
 import { TrackDataFields } from 'src/models/Track';
 import { downloadTrack } from './TrackDownloader';
 import { getTrackInfo } from '../firebase';
@@ -25,6 +25,7 @@ export const startAudio = async (info: PlayerProps) => {
   dispatch(
     fetchAudioSagaAction.fetch({
       callback: async TrackInfo => {
+        if (typeof TrackInfo === 'string') return;
         await addPlaylist(TrackInfo);
       },
     }),
@@ -40,6 +41,7 @@ export const onSwitchTrack = async (options: 'next' | 'previous') => {
     dispatch(
       fetchAudioSagaAction.fetch({
         callback: async TrackInfo => {
+          if (typeof TrackInfo === 'string') return;
           await addPlaylist(TrackInfo);
           TrackPlayer.skipToNext();
           TrackPlayer.play();

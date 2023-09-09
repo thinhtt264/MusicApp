@@ -119,7 +119,11 @@ function Request<T = Record<string, unknown>>(
       .then((res: AxiosResponse<T>) => {
         dispatch(appActions.onSetLoadApp(false));
 
-        const response = res.data;
+        if (res === undefined && defaultConfig.baseURL === env?.DOWNLOAD_URL) {
+          throw new Error('The key has expired');
+        }
+
+        const response = res?.data;
         return rs(response);
       })
       .catch((error: any) => {
@@ -130,6 +134,7 @@ function Request<T = Record<string, unknown>>(
         } else {
           err = 'Network error';
         }
+
         console.log(error);
         // dispatch(appActions.onLoadAppEnd());
         if (
@@ -137,6 +142,8 @@ function Request<T = Record<string, unknown>>(
           error.response?.data?.error?.message === 'The access token expired'
         ) {
           return rj(err);
+        } else if (error.message === 'The key has expired') {
+          return rj(error.message);
         }
         // dispatch(
         //   appActions.onShowAlert({

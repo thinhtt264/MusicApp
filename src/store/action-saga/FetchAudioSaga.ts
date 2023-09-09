@@ -29,25 +29,32 @@ function* fetchAudioWorker(
     action.payload.callback?.(trackFormFirebase._data);
     put(playerActions.onSetCurrentTrack(trackFormFirebase._data));
   } else {
-    const response: any = yield call(fetchApi);
+    try {
+      const response: any = yield call(fetchApi);
 
-    if (response && response?.soundcloudTrack?.audio[0]?.url) {
-      const TrackInfoWithUrl = {
-        ...TrackInfo,
-        url: response.soundcloudTrack.audio[0].url,
-      };
+      if (response && response?.soundcloudTrack?.audio[0]?.url) {
+        const TrackInfoWithUrl = {
+          ...TrackInfo,
+          url: response.soundcloudTrack.audio[0].url,
+        };
 
-      yield delay(500);
-      put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
-      action.payload.callback?.(TrackInfoWithUrl);
-      downloadTrack(TrackInfoWithUrl);
+        yield delay(500);
+        put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
+        action.payload.callback?.(TrackInfoWithUrl);
+        downloadTrack(TrackInfoWithUrl);
+      }
+    } catch (e) {
+      console.log(e);
+      if (e === 'The key has expired') {
+        action.payload.callback?.(e);
+      }
     }
   }
 }
 
-const fetch = createAction<{ callback: (TrackInfo: TrackDataFields) => void }>(
-  'fetch/fetchAudio',
-);
+const fetch = createAction<{
+  callback: (TrackInfo: TrackDataFields | string) => void;
+}>('fetch/fetchAudio');
 export const fetchAudioSagaAction = { fetch };
 
 export function* fetchSaga() {

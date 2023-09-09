@@ -10,9 +10,10 @@ const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
   reducer: rootReducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({ serializableCheck: false })
-      .concat(playerMiddleware)
-      .concat(sagaMiddleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+      immutableCheck: false,
+    }).concat(sagaMiddleware),
 });
 
 sagaMiddleware.run(rootSaga);

@@ -5,7 +5,7 @@ import {
   remove,
   setQueue,
 } from 'react-native-track-player/lib/trackPlayer';
-import { dispatch, getState } from '../redux';
+import { dispatch } from '../redux';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { TrackDataFields } from 'src/models/Track';
 import { downloadTrack } from './TrackDownloader';
@@ -13,13 +13,14 @@ import { getTrackInfo } from '../firebase';
 import { getDownloadLink } from 'src/store/action-thunk';
 import { envFlex } from '../config/env';
 import { fetchAudioSagaAction } from 'src/store/action-saga';
+import { PlayerProps } from './Type';
+import { setCurrentTrackSagaAction } from 'src/store/action-saga/PlayerControlSaga';
 
 const ANDROID_HEAD_PATH = 'file://';
 
-export const startAudio = async ({ info }: { info: TrackDataFields }) => {
+export const startAudio = async (info: PlayerProps) => {
   await TrackPlayer.reset();
-
-  await dispatch(playerActions.onSetCurrentTrack(info));
+  dispatch(setCurrentTrackSagaAction.fetch({ PlayerProps: info }));
 
   dispatch(
     fetchAudioSagaAction.fetch({
@@ -50,7 +51,7 @@ export const onSwitchTrack = async (options: 'next' | 'previous') => {
   }
 };
 
-export const fetchAudio = async ({
+const fetchAudio = async ({
   info,
   env,
 }: {

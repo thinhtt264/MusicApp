@@ -1,16 +1,5 @@
-import {
-  StyleSheet,
-  View,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import React, {
-  useRef,
-  useCallback,
-  useMemo,
-  useState,
-  useEffect,
-} from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useRef, useCallback } from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
@@ -39,7 +28,7 @@ const SearchScreen = (props: Props) => {
   const flatListRef = useRef<any>(null);
 
   const onNavigate = async (item: any) => {
-    await startAudio({ info: item });
+    await startAudio({ info: item, from: 'search' });
     navigation.navigate(routeNames.Stacks.PlayerStack, {
       screen: routeNames.PlayerStack.PlayerScreen,
       params: {

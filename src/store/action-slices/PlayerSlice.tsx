@@ -24,7 +24,7 @@ const playerSlice = createSlice({
   initialState,
   reducers: {
     onSetCurrentTrack: (state, { payload }: PayloadAction<TrackDataFields>) => {
-      if (state.currentTrack.url === payload.url) return;
+      if (state.currentTrack.id === payload.id) return;
       state.currentTrack = { ...state.currentTrack, ...payload };
     },
     onRemoveCurrentTrack: (
@@ -33,6 +33,10 @@ const playerSlice = createSlice({
     ) => {
       if (state.currentTrack.url === payload.url)
         state.currentTrack = DEFAULT_INFO;
+    },
+    onResetQueue: (state, { payload }: PayloadAction<TrackDataItemFields>) => {
+      state.trackQueue = [];
+      state.trackQueue.push(payload);
     },
     onChangeCurrentTrack: (state, { payload }) => {
       const trackIdToFind = payload.id;
@@ -57,8 +61,6 @@ const playerSlice = createSlice({
       getRecommend.fulfilled,
       (state, { payload }: PayloadAction<GetRecommendResponseFields>) => {
         state.trackQueue = [state.currentTrack, ...payload.tracks];
-        console.log(state.trackQueue);
-        
       },
     );
   },

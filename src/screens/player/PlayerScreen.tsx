@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useScreenController } from 'src/common/hooks';
-import { getDownloadLink, getRecommend } from 'src/store/action-thunk';
+import { getRecommend } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
 import { Header, TrackInfo } from './components';
 import { Blurhash } from 'react-native-blurhash';
@@ -14,13 +14,7 @@ import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
 import FastImage from 'react-native-fast-image';
 import { scale } from 'src/common/scale';
-import {
-  addPlaylist,
-  downloadTrack,
-  onSwitchTrack,
-  startAudio,
-} from 'src/common/player';
-import { LoadingScreen } from '../loading/LoadingScreen';
+import { onSwitchTrack } from 'src/common/player';
 import { useFocusEffect } from '@react-navigation/native';
 import { ProgressBar, ControllerBar } from './components';
 import TrackPlayer, {
@@ -29,11 +23,9 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Layout from 'src/themes/Layout';
-import { getTrackInfo, setTrackInfo } from 'src/common/firebase';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
-import { TrackDataFields, TrackDataItemFields } from 'src/models/Track';
 
 const events = [
   Event.PlaybackState,

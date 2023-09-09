@@ -12,7 +12,7 @@ export const uploadFileToFirebase = async ({
 
   try {
     await reference.putFile(localFilePath).then(async () => {
-      handleDoneUpload({ localFilePath: path, data });
+      await handleDoneUpload({ localFilePath: path, data });
     });
 
     console.log('Tệp đã được tải lên thành công.');

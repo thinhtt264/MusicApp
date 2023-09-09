@@ -20,12 +20,13 @@ export const downloadTrack = async (data: TrackDataFields) => {
       }, 1000);
       return;
     }
-    
+
     if (response.statusCode === 200) {
       console.log('Tải và lưu tệp tin thành công');
       const fileExists = await RNFS.exists(localFilePath);
       if (fileExists) {
-        uploadFileToFirebase({ localFilePath: localFilePath, data });
+        await uploadFileToFirebase({ localFilePath: localFilePath, data });
+        unLinkFileMp3();
         return localFilePath;
       }
       return '';
@@ -39,14 +40,14 @@ export const downloadTrack = async (data: TrackDataFields) => {
   }
 };
 
-// export const unLinkFileMp3 = () => {
-//   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
-//   setTimeout(async () => {
-//     try {
-//       await RNFS.unlink(localFilePath);
-//       console.log('Xóa tệp thành công');
-//     } catch (error) {
-//       console.error('Lỗi khi xóa tệp', error);
-//     }
-//   }, 500);
-// };
+const unLinkFileMp3 = () => {
+  const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
+  setTimeout(async () => {
+    try {
+      await RNFS.unlink(localFilePath);
+      console.log('Xóa tệp thành công');
+    } catch (error) {
+      console.error('Lỗi khi xóa tệp', error);
+    }
+  }, 500);
+};

@@ -3,15 +3,11 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  Easing,
-  Image,
 } from 'react-native';
 import React, {
-  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useState,
 } from 'react';
 import { useScreenController } from 'src/common/hooks';
@@ -21,7 +17,6 @@ import { Header, TrackImage, TrackInfo } from './components';
 import { Blurhash } from 'react-native-blurhash';
 import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
-import FastImage from 'react-native-fast-image';
 import { scale } from 'src/common/scale';
 import { onSwitchTrack } from 'src/common/player';
 import { useFocusEffect } from '@react-navigation/native';

@@ -1,14 +1,23 @@
-import { Platform, StyleSheet, View, ScrollView } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  ScrollView,
+  Easing,
+  Image,
+} from 'react-native';
 import React, {
+  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useState,
 } from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getRecommend } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
-import { Header, TrackInfo } from './components';
+import { Header, TrackImage, TrackInfo } from './components';
 import { Blurhash } from 'react-native-blurhash';
 import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
@@ -42,13 +51,15 @@ const PlayerScreen = ({ route }: any) => {
   // const [isLoading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(true);
   const [bgColor, setBgColor] = useState('');
+  const [option, setOptions] = useState<'next' | 'previous'>('next');
 
   const { albumImage, trackName, trackId, trackUrl, artistName, artistId } =
     formatSearchData(currentTrack);
 
+
   useLayoutEffect(() => {
     getBgColor();
-    return () => {};
+    return () => { };
   }, [albumImage]);
 
   const getBgColor = async () => {
@@ -81,6 +92,7 @@ const PlayerScreen = ({ route }: any) => {
 
   const switchTrack = async (option: 'next' | 'previous') => {
     if (trackQueue.length > 1) {
+      setOptions(option)
       await dispatch(
         playerActions.onChangeCurrentTrack({
           id: trackId,
@@ -116,6 +128,7 @@ const PlayerScreen = ({ route }: any) => {
       <Blurhash blurhash={bgColor} style={styles.blurHashBackground} />
     );
 
+
   return !bgColor ? (
     <></>
   ) : (
@@ -123,11 +136,7 @@ const PlayerScreen = ({ route }: any) => {
       {FragmentView}
       <ScrollView style={styles.container}>
         <Header LeftIcon onLeftPress={onGoBack} from={from} />
-        <FastImage
-          source={{ uri: albumImage }}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <TrackImage url={albumImage} option={option} />
         <TrackInfo artistName={artistName} trackName={trackName} />
         <ProgressBar style={styles.progessBar} />
         <ControllerBar

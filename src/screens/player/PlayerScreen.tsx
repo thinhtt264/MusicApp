@@ -122,7 +122,7 @@ const PlayerScreen = ({ route }: any) => {
     ) : (
       <Blurhash blurhash={bgColor} style={styles.blurHashBackground} />
     );
-
+  //test
 
   return !bgColor ? (
     <></>

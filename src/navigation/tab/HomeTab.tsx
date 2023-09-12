@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import {
   BottomTabBarProps,
@@ -13,6 +13,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Colors from 'src/themes/Colors';
 import { LibraryIcon } from 'src/components/svg';
 import { HomeScreen, SearchScreen } from 'src/screens';
+import { useProgress } from 'react-native-track-player';
 
 interface Props {
   size: number;
@@ -122,6 +123,15 @@ export type HomeTabParamList = {
 
 const Tab = createBottomTabNavigator<HomeTabParamList>();
 
+const FloatingPlayer = () => {
+  const { position } = useProgress()
+  return (
+    <View style={{ height: 30, width: '100%', backgroundColor: 'white', position: 'absolute', right: 0, bottom: TAB_HEIGHT, left: 0 }}>
+      <Text style={{ color: 'red' }}>{position}</Text>
+    </View>
+  )
+}
+
 const HomeTab = () => {
   return (
     <View style={{ flex: 1, position: 'relative' }}>
@@ -130,7 +140,13 @@ const HomeTab = () => {
           headerShown: false,
           tabBarShowLabel: false,
         }}
-        tabBar={TabBar}>
+        tabBar={(props) => (
+          <View>
+            <FloatingPlayer />
+            <TabBar {...props} />
+          </View>
+        )}
+      >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Library" component={HomeScreen} />

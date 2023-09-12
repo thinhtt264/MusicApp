@@ -35,11 +35,19 @@ export const startAudio = async (info: PlayerProps) => {
   // await TrackPlayer.setPlayWhenReady(true);
 };
 
+/**
+ * Function to handle track switching
+ * @param options - 'next' or 'previous' option
+ */
 export const onSwitchTrack = async (options: 'next' | 'previous') => {
   if (options === 'next') {
     TrackPlayer.pause();
     dispatch(
       fetchAudioSagaAction.fetch({
+        /**
+         * Callback function to handle fetched track info
+         * @param TrackInfo - track information
+         */
         callback: async TrackInfo => {
           if (typeof TrackInfo === 'string') return;
           await addPlaylist(TrackInfo);

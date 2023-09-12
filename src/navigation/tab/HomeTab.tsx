@@ -60,8 +60,8 @@ export const TabBar = (props: BottomTabBarProps) => {
             options.tabBarLabel !== undefined
               ? options.tabBarLabel
               : options.title !== undefined
-              ? options.title
-              : translate(`home:${route.name.toLocaleLowerCase()}`);
+                ? options.title
+                : translate(`home:${route.name.toLocaleLowerCase()}`);
 
           const isFocused = state.index === index;
 

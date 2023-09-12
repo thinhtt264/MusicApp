@@ -5,6 +5,8 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "pod-install":"cd ios & pod install",
+    "postinstall": "patch-package",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
@@ -12,9 +14,9 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.19.2",
     "@react-native-community/slider": "^4.4.3",
-    "@react-native-firebase/app": "^18.3.1",
-    "@react-native-firebase/firestore": "^18.3.1",
-    "@react-native-firebase/storage": "^18.3.1",
+    "@react-native-firebase/app": "^18.4.0",
+    "@react-native-firebase/firestore": "^18.4.0",
+    "@react-native-firebase/storage": "^18.4.0",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",

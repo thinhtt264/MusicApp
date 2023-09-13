@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import {
   BottomTabBarProps,
@@ -13,10 +13,8 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Colors from 'src/themes/Colors';
 import { LibraryIcon } from 'src/components/svg';
 import { HomeScreen, SearchScreen } from 'src/screens';
-import { useProgress } from 'react-native-track-player';
-import Animated, { Extrapolate, cancelAnimation, interpolate, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
-import { kHeight } from 'src/common/constants';
+import { TAB_HEIGHT } from 'src/common/constants';
+import { Miniplayer } from 'src/components/mini-player';
 
 interface Props {
   size: number;
@@ -126,75 +124,7 @@ export type HomeTabParamList = {
 
 const Tab = createBottomTabNavigator<HomeTabParamList>();
 
-const FloatingPlayer = () => {
-  const { position } = useProgress()
-  const translateY = useSharedValue(0);
-
-  const toggleFullScreen = () => {
-    if (Math.abs(translateY.value) < kHeight / 2) {
-      translateY.value = withTiming((-(kHeight - TAB_HEIGHT)), { duration: 800 });
-    } else {
-      translateY.value = withTiming(0, { duration: 800 });
-    }
-  };
-
-  const onEndDrag = () => {
-    if (Math.abs(translateY.value) > kHeight * 65 / 100) {
-      translateY.value = withTiming((-(kHeight - TAB_HEIGHT)), { duration: 800 });
-    } else {
-      translateY.value = withTiming(0, { duration: 800 });
-    }
-  }
-
-  const animatedStyle = useAnimatedStyle(() => {
-    const heightz = interpolate(translateY.value, [0, -(kHeight - TAB_HEIGHT)], [TAB_HEIGHT, kHeight], Extrapolate.CLAMP);
-    const bottomz = interpolate(translateY.value, [0, -(kHeight - TAB_HEIGHT)], [TAB_HEIGHT, 0], Extrapolate.CLAMP);
-    return {
-      bottom: bottomz,
-      height: heightz
-    };
-  });
-
-  const pangestureStyle = useAnimatedStyle(() => {
-    const heightz = interpolate(translateY.value, [0, -(kHeight - TAB_HEIGHT)], [0, TAB_HEIGHT], Extrapolate.CLAMP);
-    return {
-      height: heightz
-    }
-  })
-
-  const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, context) => {
-      // Lưu giá trị ban đầu khi bắt đầu kéo
-      context.startY = translateY.value;
-      cancelAnimation(translateY);
-    },
-    onActive: (event, context) => {
-      translateY.value = context.startY + event.translationY;
-    },
-    onEnd: (event) => {
-      runOnJS(onEndDrag)();
-    },
-  });
-
-  return (
-    <Animated.View style={[styles.floatingPlayer, animatedStyle]}>
-      <ScrollView style={{ flex: 1, overflow: 'hidden' }}>
-        <PanGestureHandler onGestureEvent={gestureHandler}>
-          <Animated.View style={[{ height: 0, backgroundColor: 'black', width: '100%', }, pangestureStyle]} />
-        </PanGestureHandler>
-        <Pressable onPress={toggleFullScreen}>
-          <Text style={{ color: 'red' }}>{position}</Text>
-          <Text style={{ color: 'red' }}>
-            {'Full Screen'}
-          </Text>
-        </Pressable>
-      </ScrollView>
-    </Animated.View>
-  )
-}
-
 const HomeTab = () => {
-
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       <Tab.Navigator
@@ -204,7 +134,7 @@ const HomeTab = () => {
         }}
         tabBar={(props) => (
           <View>
-            <FloatingPlayer />
+            {<Miniplayer />}
             <TabBar {...props} />
           </View>
         )}
@@ -217,7 +147,6 @@ const HomeTab = () => {
   );
 };
 
-const TAB_HEIGHT = hasNotch() ? scale(55) : scale(45);
 const styles = StyleSheet.create({
   container: {
     height: TAB_HEIGHT,

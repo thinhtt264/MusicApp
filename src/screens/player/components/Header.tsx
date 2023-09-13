@@ -10,6 +10,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { translate } from 'src/common/language/translate';
+import Animated, { Extrapolate, SharedValue, interpolate, runOnJS, useAnimatedStyle } from 'react-native-reanimated';
+import { MINIPLAYER_HEIGHT } from 'src/components/mini-player';
 
 interface Props {
   LeftIcon?: boolean;
@@ -17,6 +19,7 @@ interface Props {
   RightContentStyle?: StyleProp<ViewStyle>;
   onLeftPress?: () => void;
   from: 'search' | 'playlist';
+  translationY: SharedValue<number>;
 }
 
 const HeaderComponent = (props: Props) => {
@@ -24,8 +27,9 @@ const HeaderComponent = (props: Props) => {
     RightContent,
     RightContentStyle,
     LeftIcon,
-    onLeftPress = () => {},
+    onLeftPress = () => { },
     from,
+    translationY
   } = props;
   const insets = useSafeAreaInsets();
 
@@ -38,9 +42,22 @@ const HeaderComponent = (props: Props) => {
     }
   };
 
+  const containerStyle = useAnimatedStyle(() => {
+    const paddingVertical = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [0, 15], Extrapolate.CLAMP);
+    const marginTop = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [0, insets.top], Extrapolate.CLAMP);
+    const translateY = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [-70, 0], Extrapolate.CLAMP);
+    // const opacity = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [0, 1], Extrapolate.CLAMP);
+
+    return {
+      paddingVertical,
+      marginTop,
+      transform: [{ translateY }],
+    }
+  })
+
   return (
-    <View
-      style={[Layout.rowBetween, styles.container, { marginTop: insets.top }]}>
+    <Animated.View
+      style={[Layout.rowBetween, containerStyle, styles.container]}>
       {LeftIcon ? (
         <TouchableOpacity onPress={onLeftPress}>
           <Ionicons
@@ -63,7 +80,7 @@ const HeaderComponent = (props: Props) => {
       ) : (
         <View />
       )}
-    </View>
+    </Animated.View>
   );
 };
 
@@ -71,7 +88,6 @@ export const Header = memo(HeaderComponent, isEqual);
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: scale(15),
     alignItems: 'center',
     width: '100%',
   },

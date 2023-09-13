@@ -37,10 +37,10 @@ const events = [
   Event.PlaybackActiveTrackChanged,
 ];
 
-const PlayerScreen = ({ route }: any) => {
+const PlayerScreen = ({ route, translationY }: any) => {
   const { dispatch, navigation } = useScreenController();
 
-  const { from } = route?.params;
+  const { from = 'search' } = route?.params || 'search';
   const { currentTrack, trackQueue } = useAppSelector(state => state.player);
 
   // const [isLoading, setLoading] = useState(true);
@@ -67,13 +67,13 @@ const PlayerScreen = ({ route }: any) => {
   };
 
   useEffect(() => {
-    TrackPlayer.setPlayWhenReady(true);
-    dispatch(
-      getRecommend({
-        artists: artistId,
-        tracks: trackId,
-      }),
-    );
+    // TrackPlayer.setPlayWhenReady(true);
+    // dispatch(
+    //   getRecommend({
+    //     artists: artistId,
+    //     tracks: trackId,
+    //   }),
+    // );
   }, []);
 
   const onGoBack = () => navigation.goBack();
@@ -128,16 +128,16 @@ const PlayerScreen = ({ route }: any) => {
   ) : (
     <>
       {FragmentView}
-      <ScrollView style={styles.container}>
-        <Header LeftIcon onLeftPress={onGoBack} from={from} />
+      <View style={styles.container} >
+        <Header LeftIcon onLeftPress={onGoBack} from={from} translationY={translationY} />
         <TrackImage url={albumImage} option={option} />
         <TrackInfo artistName={artistName} trackName={trackName} />
-        <ProgressBar style={styles.progessBar} />
+        {/* <ProgressBar style={styles.progessBar} /> */}
         <ControllerBar
           buffering={buffering}
           switchTrack={option => switchTrack(option)}
         />
-      </ScrollView>
+      </View>
     </>
   );
 };
@@ -146,8 +146,6 @@ export default PlayerScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // alignItems: 'center',
     paddingHorizontal: scale(25),
   },
   image: {

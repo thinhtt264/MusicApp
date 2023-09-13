@@ -1,4 +1,6 @@
 import { Dimensions } from 'react-native';
+import { scale } from '../scale';
+import { hasNotch } from '../device';
 
 export const { width: kWidth, height: kHeight } = Dimensions.get('window');
 export const FONT_FAMILY = {
@@ -10,6 +12,7 @@ export const FONT_FAMILY = {
   ITALIC: 'Inter-Italic',
   LIGHT: 'Inter-Light',
 };
+export const TAB_HEIGHT = hasNotch() ? scale(55) : scale(45);
 
 export const ENV = {
   DEV: 'DEV',

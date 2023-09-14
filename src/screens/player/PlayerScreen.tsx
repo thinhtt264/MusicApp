@@ -139,13 +139,23 @@ const PlayerScreen = ({ route, translationY }: any) => {
       {FragmentView}
       <View style={styles.container} >
         <Header LeftIcon onLeftPress={onGoBack} from={from} translationY={translationY} />
-        <TrackImage trackQueue={trackQueue} currentTrack={currentTrack} translationY={translationY} switchTrack={(option) => switchTrack(option)} />
-        <TrackInfo artistName={artistName} trackName={trackName} />
-        <ProgressBar style={styles.progessBar} />
-        <ControllerBar
-          buffering={buffering}
-          switchTrack={option => switchTrack(option)}
-        />
+        <View style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+        }}>
+          <View style={{ width: kWidth / 3.5 - scale(30) }}>
+            <TrackImage trackQueue={trackQueue} currentTrack={currentTrack} translationY={translationY} switchTrack={(option) => switchTrack(option)} />
+          </View>
+          <View style={{ width: kWidth / 2.5 }}>
+            <TrackInfo artistName={artistName} trackName={trackName} translationY={translationY} />
+          </View>
+          {/* <ProgressBar style={styles.progessBar} />
+          <ControllerBar
+            buffering={buffering}
+            switchTrack={option => switchTrack(option)}
+          /> */}
+        </View>
+
       </View>
     </>
   );
@@ -155,7 +165,7 @@ export default PlayerScreen;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: scale(25),
+    // paddingHorizontal: scale(10),
   },
   progessBar: {
     height: scale(50),

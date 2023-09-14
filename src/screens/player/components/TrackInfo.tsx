@@ -3,18 +3,19 @@ import React, { useEffect } from 'react';
 import { fontScale, scale } from 'src/common/scale';
 import { BoldText, RegularText } from 'src/components/text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Animated, { BounceIn, BounceOut } from 'react-native-reanimated';
+import Animated, { BounceIn, BounceOut, SharedValue } from 'react-native-reanimated';
 import Colors from 'src/themes/Colors';
 
 interface Props {
   artistName: string;
   trackName: string;
+  translationY: SharedValue<number>;
 }
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 const AnimatedIcon1 = Animated.createAnimatedComponent(Ionicons);
 
-const TrackInfo = ({ trackName = '', artistName = '' }: Props) => {
+const TrackInfo = ({ trackName = '', artistName = '', translationY }: Props) => {
   const [liked, setLiked] = React.useState(false);
 
   const onPressIcon = () => {
@@ -60,7 +61,7 @@ export default TrackInfo;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: scale(40),
+    // marginTop: scale(40),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

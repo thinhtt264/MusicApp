@@ -46,12 +46,13 @@ const HeaderComponent = (props: Props) => {
     const paddingVertical = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [0, Constants.scale15], Extrapolate.CLAMP);
     const marginTop = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [-Constants.scale20, insets.top], Extrapolate.CLAMP);
     const translateY = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [-70, 0], Extrapolate.CLAMP);
-    // const opacity = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [0, 1], Extrapolate.CLAMP);
+    const marginBottom = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [0, Constants.scale20], Extrapolate.CLAMP);
 
     return {
       paddingVertical,
       marginTop,
       transform: [{ translateY }],
+      marginBottom
     }
   })
 

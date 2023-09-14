@@ -1,6 +1,6 @@
 import { kHeight } from 'src/common/constants';
 import { hasNotch } from 'src/common/device';
-import { scale } from 'src/common/scale';
+import { fontScale, scale } from 'src/common/scale';
 
 export const MINIPLAYER_HEIGHT = hasNotch() ? scale(60) : scale(50);
 export const FULLSCREEN_HEIGHT = kHeight - MINIPLAYER_HEIGHT;
@@ -20,4 +20,7 @@ export default {
   scale80: scale(80),
   scale90: scale(90),
   scale100: scale(100),
+  fontScale10: fontScale(10),
+  fontScale14: fontScale(14),
+  fontScale18: fontScale(18),
 };

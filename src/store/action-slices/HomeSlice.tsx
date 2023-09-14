@@ -28,8 +28,8 @@ export const formatSearchData = (item: TrackDataFields) => {
   const albumImage = item?.album?.images[0]?.url ?? '';
   const trackName = item?.name ?? '';
   const trackId = item?.id ?? '';
-  const artistName = item?.artists[0].name ?? '';
-  const artistId = item?.artists[0].id;
+  const artistName = item?.artists[0]?.name ?? '';
+  const artistId = item?.artists[0]?.id;
   const album = item?.album;
   const trackUrl = item?.external_urls.spotify;
   const playUrl = item?.url ?? '';

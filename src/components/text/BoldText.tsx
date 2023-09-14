@@ -5,17 +5,19 @@ import { CustomTextProps } from './type';
 import { fontScale, scale } from 'src/common/scale';
 import { FONT_FAMILY } from 'src/common/constants';
 import { useTheme } from '@react-navigation/native';
+import Animated from 'react-native-reanimated';
 
 const BoldTextComponents = (props: CustomTextProps) => {
   const theme = useTheme();
+  const AnimatedText = Animated.Text
 
   return (
-    <Text
+    <AnimatedText
       allowFontScaling={false}
       {...props}
       style={[{ color: theme.colors.text }, styles.text, props.textStyle]}>
       {props.children}
-    </Text>
+    </AnimatedText>
   );
 };
 

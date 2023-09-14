@@ -76,6 +76,9 @@ const PlayerScreen = ({ route, translationY }: any) => {
   }
 
   useEffect(() => {
+    StatusBar.setBackgroundColor('transparent');
+    StatusBar.setTranslucent(true);
+
     initPlayer();
     dispatch(
       getRecommend({
@@ -86,13 +89,6 @@ const PlayerScreen = ({ route, translationY }: any) => {
   }, []);
 
   const onGoBack = () => navigation.goBack();
-
-  useFocusEffect(
-    useCallback(() => {
-      Platform.OS === 'android' && StatusBar.setBackgroundColor('transparent');
-      StatusBar.setTranslucent(true);
-    }, []),
-  );
 
   const switchTrack = async (option: 'next' | 'previous') => {
     if (trackQueue.length > 1) {
@@ -129,7 +125,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
     bgColor === Colors.grey.player ? (
       <View style={[styles.defaultBackground, { backgroundColor: bgColor, }]} />
     ) : (
-      <Blurhash blurhash={bgColor} style={styles.blurHashBackground} />
+      <Blurhash blurhash={bgColor} style={[styles.blurHashBackground, { borderRadius: 15, borderWidth: 2 }]} />
     );
 
   return !bgColor ? (
@@ -141,12 +137,12 @@ const PlayerScreen = ({ route, translationY }: any) => {
         <Header LeftIcon onLeftPress={onGoBack} from={from} translationY={translationY} />
         <View style={{
           flexDirection: 'row',
-          flexWrap: 'wrap',
+          flexWrap: 'wrap'
         }}>
-          <View style={{ width: kWidth / 3.5 - scale(30) }}>
+          <View style={{ width: kWidth / 3.5 - scale(40) }}>
             <TrackImage trackQueue={trackQueue} currentTrack={currentTrack} translationY={translationY} switchTrack={(option) => switchTrack(option)} />
           </View>
-          <View style={{ width: kWidth / 2.5 }}>
+          <View style={{ width: kWidth / 2.2 }}>
             <TrackInfo artistName={artistName} trackName={trackName} translationY={translationY} />
           </View>
           {/* <ProgressBar style={styles.progessBar} />

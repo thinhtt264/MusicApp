@@ -92,6 +92,16 @@ export const useMax = (...args: SharedValue<number>[]) => {
   return useDerivedValue(() => sharedMax(...args.map(x => x.value)));
 };
 
+export const useInsets = () => {
+  const { top, bottom, left, right } = useSafeAreaInsets();
+  return {
+    top,
+    bottom,
+    left,
+    right,
+  };
+};
+
 /**
  * Return view inside screen or not
  */

@@ -9,7 +9,7 @@ interface PlayerState {
 }
 
 const DEFAULT_INFO = {
-  url: `file://`,
+  url: '',
   artists: [],
   external_urls: { spotify: '' },
 };

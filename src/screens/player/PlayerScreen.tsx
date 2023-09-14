@@ -18,7 +18,7 @@ import { Blurhash } from 'react-native-blurhash';
 import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
 import { scale } from 'src/common/scale';
-import { onSwitchTrack } from 'src/common/player';
+import { onSwitchTrack, startAudio } from 'src/common/player';
 import { useFocusEffect } from '@react-navigation/native';
 import { ProgressBar, ControllerBar } from './components';
 import TrackPlayer, {
@@ -30,6 +30,7 @@ import Layout from 'src/themes/Layout';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
+import { MINIPLAYER_HEIGHT } from 'src/themes/Constants';
 
 const events = [
   Event.PlaybackState,
@@ -66,14 +67,22 @@ const PlayerScreen = ({ route, translationY }: any) => {
     setBgColor(blurHashColor || bgColor || Colors.grey.player);
   };
 
+  const initPlayer = async () => {
+    console.log(currentTrack.url);
+
+    if (currentTrack.url)
+      await startAudio({ info: currentTrack, from: 'search' });
+    await TrackPlayer.setPlayWhenReady(true);
+  }
+
   useEffect(() => {
-    // TrackPlayer.setPlayWhenReady(true);
-    // dispatch(
-    //   getRecommend({
-    //     artists: artistId,
-    //     tracks: trackId,
-    //   }),
-    // );
+    initPlayer();
+    dispatch(
+      getRecommend({
+        artists: artistId,
+        tracks: trackId,
+      }),
+    );
   }, []);
 
   const onGoBack = () => navigation.goBack();
@@ -118,7 +127,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
 
   const FragmentView =
     bgColor === Colors.grey.player ? (
-      <View style={[Layout.absolute, { backgroundColor: bgColor }]} />
+      <View style={[styles.defaultBackground, { backgroundColor: bgColor, }]} />
     ) : (
       <Blurhash blurhash={bgColor} style={styles.blurHashBackground} />
     );
@@ -130,9 +139,9 @@ const PlayerScreen = ({ route, translationY }: any) => {
       {FragmentView}
       <View style={styles.container} >
         <Header LeftIcon onLeftPress={onGoBack} from={from} translationY={translationY} />
-        <TrackImage url={albumImage} option={option} />
+        <TrackImage trackQueue={trackQueue} currentTrack={currentTrack} translationY={translationY} switchTrack={(option) => switchTrack(option)} />
         <TrackInfo artistName={artistName} trackName={trackName} />
-        {/* <ProgressBar style={styles.progessBar} /> */}
+        <ProgressBar style={styles.progessBar} />
         <ControllerBar
           buffering={buffering}
           switchTrack={option => switchTrack(option)}
@@ -148,13 +157,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: scale(25),
   },
-  image: {
-    height: kWidth - scale(70),
-    marginTop: scale(35),
-    borderRadius: scale(4),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   progessBar: {
     height: scale(50),
   },
@@ -167,4 +169,12 @@ const styles = StyleSheet.create({
     left: 0,
     zIndex: -1,
   },
+  defaultBackground: {
+    borderRadius: scale(10),
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+  }
 });

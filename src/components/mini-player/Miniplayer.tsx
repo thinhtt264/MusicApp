@@ -4,55 +4,67 @@ import { PanGestureHandler } from 'react-native-gesture-handler';
 import { TAB_HEIGHT, kHeight } from 'src/common/constants';
 import { ScrollView, StyleSheet } from 'react-native';
 import { PlayerScreen } from 'src/screens';
+import Constants, { FULLSCREEN_HEIGHT, MINIPLAYER_HEIGHT } from 'src/themes/Constants';
+import { scale } from 'src/common/scale';
+import Layout from 'src/themes/Layout';
 
 
-export const MINIPLAYER_HEIGHT = kHeight - TAB_HEIGHT
 export const Miniplayer = () => {
-    const translationY = useSharedValue(-MINIPLAYER_HEIGHT);
+    const translationY = useSharedValue(0);
 
     const toggleFullScreen = () => {
-        if (Math.abs(translationY.value) < MINIPLAYER_HEIGHT / 2) {
-            translationY.value = withTiming((-MINIPLAYER_HEIGHT), { duration: 500 });
+        if (Math.abs(translationY.value) < FULLSCREEN_HEIGHT / 2) {
+            translationY.value = withTiming((-FULLSCREEN_HEIGHT), { duration: 500 });
         } else {
             translationY.value = withTiming(0, { duration: 500 });
         }
     };
 
     const onEndDrag = () => {
+
         const distance = Math.abs(translationY.value);
 
-        // Check if the distance is less than 50% of the MINIPLAYER_HEIGHT
-        if (distance < (MINIPLAYER_HEIGHT * 50 / 100)) {  // Check if the distance is greater than 25% of the MINIPLAYER_HEIGHT
-            if (distance > (MINIPLAYER_HEIGHT * 25 / 100)) {
-                translationY.value = withTiming(-MINIPLAYER_HEIGHT, { duration: 500 });
+        // Check if the distance is less than 50% of the FULLSCREEN_HEIGHT
+        if (distance < (FULLSCREEN_HEIGHT * 50 / 100)) {
+            if (distance > (FULLSCREEN_HEIGHT * 25 / 100)) { // Check if the distance is greater than 25% of the FULLSCREEN_HEIGHT
+                translationY.value = withTiming(-FULLSCREEN_HEIGHT, { duration: 500 });
             } else {
                 translationY.value = withTiming(0, { duration: 500 });
             }
         }
-        // Check if the distance is greater than or equal to 50% of the MINIPLAYER_HEIGHT
+        // Check if the distance is greater than or equal to 50% of the FULLSCREEN_HEIGHT
         else {
-            if (distance < (MINIPLAYER_HEIGHT * 70 / 100)) { // Check if the distance is less than 70% of the MINIPLAYER_HEIGHT
+            if (distance < (FULLSCREEN_HEIGHT * 75 / 100)) { // Check if the distance is less than 75% of the FULLSCREEN_HEIGHT
                 translationY.value = withTiming(0, { duration: 500 });
             } else {
-                translationY.value = withTiming(-MINIPLAYER_HEIGHT, { duration: 500 });
+                translationY.value = withTiming(-FULLSCREEN_HEIGHT, { duration: 500 });
             }
         }
     }
 
     const animatedStyle = useAnimatedStyle(() => {
-        const heightz = interpolate(translationY.value, [0, -(MINIPLAYER_HEIGHT)], [TAB_HEIGHT, kHeight], Extrapolate.CLAMP);
-        const bottomz = interpolate(translationY.value, [0, -(MINIPLAYER_HEIGHT)], [TAB_HEIGHT, 0], Extrapolate.CLAMP);
+        const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, kHeight], Extrapolate.CLAMP);
+        const bottomz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [TAB_HEIGHT, 0], Extrapolate.CLAMP);
+        const marginHorizontal = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [Constants.scale15, 0], Extrapolate.CLAMP);
         return {
             bottom: bottomz,
-            height: heightz
+            height: heightz,
+            marginHorizontal
         };
     });
 
     const pangestureStyle = useAnimatedStyle(() => {
-        const heightz = interpolate(translationY.value, [0, -(MINIPLAYER_HEIGHT)], [TAB_HEIGHT, TAB_HEIGHT + 30], Extrapolate.CLAMP);
+        // const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40], Extrapolate.CLAMP);
         return {
-            height: heightz,
+            height: translationY.value === -FULLSCREEN_HEIGHT ? MINIPLAYER_HEIGHT + 40 : MINIPLAYER_HEIGHT,
             top: 0
+        }
+    })
+
+    const playerStylez = useAnimatedStyle(() => {
+        const height = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, kHeight], Extrapolate.CLAMP);
+        return {
+            height
         }
     })
 
@@ -71,12 +83,14 @@ export const Miniplayer = () => {
     });
 
     return (
-        <Animated.View style={[styles.container, animatedStyle]}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} scrollEnabled={translationY.value >= MINIPLAYER_HEIGHT}>
+        <Animated.View style={[styles.container, animatedStyle, Layout.shadow]}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} scrollEnabled={translationY.value >= FULLSCREEN_HEIGHT}>
                 <PanGestureHandler onGestureEvent={gestureHandler}>
-                    <Animated.View style={[{ backgroundColor: 'transparent', width: '100%', position: 'absolute', right: 0 }, pangestureStyle]} />
+                    <Animated.View style={[{ backgroundColor: 'transparent', width: '100%', position: 'absolute', right: 0, zIndex: 99 }, pangestureStyle]} />
                 </PanGestureHandler>
-                <PlayerScreen translationY={translationY} />
+                <Animated.View style={playerStylez}>
+                    <PlayerScreen translationY={translationY} />
+                </Animated.View>
             </ScrollView>
         </Animated.View>
     )
@@ -89,8 +103,6 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 999,
-        width: '100%',
-        backgroundColor: 'white',
         flex: 1,
     },
 });

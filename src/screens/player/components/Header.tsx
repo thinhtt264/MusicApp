@@ -7,11 +7,11 @@ import Layout from 'src/themes/Layout';
 import { RegularText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native';
 import { translate } from 'src/common/language/translate';
 import Animated, { Extrapolate, SharedValue, interpolate, runOnJS, useAnimatedStyle } from 'react-native-reanimated';
-import { MINIPLAYER_HEIGHT } from 'src/components/mini-player';
+import Constants, { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
+import { useInsets } from 'src/common/animated';
 
 interface Props {
   LeftIcon?: boolean;
@@ -31,8 +31,8 @@ const HeaderComponent = (props: Props) => {
     from,
     translationY
   } = props;
-  const insets = useSafeAreaInsets();
 
+  const insets = useInsets()
   const titleRender = () => {
     switch (from) {
       case 'search':
@@ -43,9 +43,9 @@ const HeaderComponent = (props: Props) => {
   };
 
   const containerStyle = useAnimatedStyle(() => {
-    const paddingVertical = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [0, 15], Extrapolate.CLAMP);
-    const marginTop = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [0, insets.top], Extrapolate.CLAMP);
-    const translateY = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [-70, 0], Extrapolate.CLAMP);
+    const paddingVertical = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [0, Constants.scale15], Extrapolate.CLAMP);
+    const marginTop = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [0, insets.top], Extrapolate.CLAMP);
+    const translateY = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [-70, 0], Extrapolate.CLAMP);
     // const opacity = interpolate(translationY.value, [0, -MINIPLAYER_HEIGHT], [0, 1], Extrapolate.CLAMP);
 
     return {

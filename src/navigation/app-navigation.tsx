@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import { NavigationContainer } from '@react-navigation/native';
 import { RXStore, useAppDispatch, useAppSelector } from 'src/common/redux';
@@ -6,11 +6,13 @@ import { navigationRef } from 'src/common/navigation';
 import { appInit } from 'src/store/action-thunk/AppThunk';
 import RootNavigator from './root-navigator';
 import { MyAppTheme } from 'src/themes';
-import TrackPlayer from 'react-native-track-player';
 import { AppLoader } from 'src/components/loader';
+import TrackPlayer from 'react-native-track-player';
 
 export const AppNavigation = () => {
   const { loadingApp, theme, env } = useAppSelector(state => state.app);
+  const [init, setInit] = useState(false)
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export const AppNavigation = () => {
     };
     init().finally(() => {
       setTimeout(() => {
+        setInit(true)
         RNBootSplash.hide({ fade: true });
       }, 1000);
     });
@@ -27,7 +30,7 @@ export const AppNavigation = () => {
 
   return (
     <NavigationContainer theme={MyAppTheme[theme]} ref={navigationRef}>
-      {env && <RootNavigator />}
+      {init && env && <RootNavigator />}
       {/* Snack bar */}
       {/* <SnackBar /> */}
       {/* Modal Alert */}

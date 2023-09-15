@@ -3,9 +3,19 @@ import React, { useEffect } from 'react';
 import { fontScale, scale } from 'src/common/scale';
 import { BoldText, RegularText } from 'src/components/text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Animated, { BounceIn, BounceOut, Extrapolate, SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  BounceIn,
+  BounceOut,
+  Extrapolate,
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import Colors from 'src/themes/Colors';
-import Constants, { FULLSCREEN_HEIGHT, MINIPLAYER_HEIGHT } from 'src/themes/Constants';
+import Constants, {
+  FULLSCREEN_HEIGHT,
+  MINIPLAYER_HEIGHT,
+} from 'src/themes/Constants';
 
 interface Props {
   artistName: string;
@@ -15,8 +25,13 @@ interface Props {
 
 const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 const AnimatedIcon1 = Animated.createAnimatedComponent(Ionicons);
+const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
 
-const TrackInfo = ({ trackName = '', artistName = '', translationY }: Props) => {
+const TrackInfo = ({
+  trackName = '',
+  artistName = '',
+  translationY,
+}: Props) => {
   const [liked, setLiked] = React.useState(false);
 
   const onPressIcon = () => {
@@ -24,58 +39,99 @@ const TrackInfo = ({ trackName = '', artistName = '', translationY }: Props) => 
   };
 
   const nameStylez = useAnimatedStyle(() => {
-    const fontSize = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [Constants.fontScale14, Constants.fontScale18], Extrapolate.CLAMP)
+    const fontSize = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [Constants.fontScale14, Constants.fontScale18],
+      Extrapolate.CLAMP,
+    );
     return {
-      fontSize
-    }
-  })
+      fontSize,
+    };
+  });
 
   const artitStylez = useAnimatedStyle(() => {
-    const fontSize = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [Constants.fontScale10, Constants.fontScale14], Extrapolate.CLAMP)
+    const fontSize = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [Constants.fontScale11, Constants.fontScale14],
+      Extrapolate.CLAMP,
+    );
     return {
-      fontSize
-    }
-  })
+      fontSize,
+    };
+  });
 
   const trackStylez = useAnimatedStyle(() => {
-    const height = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT], Extrapolate.CLAMP)
+    const height = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [Constants.scale40, MINIPLAYER_HEIGHT],
+      Extrapolate.CLAMP,
+    );
     return {
-      height
-    }
-  })
+      height,
+    };
+  });
 
+  const iconStylez = useAnimatedStyle(() => {
+    const height = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [0, Constants.scale30],
+      Extrapolate.CLAMP,
+    );
+    const width = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [0, Constants.scale30],
+      Extrapolate.CLAMP,
+    );
+    return {
+      height,
+      width,
+    };
+  });
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.trackInfo, trackStylez]}>
-        <BoldText numberOfLines={1} textStyle={nameStylez}>
-          {trackName}
-        </BoldText>
-        <RegularText numberOfLines={1} textStyle={artitStylez}>
-          {artistName}
-        </RegularText>
-      </Animated.View>
-      <TouchableOpacity
+      <View
+        style={{
+          height: MINIPLAYER_HEIGHT,
+          justifyContent: 'center',
+          paddingVertical: 5,
+        }}>
+        <Animated.View style={[styles.trackInfo, trackStylez]}>
+          <BoldText numberOfLines={1} textStyle={nameStylez}>
+            {trackName}
+          </BoldText>
+          <RegularText numberOfLines={1} textStyle={artitStylez}>
+            {artistName}
+          </RegularText>
+        </Animated.View>
+      </View>
+
+      <AnimatedButton
         activeOpacity={1}
         onPress={onPressIcon}
-        style={styles.icon}>
+        style={[styles.icon, iconStylez]}>
         {!liked ? (
           <AnimatedIcon1
             name={'heart-outline'}
             size={scale(26)}
-            style={{ color: 'white' }}
+            color={'white'}
             entering={BounceIn.duration(400)}
           />
         ) : (
           <AnimatedIcon
             name={'heart-sharp'}
             size={scale(26)}
-            style={{ color: Colors.green.default }}
+            color={Colors.green.default}
             exiting={BounceOut.duration(400)}
             entering={BounceIn.duration(400)}
           />
         )}
-      </TouchableOpacity>
+      </AnimatedButton>
     </View>
   );
 };
@@ -87,14 +143,13 @@ const styles = StyleSheet.create({
     // marginTop: scale(40),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%'
+    alignItems: 'flex-start',
+    width: '100%',
   },
   trackInfo: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    marginRight: scale(5),
   },
   artist: {
     fontSize: fontScale(12),
@@ -104,8 +159,7 @@ const styles = StyleSheet.create({
     fontSize: fontScale(18),
   },
   icon: {
-    width: scale(30),
-    height: scale(30),
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
   },

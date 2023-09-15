@@ -1,9 +1,4 @@
-import {
-  Platform,
-  StyleSheet,
-  View,
-  ScrollView,
-} from 'react-native';
+import { Platform, StyleSheet, View, ScrollView } from 'react-native';
 import React, {
   useCallback,
   useEffect,
@@ -52,10 +47,9 @@ const PlayerScreen = ({ route, translationY }: any) => {
   const { albumImage, trackName, trackId, trackUrl, artistName, artistId } =
     formatSearchData(currentTrack);
 
-
   useLayoutEffect(() => {
     getBgColor();
-    return () => { };
+    return () => {};
   }, [albumImage]);
 
   const getBgColor = async () => {
@@ -73,7 +67,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
     if (currentTrack.url)
       await startAudio({ info: currentTrack, from: 'search' });
     await TrackPlayer.setPlayWhenReady(true);
-  }
+  };
 
   useEffect(() => {
     StatusBar.setBackgroundColor('transparent');
@@ -92,7 +86,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
 
   const switchTrack = async (option: 'next' | 'previous') => {
     if (trackQueue.length > 1) {
-      setOptions(option)
+      setOptions(option);
       await dispatch(
         playerActions.onChangeCurrentTrack({
           id: trackId,
@@ -123,9 +117,15 @@ const PlayerScreen = ({ route, translationY }: any) => {
 
   const FragmentView =
     bgColor === Colors.grey.player ? (
-      <View style={[styles.defaultBackground, { backgroundColor: bgColor, }]} />
+      <View style={[styles.defaultBackground, { backgroundColor: bgColor }]} />
     ) : (
-      <Blurhash blurhash={bgColor} style={[styles.blurHashBackground, { borderRadius: 15, borderWidth: 2 }]} />
+      <Blurhash
+        blurhash={bgColor}
+        style={[
+          styles.blurHashBackground,
+          { borderRadius: 15, borderWidth: 2 },
+        ]}
+      />
     );
 
   return !bgColor ? (
@@ -133,25 +133,42 @@ const PlayerScreen = ({ route, translationY }: any) => {
   ) : (
     <>
       {FragmentView}
-      <View style={styles.container} >
-        <Header LeftIcon onLeftPress={onGoBack} from={from} translationY={translationY} />
-        <View style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap'
-        }}>
+      <View style={styles.container}>
+        <Header
+          LeftIcon
+          onLeftPress={onGoBack}
+          from={from}
+          translationY={translationY}
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}>
           <View style={{ width: kWidth / 3.5 - scale(40) }}>
-            <TrackImage trackQueue={trackQueue} currentTrack={currentTrack} translationY={translationY} switchTrack={(option) => switchTrack(option)} />
+            <TrackImage
+              trackQueue={trackQueue}
+              currentTrack={currentTrack}
+              translationY={translationY}
+              switchTrack={option => switchTrack(option)}
+            />
           </View>
-          <View style={{ width: kWidth / 2.2 }}>
-            <TrackInfo artistName={artistName} trackName={trackName} translationY={translationY} />
+          <View style={{ flex: 1 }}>
+            <TrackInfo
+              artistName={artistName}
+              trackName={trackName}
+              translationY={translationY}
+            />
           </View>
-          {/* <ProgressBar style={styles.progessBar} />
-          <ControllerBar
-            buffering={buffering}
-            switchTrack={option => switchTrack(option)}
-          /> */}
+          <View style={{ width: kWidth / 2.4 }}>
+            <ControllerBar
+              translationY={translationY}
+              buffering={buffering}
+              switchTrack={option => switchTrack(option)}
+            />
+          </View>
+          {/* <ProgressBar style={styles.progessBar} /> */}
         </View>
-
       </View>
     </>
   );
@@ -182,5 +199,5 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-  }
+  },
 });

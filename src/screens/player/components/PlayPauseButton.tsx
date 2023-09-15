@@ -1,16 +1,24 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { WaveIndicator } from 'react-native-indicators';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import TrackPlayer, { State } from 'react-native-track-player';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  SharedValue,
+} from 'react-native-reanimated';
+import TrackPlayer from 'react-native-track-player';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { usePlayerSate } from 'src/common/hooks';
-import { startAudio } from 'src/common/player';
 import { scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 
 export const PlayPauseButton = React.memo(
-  ({ buffering = false }: { buffering: boolean }) => {
+  ({
+    buffering = false,
+  }: {
+    buffering: boolean;
+    translationY: SharedValue<number>;
+  }) => {
     const { isPlaying, isEnded, isPaused } = usePlayerSate();
 
     const play = async () => {

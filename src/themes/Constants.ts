@@ -21,6 +21,9 @@ export default {
   scale90: scale(90),
   scale100: scale(100),
   fontScale10: fontScale(10),
+  fontScale12: fontScale(12),
+  fontScale11: fontScale(11),
   fontScale14: fontScale(14),
+  fontScale16: fontScale(16),
   fontScale18: fontScale(18),
 };

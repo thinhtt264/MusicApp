@@ -63,7 +63,7 @@ const TrackImage = React.memo(({ currentTrack, translationY, trackQueue, switchT
             height,
             width,
             justifyContent: 'center',
-            marginLeft
+            marginLeft,
         }
     }
 

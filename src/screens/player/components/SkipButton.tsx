@@ -19,7 +19,7 @@ interface SkipButtonProps {
 }
 
 const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
-const AnimatedVector = Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedVector = Animated.createAnimatedComponent(FontAwesome6);
 
 const IconHeight = scale(22);
 const IconWidth = scale(26);
@@ -52,7 +52,7 @@ const SkipButton: React.FC<SkipButtonProps> = React.memo(
       const size = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [18, IconHeight],
+        [0, 30],
         Extrapolate.CLAMP,
       );
       return {
@@ -64,7 +64,7 @@ const SkipButton: React.FC<SkipButtonProps> = React.memo(
       <AnimatedButton onPress={switchTrack} style={[animatedStylez]}>
         <AnimatedVector
           name={iconName}
-          size={iconSize}
+          animatedProps={iconSize}
           color={Colors.white.default}
         />
       </AnimatedButton>

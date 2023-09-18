@@ -119,13 +119,9 @@ const PlayerScreen = ({ route, translationY }: any) => {
     bgColor === Colors.grey.player ? (
       <View style={[styles.defaultBackground, { backgroundColor: bgColor }]} />
     ) : (
-      <Blurhash
-        blurhash={bgColor}
-        style={[
-          styles.blurHashBackground,
-          { borderRadius: 15, borderWidth: 2 },
-        ]}
-      />
+      <View style={styles.blurHashBackground}>
+        <Blurhash blurhash={bgColor} style={Layout.fill} />
+      </View>
     );
 
   return !bgColor ? (
@@ -134,12 +130,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
     <>
       {FragmentView}
       <View style={styles.container}>
-        <Header
-          LeftIcon
-          onLeftPress={onGoBack}
-          from={from}
-          translationY={translationY}
-        />
+        <Header from={from} translationY={translationY} />
         <View
           style={{
             flexDirection: 'row',
@@ -160,7 +151,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
               translationY={translationY}
             />
           </View>
-          <View style={{ width: kWidth / 2.4 }}>
+          <View style={{ width: kWidth / 2.8 }}>
             <ControllerBar
               translationY={translationY}
               buffering={buffering}
@@ -184,6 +175,7 @@ const styles = StyleSheet.create({
     height: scale(50),
   },
   blurHashBackground: {
+    borderRadius: scale(10),
     height: '100%',
     position: 'absolute',
     top: 0,
@@ -191,6 +183,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     zIndex: -1,
+    overflow: 'hidden',
   },
   defaultBackground: {
     borderRadius: scale(10),

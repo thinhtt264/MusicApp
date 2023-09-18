@@ -2,19 +2,26 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { WaveIndicator } from 'react-native-indicators';
 import Animated, {
+  Extrapolate,
   FadeIn,
   FadeOut,
   SharedValue,
+  interpolate,
+  useAnimatedStyle,
 } from 'react-native-reanimated';
 import TrackPlayer from 'react-native-track-player';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { usePlayerSate } from 'src/common/hooks';
 import { scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
+import Constants, { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
+
+const AnimatedIcon = Animated.createAnimatedComponent(WaveIndicator);
 
 export const PlayPauseButton = React.memo(
   ({
     buffering = false,
+    translationY,
   }: {
     buffering: boolean;
     translationY: SharedValue<number>;
@@ -27,21 +34,34 @@ export const PlayPauseButton = React.memo(
         await TrackPlayer.play();
       }
     };
+    const animatedStyle = useAnimatedStyle(() => {
+      const size = interpolate(
+        translationY.value,
+        [0, -FULLSCREEN_HEIGHT],
+        [Constants.scale30, Constants.scale50],
+        Extrapolate.CLAMP,
+      );
+
+      return {
+        width: size,
+        height: size,
+      };
+    });
 
     return buffering ? (
-      <View style={{ width: scale(50) }}>
-        <WaveIndicator size={scale(50)} color={Colors.white.default} />
+      <View>
+        <AnimatedIcon style={animatedStyle} color={Colors.white.default} />
       </View>
     ) : (
       <TouchableOpacity onPress={isPlaying ? TrackPlayer.pause : play}>
         <Animated.View
-          style={styles.container}
+          style={[styles.container, animatedStyle]}
           entering={FadeIn.duration(500)}
           exiting={FadeOut}>
           <FontAwesome6
             style={{ marginLeft: isPlaying ? scale(0) : scale(2) }}
             name={isPlaying ? 'pause' : 'play'}
-            size={scale(18)}
+            size={scale(14)}
             color={Colors.black.default}
           />
         </Animated.View>

@@ -7,7 +7,6 @@ import Animated, {
   Extrapolate,
   SharedValue,
   interpolate,
-  useAnimatedProps,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import Constants, { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
@@ -48,15 +47,16 @@ const SkipButton: React.FC<SkipButtonProps> = React.memo(
       };
     });
 
-    const iconSize = useAnimatedProps(() => {
-      const size = interpolate(
+    const iconSize = useAnimatedStyle(() => {
+      const fontSize = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [0, 30],
+        [20, IconHeight],
         Extrapolate.CLAMP,
       );
+
       return {
-        size
+        fontSize,
       };
     });
 
@@ -64,7 +64,7 @@ const SkipButton: React.FC<SkipButtonProps> = React.memo(
       <AnimatedButton onPress={switchTrack} style={[animatedStylez]}>
         <AnimatedVector
           name={iconName}
-          animatedProps={iconSize}
+          style={iconSize}
           color={Colors.white.default}
         />
       </AnimatedButton>

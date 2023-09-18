@@ -82,7 +82,7 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
       <AnimatedButton onPress={optionPress} style={animatedStylez}>
         <FontAwesome6
           name={iconName}
-          size={scale(22)}
+          size={scale(20)}
           color={
             applyOption && iconName !== 'shuffle'
               ? Colors.green.default

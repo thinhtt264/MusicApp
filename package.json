@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "clean-android":"cd android && ./gradlew clean",
+    "clean-android": "cd android && ./gradlew clean",
+    "apk": "yarn clean-android && ./gradlew assembleRelease",
     "ios": "react-native run-ios",
-    "pod-install":"cd ios && pod install",
+    "pod-install": "cd ios && pod install",
     "postinstall": "patch-package",
     "lint": "eslint .",
     "start": "react-native start",

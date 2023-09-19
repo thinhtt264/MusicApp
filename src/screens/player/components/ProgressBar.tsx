@@ -9,15 +9,22 @@ import { Spacer } from 'src/components/spacer';
 import Colors from 'src/themes/Colors';
 import { dispatch } from 'src/common/redux';
 import { appActions } from 'src/store/action-slices';
+import Animated, {
+  Extrapolate,
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
+import { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
 
 interface Props extends SliderProps {
-  style?: StyleProp<ViewStyle>;
+  translationY: SharedValue<number>;
 }
 
 const formatSeconds = (time: number) =>
   new Date(time * 1000).toISOString().slice(14, 19);
 
-const ProgressBarComponent = ({ style, ...props }: Props) => {
+const ProgressBarComponent = ({ translationY, ...props }: Props) => {
   const { position, duration, buffered } = useProgress();
 
   const forceValuePosition = position >= duration ? 0 : position;
@@ -28,8 +35,18 @@ const ProgressBarComponent = ({ style, ...props }: Props) => {
     }
   }, [position, buffered]);
 
+  const stylez = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [-10, 1],
+      Extrapolate.CLAMP,
+    );
+    return { opacity };
+  });
+
   return (
-    <View style={[styles.container, style]}>
+    <Animated.View style={[styles.container, stylez]}>
       <>
         <Slider
           style={styles.slider}
@@ -38,10 +55,8 @@ const ProgressBarComponent = ({ style, ...props }: Props) => {
           maximumValue={duration}
           thumbTintColor={Colors.white.default}
           minimumTrackTintColor={Colors.white.default}
-          maximumTrackTintColor="#FFFFFF"
-          onSlidingComplete={value => {
-            TrackPlayer.seekTo(value);
-          }}
+          maximumTrackTintColor={Colors.white.default}
+          onSlidingComplete={TrackPlayer.seekTo}
           {...props}
         />
 
@@ -55,7 +70,7 @@ const ProgressBarComponent = ({ style, ...props }: Props) => {
           </Text>
         </View>
       </>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -63,16 +78,18 @@ export const ProgressBar = memo(ProgressBarComponent, isEqual);
 
 const styles = StyleSheet.create({
   slider: {
-    width: '105%',
+    width: kWidth - scale(15),
   },
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%',
-    marginTop: scale(5),
+    width: '90%',
+    marginTop: scale(10),
+    marginLeft: scale(20),
   },
   labelContainer: {
     flexDirection: 'row',
+    marginHorizontal: scale(3),
   },
   labelText: {
     color: Colors.white.default,

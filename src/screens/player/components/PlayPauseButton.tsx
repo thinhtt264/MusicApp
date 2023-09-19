@@ -17,6 +17,7 @@ import Colors from 'src/themes/Colors';
 import Constants, { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
 
 const AnimatedIcon = Animated.createAnimatedComponent(WaveIndicator);
+const AnimatedVector = Animated.createAnimatedComponent(FontAwesome6);
 
 export const PlayPauseButton = React.memo(
   ({
@@ -26,11 +27,11 @@ export const PlayPauseButton = React.memo(
     buffering: boolean;
     translationY: SharedValue<number>;
   }) => {
-    const { isPlaying, isEnded, isPaused } = usePlayerSate();
+    const { isPlaying, isEnded, isPaused, isReady } = usePlayerSate();
 
     const play = async () => {
       if (isEnded) {
-      } else if (isPaused) {
+      } else if (isPaused || isReady) {
         await TrackPlayer.play();
       }
     };
@@ -38,13 +39,25 @@ export const PlayPauseButton = React.memo(
       const size = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [Constants.scale30, Constants.scale50],
+        [Constants.scale25, Constants.scale50],
         Extrapolate.CLAMP,
       );
 
       return {
         width: size,
         height: size,
+      };
+    });
+
+    const iconStylez = useAnimatedStyle(() => {
+      const fontSize = interpolate(
+        translationY.value,
+        [0, -FULLSCREEN_HEIGHT],
+        [Constants.scale10, Constants.scale15],
+        Extrapolate.CLAMP,
+      );
+      return {
+        fontSize,
       };
     });
 
@@ -58,10 +71,12 @@ export const PlayPauseButton = React.memo(
           style={[styles.container, animatedStyle]}
           entering={FadeIn.duration(500)}
           exiting={FadeOut}>
-          <FontAwesome6
-            style={{ marginLeft: isPlaying ? scale(0) : scale(2) }}
+          <AnimatedVector
+            style={[
+              { marginLeft: isPlaying ? scale(0) : scale(2) },
+              iconStylez,
+            ]}
             name={isPlaying ? 'pause' : 'play'}
-            size={scale(14)}
             color={Colors.black.default}
           />
         </Animated.View>

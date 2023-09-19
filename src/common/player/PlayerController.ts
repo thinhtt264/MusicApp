@@ -32,7 +32,9 @@ export const startAudio = async (info: PlayerProps) => {
   );
   // }
   // Start playing it
-  // await TrackPlayer.setPlayWhenReady(true);
+  // if (info.from !== 'home') {
+  //   await TrackPlayer.setPlayWhenReady(true);
+  // }
 };
 
 /**

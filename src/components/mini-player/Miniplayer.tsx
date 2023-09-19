@@ -137,6 +137,7 @@ export const Miniplayer = () => {
               },
               pangestureStyle,
             ]}
+            onTouchEnd={toggleFullScreen}
           />
         </PanGestureHandler>
         <ScollDownButton

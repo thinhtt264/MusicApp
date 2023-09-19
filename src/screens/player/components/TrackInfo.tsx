@@ -88,9 +88,17 @@ const TrackInfo = ({
       [0, Constants.scale30],
       Extrapolate.CLAMP,
     );
+
+    const transalteX = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [100, 0],
+      Extrapolate.CLAMP,
+    );
     return {
       height,
       width,
+      transform: [{ translateX: transalteX }],
     };
   });
 

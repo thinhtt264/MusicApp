@@ -1,38 +1,37 @@
 import { StyleSheet, View } from 'react-native';
 import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
-import { StyleProp } from 'react-native';
-import { ViewStyle } from 'react-native';
 import Layout from 'src/themes/Layout';
 import { RegularText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
-import { TouchableOpacity } from 'react-native';
 import { translate } from 'src/common/language/translate';
 import Animated, {
   Extrapolate,
   SharedValue,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import Constants, { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
 import { useInsets } from 'src/common/animated';
+import { useAppSelector } from 'src/common/redux';
 
 interface Props {
-  from: 'search' | 'playlist';
   translationY: SharedValue<number>;
 }
-
+const spaceSize = scale(4);
 const HeaderComponent = (props: Props) => {
-  const { from, translationY } = props;
+  const { currentTrack } = useAppSelector(state => state.player);
+  const { translationY } = props;
 
   const insets = useInsets();
   const titleRender = () => {
-    switch (from) {
+    switch (currentTrack.playFrom) {
       case 'search':
         return translate('player:fromSearch');
+      case 'recommend':
+        return translate('player:fromRecommend');
       default:
-        break;
+        return translate('player:fromSearch');
     }
   };
 
@@ -58,7 +57,7 @@ const HeaderComponent = (props: Props) => {
     const marginBottom = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [3, Constants.scale20],
+      [spaceSize, Constants.scale20], //chỉnh khoảng cách trên track image
       Extrapolate.CLAMP,
     );
 
@@ -73,7 +72,10 @@ const HeaderComponent = (props: Props) => {
   return (
     <Animated.View
       style={[Layout.rowBetween, containerStyle, styles.container]}>
-      <RegularText numberOfLines={1} textStyle={styles.title}>
+      <RegularText
+        numberOfLines={1}
+        textStyle={styles.title}
+        ellipsizeMode="tail">
         {titleRender()}
       </RegularText>
     </Animated.View>
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     width: '100%',
-    justifyContent:'center'
+    justifyContent: 'center',
   },
   title: {
     fontSize: fontScale(12),

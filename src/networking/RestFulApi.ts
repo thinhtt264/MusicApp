@@ -46,22 +46,20 @@ AxiosInstance.interceptors.response.use(
       if (newToken === null) {
         return Promise.reject(error);
       }
-      console.log('new token');
-      console.log(newToken);
 
       dispatch(authActions.onSetToken(newToken));
 
-      originalRequest.headers[
-        tokenKeyHeader
-      ] = `Bearer ${newToken.access_token}`;
-      return AxiosInstance.request(originalRequest)
-        .then(() => {
-          console.log('call r');
-        })
-        .catch(e => {
-          console.log('lỗi lòi l ');
-          console.log(e);
-        });
+      // originalRequest.headers[
+      //   tokenKeyHeader
+      // ] = `Bearer ${newToken.access_token}`;
+      // return AxiosInstance.request(originalRequest)
+      //   .then(() => {
+      //     console.log('call r');
+      //   })
+      //   .catch(e => {
+      //     console.log('lỗi lòi l ');
+      //     console.log(e);
+      //   });
     }
     // return Promise.reject(error);
   },

@@ -15,6 +15,7 @@ import { LibraryIcon } from 'src/components/svg';
 import { HomeScreen, SearchScreen } from 'src/screens';
 import { TAB_HEIGHT } from 'src/common/constants';
 import { Miniplayer } from 'src/components/mini-player';
+import { useAppSelector } from 'src/common/redux';
 
 interface Props {
   size: number;
@@ -62,8 +63,8 @@ export const TabBar = (props: BottomTabBarProps) => {
             options.tabBarLabel !== undefined
               ? options.tabBarLabel
               : options.title !== undefined
-                ? options.title
-                : translate(`home:${route.name.toLocaleLowerCase()}`);
+              ? options.title
+              : translate(`home:${route.name.toLocaleLowerCase()}`);
 
           const isFocused = state.index === index;
 
@@ -125,6 +126,7 @@ export type HomeTabParamList = {
 const Tab = createBottomTabNavigator<HomeTabParamList>();
 
 const HomeTab = () => {
+  const { currentTrack } = useAppSelector(state => state.player);  
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       <Tab.Navigator
@@ -132,13 +134,12 @@ const HomeTab = () => {
           headerShown: false,
           tabBarShowLabel: false,
         }}
-        tabBar={(props) => (
+        tabBar={props => (
           <View>
-            {<Miniplayer />}
+            {currentTrack.id && <Miniplayer />}
             <TabBar {...props} />
           </View>
-        )}
-      >
+        )}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
         <Tab.Screen name="Library" component={HomeScreen} />
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 9999,
     width: '100%',
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
 });
 export default HomeTab;

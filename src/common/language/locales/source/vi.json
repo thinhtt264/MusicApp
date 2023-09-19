@@ -52,6 +52,7 @@
     "recent": "Các tìm kiếm gần đây"
   },
   "player": {
-    "fromSearch": "ĐANG PHÁT TỪ TÌM KIẾM"
+    "fromSearch": "ĐANG PHÁT TỪ TÌM KIẾM",
+    "fromRecommend": "Đang phát các bài hát được đề xuất cho bạn"
   }
 }

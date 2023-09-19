@@ -19,6 +19,7 @@ interface Props {
   translationY: any;
 }
 const scaleSize115 = scale(115);
+const scaleSize135 = scale(142);
 
 const ControllerBarComponent = ({
   buffering,
@@ -29,21 +30,21 @@ const ControllerBarComponent = ({
     const translateY = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [-Constants.scale100, 0],
+      [-scaleSize135, 0],
       Extrapolate.CLAMP,
     );
 
     const translateX = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [scaleSize115, 0],
+      [scaleSize115, 2],
       Extrapolate.CLAMP,
     );
 
     const width = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [kWidth / 3, kWidth - Constants.scale50],
+      [kWidth / 3, kWidth - Constants.scale40],
       Extrapolate.CLAMP,
     );
     return {

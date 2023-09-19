@@ -12,6 +12,7 @@ const RootNavigator = () => {
     state => state.auth,
   );
   const { env } = useAppSelector(state => state.app);
+  const tokenReady = !!access_token && !(tokenExpiration <= Date.now());
 
   const requestToken = async () => {
     await dispatch(
@@ -23,7 +24,7 @@ const RootNavigator = () => {
     );
   };
 
-  const tokenReady = !!access_token && !(tokenExpiration <= Date.now());
+  useEffect(() => {}, [access_token]);
 
   useEffect(() => {
     if (isLogin) {

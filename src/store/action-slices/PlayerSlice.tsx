@@ -23,7 +23,7 @@ const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    onSetCurrentTrack: (state, { payload }: PayloadAction<TrackDataFields>) => {
+    onSetCurrentTrack: (state, { payload }: PayloadAction<any>) => {
       if (state.currentTrack.id === payload.id) return;
       state.currentTrack = { ...state.currentTrack, ...payload };
     },
@@ -60,7 +60,12 @@ const playerSlice = createSlice({
     builder.addCase(
       getRecommend.fulfilled,
       (state, { payload }: PayloadAction<GetRecommendResponseFields>) => {
-        state.trackQueue = [state.currentTrack, ...payload.tracks];
+        //update playfrom cho list recommend 
+        const updatedTracks = payload.tracks.map(track => ({
+          ...track,
+          playFrom: 'recommend'
+        }));
+        state.trackQueue = [state.currentTrack, ...updatedTracks];
       },
     );
   },

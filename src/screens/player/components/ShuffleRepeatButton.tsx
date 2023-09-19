@@ -72,14 +72,25 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
         [0, IconWidth],
         Extrapolate.CLAMP,
       );
+
+      const translateX = interpolate(
+        translationY.value,
+        [0, -FULLSCREEN_HEIGHT],
+        [option === 'repeat' ? 400 : -400, 0],
+        Extrapolate.CLAMP,
+      );
+
       return {
         height,
         width,
+        transform: [{ translateX }],
       };
     });
 
     return (
-      <AnimatedButton onPress={optionPress} style={animatedStylez}>
+      <AnimatedButton
+        onPress={optionPress}
+        style={[animatedStylez, styles.container]}>
         <FontAwesome6
           name={iconName}
           size={scale(20)}
@@ -94,6 +105,11 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
   },
 );
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default ShuffleRepeatButton;

@@ -3,15 +3,16 @@ import { playerActions, searchActions } from '../action-slices';
 import { createAction } from '@reduxjs/toolkit';
 import { PlayerProps } from 'src/common/player/Type';
 
-function* setCurrentTrackWorker(
+export function* setCurrentTrackWorker(
   action: ReturnType<typeof setCurrentTrackSagaAction.fetch>,
 ): Generator<any> {
   const { from, info } = action.payload.PlayerProps;
+  const trackInfo = { ...info, playFrom: from };
 
-  yield put(playerActions.onSetCurrentTrack(info));
+  yield put(playerActions.onSetCurrentTrack(trackInfo));
   if (from === 'search') {
-    yield put(playerActions.onResetQueue(info));
-    yield put(searchActions.addSearchRecentList(info));
+    yield put(playerActions.onResetQueue(trackInfo));
+    yield put(searchActions.addSearchRecentList(trackInfo));
   } else {
   }
 }

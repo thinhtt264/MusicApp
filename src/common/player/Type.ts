@@ -1,6 +1,6 @@
-import { TrackDataFields } from 'src/models/Track';
+import { PlayFromState, TrackDataFields } from 'src/models/Track';
 
 export interface PlayerProps {
-  from: 'search' | 'home';
+  from: PlayFromState;
   info: TrackDataFields;
 }

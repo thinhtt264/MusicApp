@@ -73,7 +73,7 @@ export const Miniplayer = () => {
     const marginHorizontal = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [Constants.scale15, 0],
+      [Constants.scale10, 0],
       Extrapolate.CLAMP,
     );
     return {

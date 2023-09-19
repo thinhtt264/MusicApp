@@ -16,6 +16,7 @@ import Constants, {
   FULLSCREEN_HEIGHT,
   MINIPLAYER_HEIGHT,
 } from 'src/themes/Constants';
+import { kWidth } from 'src/common/constants';
 
 interface Props {
   artistName: string;
@@ -93,13 +94,49 @@ const TrackInfo = ({
     };
   });
 
+  const containerStyle = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [-Constants.scale50, 0],
+      Extrapolate.CLAMP,
+    );
+
+    const translateX = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [-Constants.scale25, 0],
+      Extrapolate.CLAMP,
+    );
+
+    const maxWidth = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [kWidth / 2.1, kWidth - Constants.scale50],
+      Extrapolate.CLAMP,
+    );
+
+    const marginTop = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [0, Constants.scale30],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      transform: [{ translateY }, { translateX }],
+      maxWidth,
+      marginTop,
+    };
+  });
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, containerStyle]}>
       <View
         style={{
           height: MINIPLAYER_HEIGHT,
           justifyContent: 'center',
-          paddingVertical: 5,
+          paddingVertical: scale(5),
         }}>
         <Animated.View style={[styles.trackInfo, trackStylez]}>
           <BoldText numberOfLines={1} textStyle={nameStylez}>
@@ -132,7 +169,7 @@ const TrackInfo = ({
           />
         )}
       </AnimatedButton>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -140,11 +177,12 @@ export default TrackInfo;
 
 const styles = StyleSheet.create({
   container: {
-    // marginTop: scale(40),
+    alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     width: '100%',
+    overflow: 'hidden',
   },
   trackInfo: {
     flex: 1,

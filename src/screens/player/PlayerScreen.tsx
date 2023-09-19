@@ -1,10 +1,5 @@
-import { Platform, StyleSheet, View, ScrollView } from 'react-native';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import { StyleSheet, View } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getRecommend } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
@@ -14,8 +9,7 @@ import { StatusBar } from 'react-native';
 import { kWidth } from 'src/common/constants';
 import { scale } from 'src/common/scale';
 import { onSwitchTrack, startAudio } from 'src/common/player';
-import { useFocusEffect } from '@react-navigation/native';
-import { ProgressBar, ControllerBar } from './components';
+import { ControllerBar } from './components';
 import TrackPlayer, {
   Event,
   State,
@@ -25,7 +19,17 @@ import Layout from 'src/themes/Layout';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
-import { MINIPLAYER_HEIGHT } from 'src/themes/Constants';
+import Constants, {
+  FULLSCREEN_HEIGHT,
+  MINIPLAYER_HEIGHT,
+} from 'src/themes/Constants';
+import { TrackDataItemFields } from '../../models/Track';
+import Animated, {
+  Extrapolate,
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 const events = [
   Event.PlaybackState,
@@ -131,35 +135,23 @@ const PlayerScreen = ({ route, translationY }: any) => {
       {FragmentView}
       <View style={styles.container}>
         <Header from={from} translationY={translationY} />
-        <View
-          style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-          }}>
-          <View style={{ width: kWidth / 3.5 - scale(40) }}>
-            <TrackImage
-              trackQueue={trackQueue}
-              currentTrack={currentTrack}
-              translationY={translationY}
-              switchTrack={option => switchTrack(option)}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <TrackInfo
-              artistName={artistName}
-              trackName={trackName}
-              translationY={translationY}
-            />
-          </View>
-          <View style={{ width: kWidth / 2.8 }}>
-            <ControllerBar
-              translationY={translationY}
-              buffering={buffering}
-              switchTrack={option => switchTrack(option)}
-            />
-          </View>
-          {/* <ProgressBar style={styles.progessBar} /> */}
-        </View>
+        <TrackImage
+          trackQueue={trackQueue}
+          currentTrack={currentTrack}
+          translationY={translationY}
+          switchTrack={option => switchTrack(option)}
+        />
+        <TrackInfo
+          artistName={artistName}
+          trackName={trackName}
+          translationY={translationY}
+        />
+        <ControllerBar
+          translationY={translationY}
+          buffering={buffering}
+          switchTrack={option => switchTrack(option)}
+        />
+        {/* <ProgressBar style={styles.progessBar} /> */}
       </View>
     </>
   );
@@ -175,7 +167,7 @@ const styles = StyleSheet.create({
     height: scale(50),
   },
   blurHashBackground: {
-    borderRadius: scale(10),
+    borderRadius: scale(5),
     height: '100%',
     position: 'absolute',
     top: 0,
@@ -186,7 +178,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   defaultBackground: {
-    borderRadius: scale(10),
+    // borderRadius: scale(10),
     position: 'absolute',
     top: 0,
     right: 0,

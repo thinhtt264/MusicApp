@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "clean-android": "cd android && ./gradlew clean",
-    "apk": "yarn clean-android && ./gradlew assembleRelease",
+    "apk": "npm run clean-android && cd android && ./gradlew assembleRelease",
     "ios": "react-native run-ios",
     "pod-install": "cd ios && pod install",
     "postinstall": "patch-package",

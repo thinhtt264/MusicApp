@@ -44,8 +44,8 @@ function* fetchAudioWorker(
         downloadTrack(TrackInfoWithUrl);
       }
     } catch (e) {
-      console.log(e);
       if (e === 'The key has expired') {
+        alert("Hết key rồi thay key mới đê")
         action.payload.callback?.(e);
       }
     }

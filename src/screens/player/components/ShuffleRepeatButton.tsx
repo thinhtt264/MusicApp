@@ -83,7 +83,7 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
       return {
         height,
         width,
-        transform: [{ translateX }],
+        // transform: [{ translateX }],
       };
     });
 

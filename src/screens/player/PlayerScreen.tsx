@@ -53,18 +53,18 @@ const PlayerScreen = ({ route, translationY }: any) => {
 
   const initPlayer = async () => {
     await startAudio({ info: currentTrack, from: 'home' });
-  };
-
-  useEffect(() => {
-    StatusBar.setBackgroundColor('transparent');
-    StatusBar.setTranslucent(true);
-    initPlayer();
     dispatch(
       getRecommend({
         artists: artistId,
         tracks: trackId,
       }),
     );
+  };
+
+  useEffect(() => {
+    StatusBar.setBackgroundColor('transparent');
+    StatusBar.setTranslucent(true);
+    initPlayer();
   }, []);
 
   const onGoBack = () => navigation.goBack();

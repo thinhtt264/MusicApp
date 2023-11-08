@@ -95,10 +95,11 @@ const TrackInfo = ({
       [100, 0],
       Extrapolate.CLAMP,
     );
+
     return {
       height,
       width,
-      transform: [{ translateX: transalteX }],
+      // transform: [{ translateX: transalteX }],
     };
   });
 
@@ -159,7 +160,7 @@ const TrackInfo = ({
       <AnimatedButton
         activeOpacity={1}
         onPress={onPressIcon}
-        style={[styles.icon, iconStylez]}>
+        style={[iconStylez, styles.icon]}>
         {!liked ? (
           <AnimatedIcon1
             name={'heart-outline'}

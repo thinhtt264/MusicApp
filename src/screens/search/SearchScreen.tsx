@@ -13,7 +13,7 @@ import { kWidth } from 'src/common/constants';
 import routeNames from 'src/navigation/RouteNames';
 import { SearchItemResult } from './components/SearchItemResult';
 import LoadMoreList from 'src/components/list/LoadMoreList';
-import { getSearchData } from 'src/store/action-thunk';
+import { getRecommend, getSearchData } from 'src/store/action-thunk';
 import { AnimatedList } from 'src/components/list';
 import { startAudio } from 'src/common/player';
 import TrackPlayer from 'react-native-track-player';
@@ -30,8 +30,14 @@ const SearchScreen = (props: Props) => {
   const flatListRef = useRef<any>(null);
 
   const onNavigate = async (item: any) => {
-    await TrackPlayer.setPlayWhenReady(true);
     await startAudio({ info: item, from: 'search' });
+    await TrackPlayer.setPlayWhenReady(true);
+    dispatch(
+      getRecommend({
+        artists: item.artists[0].id,
+        tracks: item.id,
+      }),
+    );
     // navigation.navigate(routeNames.Stacks.PlayerStack, {
     //   screen: routeNames.PlayerStack.PlayerScreen,
     //   params: {

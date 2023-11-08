@@ -17,9 +17,15 @@ interface Props {
   onNavigate: (item: TrackDataItemFields) => void;
   item: TrackDataItemFields;
   isRecentList: boolean;
+  onOpenModal: (item: TrackDataItemFields) => void;
 }
 
-const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
+const SearchItemComponent = ({
+  onNavigate,
+  item,
+  isRecentList,
+  onOpenModal,
+}: Props) => {
   return (
     <View style={[Layout.rowBetween, styles.container]}>
       <TouchableOpacity
@@ -40,27 +46,31 @@ const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.rightIcon}
-        onPress={() => {
-          dispatch(
-            searchActions.removeSearchRecentList(isRecentList ? item.id : ''),
-          );
-        }}>
-        {isRecentList ? (
+      {isRecentList ? (
+        <TouchableOpacity
+          style={styles.rightIcon}
+          onPress={() => {
+            dispatch(
+              searchActions.removeSearchRecentList(isRecentList ? item.id : ''),
+            );
+          }}>
           <MaterialIcons
             size={scale(24)}
             color={Colors.unActive}
             name="close"
           />
-        ) : (
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles.rightIcon}
+          onPress={() => onOpenModal(item)}>
           <SimpleLineIcons
             name="options-vertical"
             size={scale(16)}
             color={Colors.unActive}
           />
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

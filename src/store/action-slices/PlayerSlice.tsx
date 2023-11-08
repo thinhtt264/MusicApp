@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { TrackDataFields, TrackDataItemFields } from 'src/models/Track';
-import { getRecommend } from '../action-thunk';
+import { appInit, getRecommend } from '../action-thunk';
 import { GetRecommendResponseFields } from 'src/models/Api';
 
 interface PlayerState {
@@ -60,14 +60,17 @@ const playerSlice = createSlice({
     builder.addCase(
       getRecommend.fulfilled,
       (state, { payload }: PayloadAction<GetRecommendResponseFields>) => {
-        //update playfrom cho list recommend 
+        //update playfrom cho list recommend
         const updatedTracks = payload.tracks.map(track => ({
           ...track,
-          playFrom: 'recommend'
+          playFrom: 'recommend',
         }));
         state.trackQueue = [state.currentTrack, ...updatedTracks];
       },
     );
+    builder.addCase(appInit.fulfilled, (state) => {
+      state.trackQueue = [state.currentTrack];
+    });
   },
 });
 export const { reducer: playerReducer, actions: playerActions } = playerSlice;

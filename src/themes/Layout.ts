@@ -25,11 +25,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  colVCenter: {
+  colHCenter: {
     flexDirection: 'column',
     alignItems: 'center',
   },
-  colHCenter: {
+  colVCenter: {
     flexDirection: 'column',
     justifyContent: 'center',
   },

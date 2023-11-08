@@ -1,2 +1,3 @@
 import { SearchBox } from './SearchBox';
-export { SearchBox };
+import BottomSheetContent from './BottomSheetContent';
+export { SearchBox, BottomSheetContent };

@@ -8,10 +8,11 @@ import RootNavigator from './root-navigator';
 import { MyAppTheme } from 'src/themes';
 import { AppLoader } from 'src/components/loader';
 import TrackPlayer from 'react-native-track-player';
+import { Host } from 'react-native-portalize';
 
 export const AppNavigation = () => {
   const { loadingApp, theme, env } = useAppSelector(state => state.app);
-  const [init, setInit] = useState(false)
+  const [init, setInit] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -22,7 +23,7 @@ export const AppNavigation = () => {
     };
     init().finally(() => {
       setTimeout(() => {
-        setInit(true)
+        setInit(true);
         RNBootSplash.hide({ fade: true });
       }, 1000);
     });
@@ -30,7 +31,11 @@ export const AppNavigation = () => {
 
   return (
     <NavigationContainer theme={MyAppTheme[theme]} ref={navigationRef}>
-      {init && env && <RootNavigator />}
+      {init && env && (
+        <Host>
+          <RootNavigator />
+        </Host>
+      )}
       {/* Snack bar */}
       {/* <SnackBar /> */}
       {/* Modal Alert */}

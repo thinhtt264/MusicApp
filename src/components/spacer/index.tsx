@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import { scale } from 'src/common/scale';
 
 const DEFAULT_SPACE = scale(15);
@@ -12,13 +12,17 @@ const SPACER_STYLES = {
   expand: (): ViewStyle => ({ flex: 1 }),
 };
 
-export const Spacer = React.memo(({
-  mode = 'vertical',
-  size = DEFAULT_SPACE,
-}: {
-  mode?: SpacerMode;
-  size?: number;
-}) => {
-  const style = SPACER_STYLES[mode](size);
-  return <View style={style} />;
-});
+export const Spacer = React.memo(
+  ({
+    mode = 'vertical',
+    size = DEFAULT_SPACE,
+    style = {},
+  }: {
+    mode?: SpacerMode;
+    size?: number;
+    style?: ViewStyle;
+  }) => {
+    const styles = SPACER_STYLES[mode](size);
+    return <View style={[styles, style]} />;
+  },
+);

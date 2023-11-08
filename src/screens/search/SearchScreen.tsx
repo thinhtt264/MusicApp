@@ -1,23 +1,25 @@
-import { StyleSheet, View } from 'react-native';
-import React, { useRef, useCallback } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
+import React, { useRef, useCallback, useState } from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { fontScale, scale } from 'src/common/scale';
-import { SearchBox } from './components';
+import { BottomSheetContent, SearchBox } from './components';
 import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
 import { BoldText } from 'src/components/text';
 import { kWidth } from 'src/common/constants';
-import routeNames from 'src/navigation/RouteNames';
 import { SearchItemResult } from './components/SearchItemResult';
 import LoadMoreList from 'src/components/list/LoadMoreList';
-import { getRecommend, getSearchData } from 'src/store/action-thunk';
+import { getSearchData } from 'src/store/action-thunk';
 import { AnimatedList } from 'src/components/list';
 import { startAudio } from 'src/common/player';
 import TrackPlayer from 'react-native-track-player';
 import { setCurrentTrackSagaAction } from 'src/store/action-saga';
+import { BottomModal } from 'src/components/modal';
+import { BottomSheetRef } from 'src/components/modal/type';
+import { Portal } from 'react-native-portalize';
 
 interface Props {}
 
@@ -27,17 +29,14 @@ const SearchScreen = (props: Props) => {
     state => state.search,
   );
 
-  const flatListRef = useRef<any>(null);
+  const [trackInfo, setTrackInfo] = useState<any>();
+
+  const bottomSheetRef = useRef<BottomSheetRef>(null);
+  const flatListRef = useRef<FlatList>(null);
 
   const onNavigate = async (item: any) => {
     await startAudio({ info: item, from: 'search' });
     await TrackPlayer.setPlayWhenReady(true);
-    dispatch(
-      getRecommend({
-        artists: item.artists[0].id,
-        tracks: item.id,
-      }),
-    );
     // navigation.navigate(routeNames.Stacks.PlayerStack, {
     //   screen: routeNames.PlayerStack.PlayerScreen,
     //   params: {
@@ -53,6 +52,7 @@ const SearchScreen = (props: Props) => {
           onNavigate={onNavigate}
           item={item}
           isRecentList={isRecentList}
+          onOpenModal={(data: any) => openBottomModal(data)}
         />
       );
     },
@@ -71,6 +71,11 @@ const SearchScreen = (props: Props) => {
     },
     [searchData.keyword],
   );
+
+  const openBottomModal = (info: any) => {
+    setTrackInfo(info);
+    bottomSheetRef.current?.onOpen(0);
+  };
 
   return (
     <Container style={styles.container}>
@@ -110,6 +115,11 @@ const SearchScreen = (props: Props) => {
           </>
         )}
       </>
+      <Portal>
+        <BottomModal ref={bottomSheetRef}>
+          <BottomSheetContent info={trackInfo} />
+        </BottomModal>
+      </Portal>
     </Container>
   );
 };

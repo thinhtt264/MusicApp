@@ -32,7 +32,6 @@ const PlayerScreen = ({ route, translationY }: any) => {
   // const [isLoading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(true);
   const [bgColor, setBgColor] = useState('');
-  const [option, setOptions] = useState<'next' | 'previous'>('next');
 
   const { albumImage, trackName, trackId, trackUrl, artistName, artistId } =
     formatSearchData(currentTrack);
@@ -53,12 +52,6 @@ const PlayerScreen = ({ route, translationY }: any) => {
 
   const initPlayer = async () => {
     await startAudio({ info: currentTrack, from: 'home' });
-    dispatch(
-      getRecommend({
-        artists: artistId,
-        tracks: trackId,
-      }),
-    );
   };
 
   useEffect(() => {
@@ -70,14 +63,23 @@ const PlayerScreen = ({ route, translationY }: any) => {
   const onGoBack = () => navigation.goBack();
 
   const switchTrack = async (option: 'next' | 'previous') => {
-    if (trackQueue.length > 1) {
-      setOptions(option);
+    if (trackQueue.length > 0) {
+      if (option === 'next' && trackQueue.length === 1) {
+        await dispatch(
+          getRecommend({
+            artists: artistId,
+            tracks: trackId,
+          }),
+        );
+      }
+
       await dispatch(
         playerActions.onChangeCurrentTrack({
           id: trackId,
           option: option,
         }),
       );
+
       setBuffering(true);
       await onSwitchTrack(option);
     }

@@ -1,4 +1,4 @@
-import { TrackDataFields } from "src/models/Track";
+import { TrackDataFields, TrackDataItemFields } from 'src/models/Track';
 
 export interface ReadDataProps {
   collection?: 'TrackList' | 'RapidApi';
@@ -18,5 +18,19 @@ export interface TrackInfoFields {
 
 export interface UploadFileFields {
   localFilePath: string;
+  data: TrackDataItemFields;
+}
+
+export interface AddPlayListFields {
+  playListId?: string;
+  data: {
+    name: string;
+    img: string;
+  };
+}
+
+export interface AddTrackToPlayListFields {
   data: TrackDataFields;
+  ref?: string;
+  callback?: () => void;
 }

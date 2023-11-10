@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import React, { memo } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import isEqual from 'react-fast-compare';
 import Layout from 'src/themes/Layout';
 import FastImage from 'react-native-fast-image';
@@ -10,68 +10,99 @@ import { TrackDataItemFields } from 'src/models/Track';
 import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import { kWidth } from 'src/common/constants';
-import { dispatch } from 'src/common/redux';
+import { dispatch, useAppSelector } from 'src/common/redux';
 import { searchActions } from 'src/store/action-slices';
+import { BottomModal } from 'src/components/modal';
+import { BottomSheetRef } from 'src/components/modal/type';
+import { Portal } from 'react-native-portalize';
+import BottomSheetContent from './BottomSheetContent';
 
 interface Props {
   onNavigate: (item: TrackDataItemFields) => void;
   item: TrackDataItemFields;
   isRecentList: boolean;
-  onOpenModal: (item: TrackDataItemFields) => void;
 }
 
-const SearchItemComponent = ({
-  onNavigate,
-  item,
-  isRecentList,
-  onOpenModal,
-}: Props) => {
-  return (
-    <View style={[Layout.rowBetween, styles.container]}>
-      <TouchableOpacity
-        style={[Layout.row, { flex: 1 }]}
-        onPress={() => onNavigate(item)}>
-        <FastImage
-          source={{ uri: item?.album?.images[0]?.url }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-        <View style={styles.info}>
-          <MediumText numberOfLines={1} textStyle={styles.songname}>
-            {item.name}
-          </MediumText>
-          <MediumText numberOfLines={1} textStyle={styles.artists}>
-            {item.artists[0].name}
-          </MediumText>
-        </View>
-      </TouchableOpacity>
+const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
+  const { currentTrack } = useAppSelector(state => state.player);
+  const bottomSheetRef = useRef<BottomSheetRef>(null);
+  const [visible, setVisible] = useState(false);
 
-      {isRecentList ? (
+  const openBottomModal = useCallback(() => {
+    bottomSheetRef.current?.onOpen(0);
+    setVisible(true);
+  }, []);
+
+  const onCloseModal = useCallback(() => {
+    bottomSheetRef.current?.onClose();
+    setVisible(false);
+  }, []);
+
+  return (
+    <>
+      <View style={[Layout.rowBetween, styles.container]}>
         <TouchableOpacity
-          style={styles.rightIcon}
-          onPress={() => {
-            dispatch(
-              searchActions.removeSearchRecentList(isRecentList ? item.id : ''),
-            );
-          }}>
-          <MaterialIcons
-            size={scale(24)}
-            color={Colors.unActive}
-            name="close"
+          style={[Layout.row, { flex: 1 }]}
+          onPress={() => onNavigate(item)}>
+          <FastImage
+            source={{ uri: item?.album?.images[0]?.url }}
+            style={styles.image}
+            resizeMode="cover"
           />
+          <View style={styles.info}>
+            <MediumText
+              numberOfLines={1}
+              textStyle={[
+                styles.songname,
+                {
+                  color:
+                    currentTrack?.id === item.id
+                      ? Colors.green.default
+                      : 'white',
+                },
+              ]}>
+              {item.name}
+            </MediumText>
+            <MediumText numberOfLines={1} textStyle={styles.artists}>
+              {item.artists[0].name}
+            </MediumText>
+          </View>
         </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.rightIcon}
-          onPress={() => onOpenModal(item)}>
-          <SimpleLineIcons
-            name="options-vertical"
-            size={scale(16)}
-            color={Colors.unActive}
-          />
-        </TouchableOpacity>
-      )}
-    </View>
+
+        {isRecentList ? (
+          <TouchableOpacity
+            style={styles.rightIcon}
+            onPress={() => {
+              dispatch(
+                searchActions.removeSearchRecentList(
+                  isRecentList ? item.id : '',
+                ),
+              );
+            }}>
+            <MaterialIcons
+              size={scale(24)}
+              color={Colors.unActive}
+              name="close"
+            />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.rightIcon} onPress={openBottomModal}>
+            <SimpleLineIcons
+              name="options-vertical"
+              size={scale(16)}
+              color={Colors.unActive}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
+      <Portal>
+        <BottomModal ref={bottomSheetRef}>
+          {visible ? (
+            <BottomSheetContent info={item} onCloseModal={onCloseModal} />
+          ) : null}
+        </BottomModal>
+      </Portal>
+    </>
   );
 };
 

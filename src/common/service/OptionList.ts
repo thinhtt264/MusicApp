@@ -5,6 +5,7 @@ export const optionList = {
       inactiveIcon: 'heart-outline',
       activeIcon: 'heart-sharp',
       name: 'Thích',
+      liked: 'Đã thích',
     },
     {
       id: 1,

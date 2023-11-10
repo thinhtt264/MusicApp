@@ -13,14 +13,14 @@ const Colors = {
   grey: {
     default: '#666666',
     heading: '#3E4145',
-    body: '#4D545B',
+    body: '#2b2b2b',
     placeHolder: '#656565',
     stroke: '#D5D7DB',
     player: 'rgb(72,72,72)',
     disable: '#D5DBE2',
     remember: '#717478',
   },
-  white: { default: '#FFFFFF' },
+  white: { default: '#FFFFFF', darker: '#aeaeae' },
   black: {
     default: '#000000',
     lighter: '#444444',

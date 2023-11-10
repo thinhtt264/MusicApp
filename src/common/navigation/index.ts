@@ -2,23 +2,30 @@ import {
   StackActions,
   createNavigationContainerRef,
 } from '@react-navigation/native';
+import { NavigationType } from 'src/navigation/RouteNames';
 
 export const navigationRef = createNavigationContainerRef<any>();
 
-export function navigate(name: string, params?: any) {
+function navigate({ name, params }: NavigationType) {
   navigationRef?.navigate(name, params);
 }
 
-export function replace(name: string, params?: any) {
+function replace(name: string, params?: any) {
   navigationRef?.dispatch(StackActions.replace(name, params));
 }
 
-export function reset(params?: any) {
+function reset(params?: any) {
   navigationRef?.reset(params);
 }
 
-export function goBack() {
+function goBack() {
   if (navigationRef.current?.canGoBack?.()) {
     navigationRef?.goBack();
   }
 }
+export const navigation = {
+  navigate,
+  replace,
+  reset,
+  goBack,
+};

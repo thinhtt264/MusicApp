@@ -4,7 +4,7 @@ import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { fontScale, scale } from 'src/common/scale';
-import { BottomSheetContent, SearchBox } from './components';
+import { SearchBox } from './components';
 import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
@@ -16,33 +16,20 @@ import { getSearchData } from 'src/store/action-thunk';
 import { AnimatedList } from 'src/components/list';
 import { startAudio } from 'src/common/player';
 import TrackPlayer from 'react-native-track-player';
-import { setCurrentTrackSagaAction } from 'src/store/action-saga';
-import { BottomModal } from 'src/components/modal';
-import { BottomSheetRef } from 'src/components/modal/type';
-import { Portal } from 'react-native-portalize';
 
 interface Props {}
 
 const SearchScreen = (props: Props) => {
-  const { translate, navigation, dispatch } = useScreenController();
+  const { translate, dispatch } = useScreenController();
   const { searchData, searchRecentData } = useAppSelector(
     state => state.search,
   );
 
-  const [trackInfo, setTrackInfo] = useState<any>();
-
-  const bottomSheetRef = useRef<BottomSheetRef>(null);
   const flatListRef = useRef<FlatList>(null);
 
   const onNavigate = async (item: any) => {
     await startAudio({ info: item, from: 'search' });
     await TrackPlayer.setPlayWhenReady(true);
-    // navigation.navigate(routeNames.Stacks.PlayerStack, {
-    //   screen: routeNames.PlayerStack.PlayerScreen,
-    //   params: {
-    //     from: 'search',
-    //   },
-    // });
   };
 
   const renderItem = useCallback(
@@ -52,7 +39,6 @@ const SearchScreen = (props: Props) => {
           onNavigate={onNavigate}
           item={item}
           isRecentList={isRecentList}
-          onOpenModal={(data: any) => openBottomModal(data)}
         />
       );
     },
@@ -71,11 +57,6 @@ const SearchScreen = (props: Props) => {
     },
     [searchData.keyword],
   );
-
-  const openBottomModal = (info: any) => {
-    setTrackInfo(info);
-    bottomSheetRef.current?.onOpen(0);
-  };
 
   return (
     <Container style={styles.container}>
@@ -115,11 +96,6 @@ const SearchScreen = (props: Props) => {
           </>
         )}
       </>
-      <Portal>
-        <BottomModal ref={bottomSheetRef}>
-          <BottomSheetContent info={trackInfo} />
-        </BottomModal>
-      </Portal>
     </Container>
   );
 };

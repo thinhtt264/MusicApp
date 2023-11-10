@@ -111,7 +111,7 @@ const TrackImage = React.memo(
       return {
         marginLeft,
       };
-    });
+    });    
 
     return (
       <Animated.View style={containerStyle}>

@@ -60,8 +60,6 @@ const PlayerScreen = ({ route, translationY }: any) => {
     initPlayer();
   }, []);
 
-  const onGoBack = () => navigation.goBack();
-
   const switchTrack = async (option: 'next' | 'previous') => {
     if (trackQueue.length > 0) {
       if (option === 'next' && trackQueue.length === 1) {

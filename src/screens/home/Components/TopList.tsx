@@ -14,7 +14,6 @@ const TopListComponent = ({ homedata }: any) => {
   return (
     <View style={[Layout.boxShadow, styles.listContainer]}>
       <AnimatedList
-        flatlistRef={null}
         data={homedata}
         horizontal
         ItemSeparatorComponent={() => <Divider width={scale(8)} />}

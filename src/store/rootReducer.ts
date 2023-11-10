@@ -5,6 +5,7 @@ import {
   authReducer,
   homeReducer,
   playerReducer,
+  profileReducer,
   searchReducer,
 } from './action-slices';
 
@@ -38,12 +39,19 @@ const searchPersistConfig = {
   whitelist: ['searchRecentData'],
 };
 
+const profilePersistConfig = {
+  key: 'search',
+  storage: AsyncStorage,
+  blacklist: [],
+};
+
 const rootReducer = persistCombineReducers(rootPersistConfig, {
   app: persistReducer(appPersistConfig, appReducer),
   auth: persistReducer(authPersistConfig, authReducer),
   home: homeReducer,
   player: persistReducer(playerPersistConfig, playerReducer),
   search: persistReducer(searchPersistConfig, searchReducer),
+  profile: persistReducer(profilePersistConfig, profileReducer),
 });
 
 export default rootReducer;

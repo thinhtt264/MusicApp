@@ -34,9 +34,14 @@ const playerSlice = createSlice({
       if (state.currentTrack.url === payload.url)
         state.currentTrack = DEFAULT_INFO;
     },
-    onResetQueue: (state, { payload }: PayloadAction<TrackDataItemFields>) => {
+    onResetQueue: (state, { payload }: PayloadAction<any>) => {
       state.trackQueue = [];
-      state.trackQueue.push(payload);
+
+      if (Array.isArray(payload)) {
+        state.trackQueue = payload;
+      } else {
+        state.trackQueue.push(payload);
+      }
     },
     onChangeCurrentTrack: (state, { payload }) => {
       const trackIdToFind = payload.id;
@@ -50,6 +55,11 @@ const playerSlice = createSlice({
           trackIndex < state.trackQueue.length - 1
         ) {
           state.currentTrack = state.trackQueue[trackIndex + 1];
+        } else if ( // nếu là bài hát cuối trong playlist bấm next sẽ reset playlist
+          payload.option === 'next' &&
+          trackIndex === state.trackQueue.length - 1
+        ) {
+          state.currentTrack = state.trackQueue[0];
         } else if (payload.option === 'previous' && trackIndex > 0) {
           state.currentTrack = state.trackQueue[trackIndex - 1];
         }
@@ -68,7 +78,7 @@ const playerSlice = createSlice({
         state.trackQueue = [state.currentTrack, ...updatedTracks];
       },
     );
-    builder.addCase(appInit.fulfilled, (state) => {
+    builder.addCase(appInit.fulfilled, state => {
       state.trackQueue = [state.currentTrack];
     });
   },

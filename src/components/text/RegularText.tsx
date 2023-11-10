@@ -23,7 +23,7 @@ const RegularTextComponents = (props: CustomTextProps) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: fontScale(14),
+    fontSize: fontScale(12),
     fontFamily: FONT_FAMILY.REGULAR,
   },
 });

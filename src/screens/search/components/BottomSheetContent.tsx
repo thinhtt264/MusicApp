@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TrackDataItemFields } from 'src/models/Track';
 import Layout from 'src/themes/Layout';
 import { BoldText, RegularText } from 'src/components/text';
@@ -14,82 +14,150 @@ import {
   ViewAlbumIcon,
   ViewArtistIcon,
 } from 'src/components/svg';
+import { addTrackToPlaylist, checkLoveTrack } from 'src/common/firebase';
 
 type Props = {
   info: TrackDataItemFields;
+  onCloseModal: () => void;
 };
 
-const BottomSheetContent = ({ info }: Props) => {
+const BottomSheetContent = ({ info, onCloseModal }: Props) => {
+  const [isLiked, setLiked] = useState(false);
+
+  const handleLikePress = useCallback(() => {
+    addTrackToPlaylist({ data: info, callback: () => {} });
+  }, []);
+
+  useEffect(() => {
+    if (info?.id) {
+      checkLoveTrack(info).then(bool => {
+        setLiked(bool);
+      });
+    }
+  }, []);
+
   const OptionCard = ({ item }: any) => {
     const renderIcon = () => {
       const iconSize = scale(24);
       const color = Colors.unActive;
 
-      switch (item.id) {
-        case 0:
-          return (
-            <TouchableOpacity>
+      const IconComponent = () => {
+        switch (item.id) {
+          case 0:
+            return (
+              <>
+                {isLiked ? (
+                  <Ionicons
+                    name="heart-sharp"
+                    size={iconSize}
+                    color={Colors.green.default}
+                  />
+                ) : (
+                  <Ionicons
+                    name="heart-outline"
+                    size={iconSize}
+                    color={color}
+                  />
+                )}
+              </>
+            );
+          case 1:
+            return (
+              <AddToPlaylistIcon
+                width={iconSize}
+                height={iconSize}
+                color={color}
+                viewBox={`-5 0 ${68} ${60}`}
+              />
+            );
+          case 2:
+            return (
+              <AddToQueueIcon
+                width={iconSize}
+                height={iconSize}
+                color={color}
+                viewBox={`-5 0 ${68} ${60}`}
+              />
+            );
+          case 3:
+            return (
+              <ViewAlbumIcon
+                width={iconSize}
+                height={iconSize}
+                color={color}
+                viewBox={`-5 0 ${68} ${60}`}
+              />
+            );
+          case 4:
+            return (
+              <ViewArtistIcon
+                width={iconSize}
+                height={iconSize}
+                color={color}
+                viewBox={`-5 0 ${68} ${60}`}
+              />
+            );
+          case 5:
+            return (
               <Ionicons
                 name={item.inactiveIcon}
                 size={iconSize}
                 color={color}
               />
-            </TouchableOpacity>
-          );
-        case 1:
-          return (
-            <AddToPlaylistIcon
-              width={iconSize}
-              height={iconSize}
-              color={color}
-              viewBox={`-5 0 ${68} ${60}`}
-            />
-          );
-        case 2:
-          return (
-            <AddToQueueIcon
-              width={iconSize}
-              height={iconSize}
-              color={color}
-              viewBox={`-5 0 ${68} ${60}`}
-            />
-          );
-        case 3:
-          return (
-            <ViewAlbumIcon
-              width={iconSize}
-              height={iconSize}
-              color={color}
-              viewBox={`-5 0 ${68} ${60}`}
-            />
-          );
-        case 4:
-          return (
-            <ViewArtistIcon
-              width={iconSize}
-              height={iconSize}
-              color={color}
-              viewBox={`-5 0 ${68} ${60}`}
-            />
-          );
-        case 5:
-          return (
-            <Ionicons name={item.inactiveIcon} size={iconSize} color={color} />
-          );
-        default:
-          break;
-      }
+            );
+          default:
+            return null;
+        }
+      };
+
+      const iconHandlers = [
+        {
+          id: 0,
+          onPress: handleLikePress,
+        },
+        {
+          id: 1,
+          onPress: () => {
+            // Do something else
+          },
+        },
+        {
+          id: 2,
+          onPress: () => {
+            // Do something else
+          },
+        },
+        {
+          id: 3,
+          onPress: () => {
+            // Do something else
+          },
+        },
+        {
+          id: 4,
+          onPress: () => {
+            // Do something else
+          },
+        },
+      ];
+
+      return (
+        <TouchableOpacity
+          style={[Layout.rowVCenter, styles.option]}
+          onPress={() => {
+            iconHandlers[item.id] && iconHandlers[item.id].onPress();
+            onCloseModal();
+          }}>
+          <IconComponent />
+          <View style={{ paddingLeft: scale(10) }}>
+            <BoldText textStyle={{ fontSize: fontScale(15) }}>
+              {item.id === 0 && isLiked ? item.liked : item.name}
+            </BoldText>
+          </View>
+        </TouchableOpacity>
+      );
     };
-    return (
-      <View style={[Layout.rowVCenter, styles.option]}>
-        {renderIcon()}
-        <View style={{ paddingLeft: scale(10) }}>
-          <BoldText textStyle={{ fontSize: fontScale(15) }}>
-            {item.name}
-          </BoldText>
-        </View>
-      </View>
-    );
+    return <View>{renderIcon()}</View>;
   };
 
   if (!info) return null;
@@ -116,9 +184,9 @@ const BottomSheetContent = ({ info }: Props) => {
         size={scale(15)}
         style={{ borderBottomColor: Colors.grey.placeHolder, borderWidth: 0.2 }}
       />
-      {optionList.Card_Music.map((i: any) => {
+      {optionList.Card_Music.map((i: any, index) => {
         return (
-          <View style={{ paddingHorizontal: scale(15) }}>
+          <View key={index} style={{ paddingHorizontal: scale(15) }}>
             <Spacer size={scale(20)} />
             <OptionCard item={i} />
           </View>

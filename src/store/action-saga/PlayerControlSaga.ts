@@ -13,7 +13,8 @@ export function* setCurrentTrackWorker(
   if (from === 'search') {
     yield put(playerActions.onResetQueue(trackInfo));
     yield put(searchActions.addSearchRecentList(trackInfo));
-  } else {
+  } else if (from === 'playlist') {
+    yield put(playerActions.onResetQueue(trackInfo));
   }
 }
 

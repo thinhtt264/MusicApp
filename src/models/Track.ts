@@ -30,7 +30,12 @@ interface Artist {
 interface ExternalIds {
   isrc: string;
 }
-export type PlayFromState = 'home' | 'search' | 'recommend';
+export type PlayFromState =
+  | 'home'
+  | 'search'
+  | 'recommend'
+  | 'playlist'
+  | 'queue';
 
 export interface TrackDataFields extends TrackDataItemFields {
   url?: string;

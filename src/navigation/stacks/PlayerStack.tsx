@@ -14,11 +14,6 @@ export type PlayerStackParamList = {
     trackUrl: string;
   };
 };
-export type NewsStackNavigationProp =
-  NativeStackNavigationProp<PlayerStackParamList>;
-
-export type NewsStackRouteProps<RouteName extends keyof PlayerStackParamList> =
-  RouteProp<PlayerStackParamList, RouteName>;
 
 const Stack = createNativeStackNavigator<PlayerStackParamList>();
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, ViewProps } from 'react-native';
 import Animated, {
   Extrapolate,
   SharedValue,
@@ -16,7 +16,8 @@ import { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
 
 interface ShuffleRepeatButtonProps {
   option: 'shuffle' | 'repeat';
-  translationY: SharedValue<number>;
+  translationY?: SharedValue<number>;
+  size?: number;
 }
 
 const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
@@ -25,7 +26,7 @@ const IconHeight = scale(22);
 const IconWidth = scale(26);
 
 const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
-  ({ option, translationY }) => {
+  ({ option, translationY, size = scale(20) }) => {
     const [applyOption, setstate] = useState(false);
 
     const onPressRepeat = () => {
@@ -50,7 +51,10 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
       });
     };
 
-    const onPressShuffle = async () => await shuffle();
+    const onPressShuffle = async () => {
+      setstate(prev => !prev);
+      // await shuffle();
+    };
 
     const optionPress = option === 'shuffle' ? onPressShuffle : onPressRepeat;
     const iconName = option === 'shuffle' ? 'shuffle' : 'repeat';
@@ -60,6 +64,8 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
     }, []);
 
     const animatedStylez = useAnimatedStyle(() => {
+      if (!translationY) return {};
+
       const height = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
@@ -73,13 +79,12 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
         Extrapolate.CLAMP,
       );
 
-      const translateX = interpolate(
-        translationY.value,
-        [0, -FULLSCREEN_HEIGHT],
-        [option === 'repeat' ? 400 : -400, 0],
-        Extrapolate.CLAMP,
-      );
-
+      // const translateX = interpolate(
+      //   translationY.value,
+      //   [0, -FULLSCREEN_HEIGHT],
+      //   [option === 'repeat' ? 400 : -400, 0],
+      //   Extrapolate.CLAMP,
+      // );
       return {
         height,
         width,
@@ -93,12 +98,8 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
         style={[animatedStylez, styles.container]}>
         <FontAwesome6
           name={iconName}
-          size={scale(20)}
-          color={
-            applyOption && iconName !== 'shuffle'
-              ? Colors.green.default
-              : Colors.white.default
-          }
+          size={size}
+          color={applyOption ? Colors.green.default : Colors.white.default}
         />
       </AnimatedButton>
     );

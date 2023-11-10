@@ -30,6 +30,8 @@ const HeaderComponent = (props: Props) => {
         return translate('player:fromSearch');
       case 'recommend':
         return translate('player:fromRecommend');
+      case 'playlist':
+        return translate('player:fromPlaylist');
       default:
         return translate('player:fromSearch');
     }

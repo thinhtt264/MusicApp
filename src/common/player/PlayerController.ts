@@ -6,7 +6,7 @@ import {
   setQueue,
 } from 'react-native-track-player/lib/trackPlayer';
 import { dispatch } from '../redux';
-import { formatSearchData } from 'src/store/action-slices';
+import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { TrackDataFields } from 'src/models/Track';
 import { downloadTrack } from './TrackDownloader';
 import { getTrackInfo } from '../firebase';
@@ -35,6 +35,13 @@ export const startAudio = async (info: PlayerProps) => {
   // if (info.from !== 'home') {
   //   await TrackPlayer.setPlayWhenReady(true);
   // }
+};
+
+export const startPlaylist = async (queue: TrackDataFields[]) => {
+  await TrackPlayer.reset();
+  await dispatch(playerActions.onResetQueue(queue));
+  await startAudio({ from: 'queue', info: queue[0] });
+  await TrackPlayer.setPlayWhenReady(true);
 };
 
 /**

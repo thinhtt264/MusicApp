@@ -25,7 +25,7 @@
     "viewAll": "Xem tất cả",
     "home": "Trang chủ",
     "search": "Tìm kiếm",
-    "library": "Thư viện"
+    "librarystack": "Thư viện"
   },
   "validation": {
     "require": "Trường này là bắt buộc",
@@ -53,6 +53,11 @@
   },
   "player": {
     "fromSearch": "ĐANG PHÁT TỪ TÌM KIẾM",
-    "fromRecommend": "Đang phát các bài hát được đề xuất cho bạn"
+    "fromRecommend": "Đang phát các bài hát được đề xuất cho bạn",
+    "fromPlaylist": "ĐANG PHÁT TỪ DANH SÁCH PHÁT"
+  },
+  "library": {
+    "playlist": "Danh sách phát",
+    "song": "Bài hát"
   }
 }

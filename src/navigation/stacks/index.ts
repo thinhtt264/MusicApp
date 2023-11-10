@@ -1,3 +1,4 @@
 import HomeStack from './HomeStack';
 import PlayerStack from './PlayerStack';
-export { HomeStack, PlayerStack };
+import LibraryStack from './LibraryStack';
+export { HomeStack, PlayerStack, LibraryStack };

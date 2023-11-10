@@ -1,25 +1,31 @@
-export enum NavigationStackNames {
-  AuthStack = 'AuthStack',
-  MainStack = 'MainStack',
-  HomeStack = 'HomeStack',
-  HomeTab = 'HomeTab',
-  PlayerStack = 'PlayerStack',
-}
+import { LibraryStackParamList } from "./stacks/LibraryStack";
 
-export enum AuthStack {
-  LoginScreen = 'LoginScreen',
-  RegisterScreen = 'RegisterScreen',
-  OtpScreen = 'OtpScreen',
-  CreatePassword = 'CreatePassword',
-}
-
-export enum PlayerStack {
-  PlayerScreen = 'PlayerScreen',
-}
-const routeNames = {
-  Stacks: NavigationStackNames,
-  AuthStack,
-  PlayerStack,
+export type NavigationStackNames = {
+  AuthStack: undefined;
+  MainStack: undefined;
+  HomeStack: undefined;
+  HomeTab: undefined;
+  PlayerStack: undefined;
+  LibraryStack: LibraryStackParamList;
 };
 
-export default routeNames;
+export type ScreenNames = {
+  PlayerScreen: undefined;
+  LoginScreen: undefined;
+  RegisterScreen: undefined;
+  PlaylistScreen: undefined;
+  Home: undefined;
+  Search: undefined;
+};
+
+export type RouteNames = ScreenNames & NavigationStackNames;
+
+export type RouteParams = {
+  screen?: keyof ScreenNames;
+  params?: any;
+};
+
+export type NavigationType = {
+  name: keyof RouteNames;
+  params?: RouteParams;
+};

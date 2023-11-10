@@ -5,7 +5,6 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { fontScale, scale } from 'src/common/scale/index';
-import { hasNotch } from 'src/common/device';
 import { BoldText } from 'src/components/text';
 import { translate } from 'src/common/language/translate';
 
@@ -16,6 +15,7 @@ import { HomeScreen, SearchScreen } from 'src/screens';
 import { TAB_HEIGHT } from 'src/common/constants';
 import { Miniplayer } from 'src/components/mini-player';
 import { useAppSelector } from 'src/common/redux';
+import { LibraryStack } from '../stacks';
 
 interface Props {
   size: number;
@@ -40,7 +40,7 @@ const renderIcon = (props: Props) => {
     case 'Search': {
       return <Octicons name="search" size={size} color={color} />;
     }
-    case 'Library': {
+    case 'LibraryStack': {
       return (
         <LibraryIcon
           color={color}
@@ -120,13 +120,13 @@ export const TabBar = (props: BottomTabBarProps) => {
 export type HomeTabParamList = {
   Home: undefined;
   Search: undefined;
-  Library: undefined;
+  LibraryStack: undefined;
 };
 
 const Tab = createBottomTabNavigator<HomeTabParamList>();
 
 const HomeTab = () => {
-  const { currentTrack } = useAppSelector(state => state.player);  
+  const { currentTrack } = useAppSelector(state => state.player);
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       <Tab.Navigator
@@ -142,7 +142,7 @@ const HomeTab = () => {
         )}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Search" component={SearchScreen} />
-        <Tab.Screen name="Library" component={HomeScreen} />
+        <Tab.Screen name="LibraryStack" component={LibraryStack} />
       </Tab.Navigator>
     </View>
   );

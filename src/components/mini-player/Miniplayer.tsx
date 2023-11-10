@@ -11,16 +11,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { TAB_HEIGHT, kHeight } from 'src/common/constants';
-import { ScrollView, StatusBar, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { PlayerScreen } from 'src/screens';
 import Constants, {
   FULLSCREEN_HEIGHT,
   MINIPLAYER_HEIGHT,
 } from 'src/themes/Constants';
-import { scale } from 'src/common/scale';
 import Layout from 'src/themes/Layout';
 import { useInsets } from 'src/common/animated';
-import { Header, ScollDownButton } from 'src/screens/player/components';
+import { ScollDownButton } from 'src/screens/player/components';
 
 export const Miniplayer = () => {
   const translationY = useSharedValue(0);

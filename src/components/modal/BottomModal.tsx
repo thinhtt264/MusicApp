@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, {
   forwardRef,
   useCallback,
@@ -20,7 +20,7 @@ const BottomModal = forwardRef((props: BottomSheetProps, ref) => {
   const snapPointBottomSheet = useMemo(() => snapPoints, []);
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
+    // console.log('handleSheetChanges', index);
   }, []);
 
   useImperativeHandle(ref, () => ({

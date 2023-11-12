@@ -36,11 +36,11 @@ const HeaderComponent = (props: Props) => {
         style={styles.linearGradient}
         locations={[0.2, 1]}
         colors={['#223379', 'black']}></LinearGradient>
-      <View style={[styles.body, { marginTop: useInsets().top }]}>
+      <View style={[styles.body, { marginTop: useInsets().top + scale(15) }]}>
         <View style={[Layout.rowBetween]}>
           <TouchableOpacity onPress={navigation.goBack}>
             <Ionicons
-              style={{ marginLeft: scale(-5) }}
+              style={{ marginLeft: scale(-2) }}
               name="arrow-back"
               size={scale(24)}
               color={Colors.white.default}

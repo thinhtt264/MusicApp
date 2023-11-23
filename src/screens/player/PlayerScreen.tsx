@@ -5,8 +5,6 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { useScreenController } from 'src/common/hooks';
-import { getRecommend } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
 import { Header, ProgressBar, TrackImage, TrackInfo } from './components';
 import { Blurhash } from 'react-native-blurhash';
@@ -23,7 +21,6 @@ import Layout from 'src/themes/Layout';
 import { formatSearchData } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
-import { playerControlActionSaga } from 'src/store/action-saga';
 
 const events = [
   Event.PlaybackState,
@@ -32,29 +29,27 @@ const events = [
 ];
 
 const PlayerScreen = ({ route, translationY }: any) => {
-  const { dispatch, navigation } = useScreenController();
   const { currentTrack, trackQueue } = useAppSelector(state => state.player);
 
   // const [isLoading, setLoading] = useState(true);
   const [buffering, setBuffering] = useState(true);
   const [bgColor, setBgColor] = useState('');
 
-  const { albumImage, trackName, trackId, trackUrl, artistName, artistId } =
+  const { albumImage, trackName, artistName } =
     formatSearchData(currentTrack);
 
   useLayoutEffect(() => {
     getBgColor();
-    return () => {};
   }, [albumImage]);
 
-  const getBgColor = async () => {
+  const getBgColor = useCallback(async () => {
     const bgColor = await getBackGroundPlayer(albumImage);
     const blurHashColor =
       bgColor !== Colors.grey.player
         ? await getBlurhashColor(albumImage)
         : false;
     setBgColor(blurHashColor || bgColor || Colors.grey.player);
-  };
+  }, [albumImage]);
 
   const initPlayer = async () => {
     await startAudio({ info: currentTrack, from: 'home' });

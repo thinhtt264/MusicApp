@@ -8,10 +8,7 @@ import {
 import { dispatch } from '../redux';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { TrackDataFields } from 'src/models/Track';
-import { downloadTrack } from './TrackDownloader';
-import { getTrackInfo } from '../firebase';
-import { getDownloadLink } from 'src/store/action-thunk';
-import { envFlex } from '../config/env';
+
 import {
   fetchAudioSagaAction,
   playerControlActionSaga,
@@ -22,7 +19,7 @@ const ANDROID_HEAD_PATH = 'file://';
 
 export const startAudio = async (info: PlayerProps) => {
   await TrackPlayer.reset();
-  // dispatch(playerControlActionSaga.setCurrentTrack({ PlayerProps: info }));
+  dispatch(playerControlActionSaga.setCurrentTrack({ PlayerProps: info }));
 
   dispatch(
     fetchAudioSagaAction.fetch({
@@ -58,12 +55,21 @@ export const onSwitchTrack = async (options: 'next' | 'previous') => {
         callback: async TrackInfo => {
           if (typeof TrackInfo === 'string') return;
           await addPlaylist(TrackInfo);
-          await TrackPlayer.skipToNext();
-          await TrackPlayer.play();
+          await skipToNext(TrackInfo);
         },
       },
     }),
   );
+};
+
+const skipToNext = async (TrackInfo: any) => {
+  const currentQueue = await TrackPlayer.getQueue();
+  if (TrackInfo.id === currentQueue[0].id) {
+    await TrackPlayer.skip(0);
+  } else {
+    await TrackPlayer.skipToNext();
+  }
+  await TrackPlayer.setPlayWhenReady(true);
 };
 
 export const addPlaylist = async (info: TrackDataFields) => {
@@ -76,15 +82,12 @@ export const addPlaylist = async (info: TrackDataFields) => {
   };
 
   const currentQueue = await TrackPlayer.getQueue();
-  currentQueue.map(item => {
-    console.log(item.id === trackId);
-  });
+  const isAlready = currentQueue.find(item => item.id === trackId);
 
-  // Add a track to the queue
-  try {
+  if (!isAlready) {
     await TrackPlayer.add(addTrack);
-  } catch (error) {
-    console.error('Error playing music:', error);
+  } else {
+    return;
   }
 };
 

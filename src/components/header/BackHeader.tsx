@@ -13,8 +13,8 @@ import { fontScale, scale } from 'src/common/scale';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from 'src/themes/Colors';
 import LinearGradient from 'react-native-linear-gradient';
-import { useInsets } from 'src/common/animated';
 import { navigation } from 'src/common/navigation';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   RightContent?: () => React.ReactNode;
@@ -36,7 +36,7 @@ const HeaderComponent = (props: Props) => {
         style={styles.linearGradient}
         locations={[0.2, 1]}
         colors={['#223379', 'black']}></LinearGradient>
-      <View style={[styles.body, { marginTop: useInsets().top + scale(15) }]}>
+      <View style={[styles.body, { marginTop: useSafeAreaInsets().top + scale(15) }]}>
         <View style={[Layout.rowBetween]}>
           <TouchableOpacity onPress={navigation.goBack}>
             <Ionicons

@@ -40,9 +40,9 @@ const searchPersistConfig = {
 };
 
 const profilePersistConfig = {
-  key: 'search',
+  key: 'profile',
   storage: AsyncStorage,
-  blacklist: [],
+  whitelist: [],
 };
 
 const rootReducer = persistCombineReducers(rootPersistConfig, {

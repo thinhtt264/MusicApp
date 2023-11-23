@@ -18,7 +18,7 @@ export function* setCurrentTrackWorker(
   if (from === 'search') {
     yield put(playerActions.onResetQueue(trackInfo));
     yield put(searchActions.addSearchRecentList(trackInfo));
-  } else if (from === 'playlist') {    
+  } else if (from === 'playlist') {
     yield put(playerActions.onResetQueue(trackInfo));
   }
 }
@@ -43,6 +43,7 @@ export function* onChangeCurrentTrackWorker(
 
   if (Object.keys(newTrack).length !== 0) {
     yield call(TrackPlayer.pause);
+    yield put(playerActions.onSetCurrentTrack(newTrack)); // chuyển track để fetch nhạc mới
     //check xem currentTrack có thay đổi hay không
     if (option === 'next') {
       yield put(
@@ -56,17 +57,6 @@ export function* onChangeCurrentTrackWorker(
       yield TrackPlayer.skipToPrevious();
       yield TrackPlayer.setPlayWhenReady(true);
     }
-    yield setCurrentTrackWorker({
-      payload: { PlayerProps: { info: newTrack, from: 'playlist' } },
-      type: ''
-    });
-
-    // const track: any = yield TrackPlayer.getActiveTrack();
-    // console.log('so sánh');
-
-    // console.log(track.id);
-    // console.log(newTrack.id);
-    // console.log(track.id === newTrack.id);
   } else {
   }
 }

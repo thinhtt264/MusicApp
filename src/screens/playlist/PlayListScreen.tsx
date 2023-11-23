@@ -14,7 +14,7 @@ import { ScreenLoader } from 'src/components/loader';
 type Props = {};
 
 const PlayListScreen = (props: Props) => {
-  const { dispatch, navigation, translate, route } = useScreenController();
+  const { translate, route } = useScreenController();
   const [listTrack, setListTrack] = useState<any>();
   const { id: playlistId, name, total } = route.params?.data;
 

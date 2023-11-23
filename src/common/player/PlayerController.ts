@@ -22,12 +22,11 @@ const ANDROID_HEAD_PATH = 'file://';
 
 export const startAudio = async (info: PlayerProps) => {
   await TrackPlayer.reset();
-  dispatch(playerControlActionSaga.setCurrentTrack({ PlayerProps: info }));
+  // dispatch(playerControlActionSaga.setCurrentTrack({ PlayerProps: info }));
 
   dispatch(
     fetchAudioSagaAction.fetch({
       callback: async TrackInfo => {
-        console.log(typeof TrackInfo === 'string');
         if (typeof TrackInfo === 'string') return;
         await addPlaylist(TrackInfo);
       },
@@ -67,46 +66,26 @@ export const onSwitchTrack = async (options: 'next' | 'previous') => {
   );
 };
 
-const fetchAudio = async ({
-  info,
-  env,
-}: {
-  info: TrackDataFields;
-  env?: any;
-}) => {
-  let TrackInfo = info ?? {};
-  const trackResponse: any = await getTrackInfo({ doc: TrackInfo.id });
-
-  if (trackResponse._data !== undefined) {
-    console.log('phát từ firebase');
-    TrackInfo = trackResponse._data;
-    return TrackInfo;
-  } else {
-    const response = await dispatch(
-      getDownloadLink({
-        link: TrackInfo.external_urls.spotify,
-        baseUrl: env?.DOWNLOAD_URL ?? envFlex('Dev')?.DOWNLOAD_URL,
-      }),
-    );
-
-    TrackInfo = {
-      ...TrackInfo,
-      url: response.payload.soundcloudTrack.audio[0].url,
-    };
-    downloadTrack(TrackInfo);
-    return TrackInfo;
-  }
-};
-
 export const addPlaylist = async (info: TrackDataFields) => {
   const { playUrl, trackName, trackId, artistName } = formatSearchData(info);
-  // Add a track to the queue
-  await TrackPlayer.add({
+  const addTrack = {
     id: trackId,
     url: playUrl,
     title: trackName,
     artist: artistName,
+  };
+
+  const currentQueue = await TrackPlayer.getQueue();
+  currentQueue.map(item => {
+    console.log(item.id === trackId);
   });
+
+  // Add a track to the queue
+  try {
+    await TrackPlayer.add(addTrack);
+  } catch (error) {
+    console.error('Error playing music:', error);
+  }
 };
 
 export async function shuffle(): Promise<Track[]> {

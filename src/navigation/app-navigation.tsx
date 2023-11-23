@@ -26,10 +26,10 @@ export const AppNavigation = () => {
       setInit(true);
       RNBootSplash.hide({ fade: true });
     });
-    getTimeSinceStartup().then(time => {
-      console.log(`Time since startup: ${time} ms`);
-      alert(time);
-    });
+    // getTimeSinceStartup().then(time => {
+    //   console.log(`Time since startup: ${time} ms`);
+    //   alert(time);
+    // });
   }, []);
 
   return (

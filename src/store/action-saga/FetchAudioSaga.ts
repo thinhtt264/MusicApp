@@ -20,16 +20,27 @@ function* fetchAudioWorker(
       isNeedToken: false,
     });
 
-  const trackFormFirebase: any = yield call(getTrackInfo, {
-    doc: TrackInfo.id,
-  });
+  // const trackFormFirebase: any = yield call(getTrackInfo, {
+  //   doc: TrackInfo.id,
+  // });
 
-  if (trackFormFirebase._data !== undefined) {
-    console.log('phát từ firebase');
-    action.payload.callback?.(trackFormFirebase._data);
-    yield put(playerActions.onSetCurrentTrack(trackFormFirebase._data));
-  } else {
-    try {
+  // if (trackFormFirebase._data !== undefined) {
+  //   console.log('phát từ firebase');
+  //   action.payload.callback?.(trackFormFirebase._data);
+  //   yield put(playerActions.onSetCurrentTrack(trackFormFirebase._data));
+  // } else {
+  try {
+    const trackFilePath = yield call(downloadTrack, TrackInfo);
+    console.log(trackFilePath);
+
+    if (trackFilePath) {
+      const TrackInfoWithUrl = {
+        ...TrackInfo,
+        url: trackFilePath,
+      };
+      yield put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
+      action.payload.callback?.(TrackInfoWithUrl);
+    } else {
       const response: any = yield call(fetchApi);
 
       if (response && response?.soundcloudTrack?.audio[0]?.url) {
@@ -43,14 +54,17 @@ function* fetchAudioWorker(
         action.payload.callback?.(TrackInfoWithUrl);
         downloadTrack(TrackInfoWithUrl);
       }
-    } catch (e) {
-      if (e === 'The key has expired') {
-        alert('Hết key rồi thay key mới đê');
-        action.payload.callback?.(e);
-      }
+    }
+  } catch (e) {
+    if (e === 'The key has expired') {
+      alert('Hết key rồi thay key mới đê');
+      action.payload.callback?.(e);
+    } else {
+      console.log(e);
     }
   }
 }
+// }
 
 const fetch = createAction<{
   callback: (TrackInfo: TrackDataFields | string) => void;

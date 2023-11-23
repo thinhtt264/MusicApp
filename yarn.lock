@@ -6388,6 +6388,11 @@ react-native-mmkv@^2.10.1:
   resolved "https://registry.npmjs.org/react-native-mmkv/-/react-native-mmkv-2.10.1.tgz"
   integrity sha512-MCrYytUJ3JhSVg7LwVXCj7ExbMHe48FoQdDA1xo1q/M4c1/QyI3M9L9d2dyJUhYPnsSO0+5c2mJICm7v39XA0w==
 
+react-native-permissions@^3.10.1:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.10.1.tgz#cb0171c8d12113869deaabbdfb979aad1a44752b"
+  integrity sha512-Gc5BxxpjZn4QNUDiVeHOO0vXh3AH7ToolmwTJozqC6DsxV7NAf3ttap+8BSmzDR8WxuAM3Cror+YNiBhHJx7/w==
+
 react-native-portalize@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/react-native-portalize/-/react-native-portalize-1.0.7.tgz#8b3c742a06f863654d526ea1075a8596625f8482"

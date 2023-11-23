@@ -18,7 +18,7 @@ export function* setCurrentTrackWorker(
   if (from === 'search') {
     yield put(playerActions.onResetQueue(trackInfo));
     yield put(searchActions.addSearchRecentList(trackInfo));
-  } else if (from === 'playlist') {
+  } else if (from === 'playlist') {    
     yield put(playerActions.onResetQueue(trackInfo));
   }
 }
@@ -43,7 +43,6 @@ export function* onChangeCurrentTrackWorker(
 
   if (Object.keys(newTrack).length !== 0) {
     yield call(TrackPlayer.pause);
-    yield put(playerActions.onChangeCurrentTrack(newTrack));
     //check xem currentTrack có thay đổi hay không
     if (option === 'next') {
       yield put(
@@ -57,12 +56,17 @@ export function* onChangeCurrentTrackWorker(
       yield TrackPlayer.skipToPrevious();
       yield TrackPlayer.setPlayWhenReady(true);
     }
-    const track: any = yield TrackPlayer.getActiveTrack();
-    console.log('so sánh');
+    yield setCurrentTrackWorker({
+      payload: { PlayerProps: { info: newTrack, from: 'playlist' } },
+      type: ''
+    });
 
-    console.log(track.id);
-    console.log(newTrack.id);
-    console.log(track.id === newTrack.id);
+    // const track: any = yield TrackPlayer.getActiveTrack();
+    // console.log('so sánh');
+
+    // console.log(track.id);
+    // console.log(newTrack.id);
+    // console.log(track.id === newTrack.id);
   } else {
   }
 }

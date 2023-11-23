@@ -43,16 +43,13 @@ const playerSlice = createSlice({
         state.trackQueue.push(payload);
       }
     },
-    onChangeCurrentTrack: (state, { payload }) => {
-      if (Object.keys(payload).length !== 0) state.currentTrack = payload;      
-    },
   },
   extraReducers: builder => {
     builder.addCase(
       getRecommend.fulfilled,
       (state, { payload }: PayloadAction<GetRecommendResponseFields>) => {
         console.log('work nè hehe');
-        
+
         //update playfrom cho list recommend
         const updatedTracks = payload.tracks.map(track => ({
           ...track,

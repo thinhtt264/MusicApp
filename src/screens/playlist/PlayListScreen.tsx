@@ -9,6 +9,7 @@ import { FlatList } from 'react-native';
 import { HeaderList, TrackCard } from './components';
 import { Spacer } from 'src/components/spacer';
 import { startPlaylist } from 'src/common/player';
+import { ScreenLoader } from 'src/components/loader';
 
 type Props = {};
 
@@ -40,6 +41,11 @@ const PlayListScreen = (props: Props) => {
           ListHeaderComponent={() => <HeaderList onPlayQueue={onPlayQueue} />}
           renderItem={({ item }) => <TrackCard item={item} />}
           ItemSeparatorComponent={() => <Spacer size={scale(12)} />}
+          ListEmptyComponent={
+            <View style={{ marginTop: '40%' }}>
+              <ScreenLoader />
+            </View>
+          }
         />
       </View>
     </View>

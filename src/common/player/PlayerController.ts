@@ -12,19 +12,22 @@ import { downloadTrack } from './TrackDownloader';
 import { getTrackInfo } from '../firebase';
 import { getDownloadLink } from 'src/store/action-thunk';
 import { envFlex } from '../config/env';
-import { fetchAudioSagaAction } from 'src/store/action-saga';
+import {
+  fetchAudioSagaAction,
+  playerControlActionSaga,
+} from 'src/store/action-saga';
 import { PlayerProps } from './Type';
-import { setCurrentTrackSagaAction } from 'src/store/action-saga/PlayerControlSaga';
 
 const ANDROID_HEAD_PATH = 'file://';
 
 export const startAudio = async (info: PlayerProps) => {
   await TrackPlayer.reset();
-  dispatch(setCurrentTrackSagaAction.fetch({ PlayerProps: info }));
+  dispatch(playerControlActionSaga.setCurrentTrack({ PlayerProps: info }));
 
   dispatch(
     fetchAudioSagaAction.fetch({
       callback: async TrackInfo => {
+        console.log(typeof TrackInfo === 'string');
         if (typeof TrackInfo === 'string') return;
         await addPlaylist(TrackInfo);
       },
@@ -49,25 +52,19 @@ export const startPlaylist = async (queue: TrackDataFields[]) => {
  * @param options - 'next' or 'previous' option
  */
 export const onSwitchTrack = async (options: 'next' | 'previous') => {
-  if (options === 'next') {
-    TrackPlayer.pause();
-    dispatch(
-      fetchAudioSagaAction.fetch({
-        /**
-         * Callback function to handle fetched track info
-         * @param TrackInfo - track information
-         */
+  await dispatch(
+    playerControlActionSaga.onChangeCurrentTrack({
+      ChangeTrackProps: {
+        option: options,
         callback: async TrackInfo => {
           if (typeof TrackInfo === 'string') return;
           await addPlaylist(TrackInfo);
-          TrackPlayer.skipToNext();
-          TrackPlayer.play();
+          await TrackPlayer.skipToNext();
+          await TrackPlayer.play();
         },
-      }),
-    );
-  } else {
-    TrackPlayer.skipToPrevious();
-  }
+      },
+    }),
+  );
 };
 
 const fetchAudio = async ({

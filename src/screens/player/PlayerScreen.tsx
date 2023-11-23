@@ -1,5 +1,10 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getRecommend } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
@@ -15,9 +20,10 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Layout from 'src/themes/Layout';
-import { formatSearchData, playerActions } from 'src/store/action-slices';
+import { formatSearchData } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
+import { playerControlActionSaga } from 'src/store/action-saga';
 
 const events = [
   Event.PlaybackState,
@@ -60,28 +66,13 @@ const PlayerScreen = ({ route, translationY }: any) => {
     initPlayer();
   }, []);
 
-  const switchTrack = async (option: 'next' | 'previous') => {
+  const switchTrack = useCallback(async (option: 'next' | 'previous') => {
     if (trackQueue.length > 0) {
-      if (option === 'next' && trackQueue.length === 1) {
-        await dispatch(
-          getRecommend({
-            artists: artistId,
-            tracks: trackId,
-          }),
-        );
-      }
-
-      await dispatch(
-        playerActions.onChangeCurrentTrack({
-          id: trackId,
-          option: option,
-        }),
-      );
-
       setBuffering(true);
       await onSwitchTrack(option);
+      setBuffering(false);
     }
-  };
+  }, []);
 
   useTrackPlayerEvents(events, async event => {
     if (event.type === Event.PlaybackError) {
@@ -96,7 +87,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
         switchTrack('next');
       }
     } else if (event.type === Event.PlaybackActiveTrackChanged) {
-      console.log('đổi bài');
+      // console.log('đổi bài');
     }
   });
 

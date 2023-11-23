@@ -27,7 +27,7 @@ function* fetchAudioWorker(
   if (trackFormFirebase._data !== undefined) {
     console.log('phát từ firebase');
     action.payload.callback?.(trackFormFirebase._data);
-    put(playerActions.onSetCurrentTrack(trackFormFirebase._data));
+    yield put(playerActions.onSetCurrentTrack(trackFormFirebase._data));
   } else {
     try {
       const response: any = yield call(fetchApi);
@@ -39,13 +39,13 @@ function* fetchAudioWorker(
         };
 
         yield delay(500);
-        put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
+        yield put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
         action.payload.callback?.(TrackInfoWithUrl);
         downloadTrack(TrackInfoWithUrl);
       }
     } catch (e) {
       if (e === 'The key has expired') {
-        alert("Hết key rồi thay key mới đê")
+        alert('Hết key rồi thay key mới đê');
         action.payload.callback?.(e);
       }
     }

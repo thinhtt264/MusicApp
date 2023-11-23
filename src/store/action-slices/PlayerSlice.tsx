@@ -44,32 +44,15 @@ const playerSlice = createSlice({
       }
     },
     onChangeCurrentTrack: (state, { payload }) => {
-      const trackIdToFind = payload.id;
-      const trackIndex = state.trackQueue.findIndex(
-        track => track.id === trackIdToFind,
-      );
-
-      if (trackIndex !== -1) {
-        if (
-          payload.option === 'next' &&
-          trackIndex < state.trackQueue.length - 1
-        ) {
-          state.currentTrack = state.trackQueue[trackIndex + 1];
-        } else if ( // nếu là bài hát cuối trong playlist bấm next sẽ reset playlist
-          payload.option === 'next' &&
-          trackIndex === state.trackQueue.length - 1
-        ) {
-          state.currentTrack = state.trackQueue[0];
-        } else if (payload.option === 'previous' && trackIndex > 0) {
-          state.currentTrack = state.trackQueue[trackIndex - 1];
-        }
-      }
+      if (Object.keys(payload).length !== 0) state.currentTrack = payload;      
     },
   },
   extraReducers: builder => {
     builder.addCase(
       getRecommend.fulfilled,
       (state, { payload }: PayloadAction<GetRecommendResponseFields>) => {
+        console.log('work nè hehe');
+        
         //update playfrom cho list recommend
         const updatedTracks = payload.tracks.map(track => ({
           ...track,

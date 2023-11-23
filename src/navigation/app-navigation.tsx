@@ -9,6 +9,7 @@ import { MyAppTheme } from 'src/themes';
 import { AppLoader } from 'src/components/loader';
 import TrackPlayer from 'react-native-track-player';
 import { Host } from 'react-native-portalize';
+import { getTimeSinceStartup } from 'react-native-startup-time';
 
 export const AppNavigation = () => {
   const { loadingApp, theme, env } = useAppSelector(state => state.app);
@@ -22,10 +23,12 @@ export const AppNavigation = () => {
       await TrackPlayer.setupPlayer();
     };
     init().finally(() => {
-      setTimeout(() => {
-        setInit(true);
-        RNBootSplash.hide({ fade: true });
-      }, 1000);
+      setInit(true);
+      RNBootSplash.hide({ fade: true });
+    });
+    getTimeSinceStartup().then(time => {
+      console.log(`Time since startup: ${time} ms`);
+      alert(time);
     });
   }, []);
 

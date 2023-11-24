@@ -75,6 +75,7 @@ export const Miniplayer = () => {
       [Constants.scale10, 0],
       Extrapolate.CLAMP,
     );
+
     return {
       bottom: bottomz,
       height: heightz,
@@ -85,23 +86,20 @@ export const Miniplayer = () => {
   const pangestureStyle = useAnimatedStyle(() => {
     // const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40], Extrapolate.CLAMP);
     return {
-      height:
-        translationY.value === -FULLSCREEN_HEIGHT
-          ? MINIPLAYER_HEIGHT + 40
-          : MINIPLAYER_HEIGHT,
+      height: MINIPLAYER_HEIGHT,
       top: 0,
     };
   });
 
   const playerStylez = useAnimatedStyle(() => {
-    const height = interpolate(
-      translationY.value,
-      [0, -FULLSCREEN_HEIGHT],
-      [MINIPLAYER_HEIGHT, kHeight + insets.top],
-      Extrapolate.CLAMP,
-    );
+    // const height = interpolate(
+    //   translationY.value,
+    //   [0, -FULLSCREEN_HEIGHT],
+    //   [MINIPLAYER_HEIGHT, kHeight + insets.top],
+    //   Extrapolate.CLAMP,
+    // );
     return {
-      height,
+      height: kHeight + insets.top,
     };
   });
 

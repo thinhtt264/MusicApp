@@ -47,9 +47,18 @@ const ControllerBarComponent = ({
       [kWidth / 3, kWidth - Constants.scale40],
       Extrapolate.CLAMP,
     );
+    const initScale = kWidth / 3 / (kWidth - Constants.scale40); //tính ra % tý lệ của size ban đầu so với size tối đa
+
+    const scale = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [initScale, 1],
+      Extrapolate.CLAMP,
+    );
+
     return {
-      transform: [{ translateY }, { translateX }],
-      width,
+      transform: [{ translateY }, { translateX }, { scale: scale }],
+      width: kWidth - Constants.scale40,
       alignSelf: 'center',
     };
   });

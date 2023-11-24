@@ -36,28 +36,21 @@ export const PlayPauseButton = React.memo(
       }
     };
     const animatedStyle = useAnimatedStyle(() => {
-      const size = interpolate(
+      const scale = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [Constants.scale25, Constants.scale50],
+        [1.5, 1],
         Extrapolate.CLAMP,
       );
 
       return {
-        width: size,
-        height: size,
+        transform: [{ scale }],
       };
     });
 
     const iconStylez = useAnimatedStyle(() => {
-      const fontSize = interpolate(
-        translationY.value,
-        [0, -FULLSCREEN_HEIGHT],
-        [Constants.scale10, Constants.scale15],
-        Extrapolate.CLAMP,
-      );
       return {
-        fontSize,
+        fontSize: Constants.scale15,
       };
     });
 

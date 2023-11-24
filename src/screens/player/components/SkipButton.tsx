@@ -21,7 +21,7 @@ const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
 const AnimatedVector = Animated.createAnimatedComponent(FontAwesome6);
 
 const IconHeight = scale(22);
-const IconWidth = scale(26);
+const IconWidth = scale(24);
 
 const SkipButton: React.FC<SkipButtonProps> = React.memo(
   ({ direction, switchTrack, translationY }) => {
@@ -29,34 +29,41 @@ const SkipButton: React.FC<SkipButtonProps> = React.memo(
       direction === 'previous' ? 'backward-step' : 'forward-step';
 
     const animatedStylez = useAnimatedStyle(() => {
-      const height = interpolate(
+      // const height = interpolate(
+      //   translationY.value,
+      //   [0, -FULLSCREEN_HEIGHT],
+      //   [Constants.scale20, IconHeight],
+      //   Extrapolate.CLAMP,
+      // );
+      // const width = interpolate(
+      //   translationY.value,
+      //   [0, -FULLSCREEN_HEIGHT],
+      //   [Constants.scale20, IconWidth],
+      //   Extrapolate.CLAMP,
+      // );
+      const scale = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [Constants.scale20, IconHeight],
+        [1, 1],
         Extrapolate.CLAMP,
       );
-      const width = interpolate(
-        translationY.value,
-        [0, -FULLSCREEN_HEIGHT],
-        [Constants.scale20, IconWidth],
-        Extrapolate.CLAMP,
-      );
+
       return {
-        height,
-        width,
+        transform: [{ scale }],
       };
     });
 
     const iconSize = useAnimatedStyle(() => {
-      const fontSize = interpolate(
+      const scale = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [20, IconHeight],
+        [1, IconHeight / 50],
         Extrapolate.CLAMP,
       );
 
       return {
-        fontSize,
+        fontSize: 50,
+        transform: [{ scale }],
       };
     });
 

@@ -66,29 +66,17 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
     const animatedStylez = useAnimatedStyle(() => {
       if (!translationY) return {};
 
-      const height = interpolate(
+      const scale = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [0, IconHeight],
-        Extrapolate.CLAMP,
-      );
-      const width = interpolate(
-        translationY.value,
-        [0, -FULLSCREEN_HEIGHT],
-        [0, IconWidth],
+        [0, 1], // Giả sử IconHeight và IconWidth là kích thước ban đầu của bạn
         Extrapolate.CLAMP,
       );
 
-      // const translateX = interpolate(
-      //   translationY.value,
-      //   [0, -FULLSCREEN_HEIGHT],
-      //   [option === 'repeat' ? 400 : -400, 0],
-      //   Extrapolate.CLAMP,
-      // );
       return {
-        height,
-        width,
-        // transform: [{ translateX }],
+        transform: [{ scale }],
+        height: IconHeight,
+        width: IconWidth,
       };
     });
 

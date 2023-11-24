@@ -59,18 +59,18 @@ const TrackImage = React.memo(
         Extrapolate.CLAMP,
       );
 
-      const height = interpolate(
-        translationY.value,
-        [0, -FULLSCREEN_HEIGHT],
-        [Constants.scale40, ImageSize],
-        Extrapolate.CLAMP,
-      );
-      const width = interpolate(
-        translationY.value,
-        [0, -FULLSCREEN_HEIGHT],
-        [Constants.scale40, ImageSize],
-        Extrapolate.CLAMP,
-      );
+      // const height = interpolate(
+      //   translationY.value,
+      //   [0, -FULLSCREEN_HEIGHT],
+      //   [Constants.scale40, ImageSize],
+      //   Extrapolate.CLAMP,
+      // );
+      // const width = interpolate(
+      //   translationY.value,
+      //   [0, -FULLSCREEN_HEIGHT],
+      //   [Constants.scale40, ImageSize],
+      //   Extrapolate.CLAMP,
+      // );
 
       const translateX = interpolate(
         translationY.value,

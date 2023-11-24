@@ -21,6 +21,7 @@ import Layout from 'src/themes/Layout';
 import { formatSearchData } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
+import { navigation } from 'src/common/navigation';
 
 const events = [
   Event.PlaybackState,
@@ -35,8 +36,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
   const [buffering, setBuffering] = useState(true);
   const [bgColor, setBgColor] = useState('');
 
-  const { albumImage, trackName, artistName } =
-    formatSearchData(currentTrack);
+  const { albumImage, trackName, artistName } = formatSearchData(currentTrack);
 
   useLayoutEffect(() => {
     getBgColor();
@@ -85,7 +85,6 @@ const PlayerScreen = ({ route, translationY }: any) => {
       // console.log('đổi bài');
     }
   });
-
   const FragmentView =
     bgColor === Colors.grey.player ? (
       <View style={[styles.defaultBackground, { backgroundColor: bgColor }]} />
@@ -108,11 +107,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
           translationY={translationY}
           switchTrack={option => switchTrack(option)}
         />
-        <TrackInfo
-          artistName={artistName}
-          trackName={trackName}
-          translationY={translationY}
-        />
+        <TrackInfo TrackInfo={currentTrack} translationY={translationY} />
         <ProgressBar translationY={translationY} />
         <ControllerBar
           translationY={translationY}

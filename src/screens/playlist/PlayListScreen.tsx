@@ -18,11 +18,15 @@ const PlayListScreen = (props: Props) => {
   const [listTrack, setListTrack] = useState<any>();
   const { id: playlistId, name, total } = route.params?.data;
 
-  useEffect(() => {
-    getTrackFormPlayList(playlistId).then(res => {
-      setListTrack(res);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getTrackFormPlayList(playlistId).then(res => {
+  //     setListTrack(res);
+  //   });
+  // }, []);
+
+  getTrackFormPlayList(playlistId, data => {
+    setListTrack(data);
+  });
 
   const onPlayQueue = () => {
     startPlaylist(listTrack);

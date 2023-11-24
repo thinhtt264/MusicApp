@@ -9,9 +9,12 @@ import {
 } from './type';
 import { Collection } from './Constants';
 import { TrackDataItemFields } from 'src/models/Track';
+import { useEffect, useRef } from 'react';
 
 const UserId = 'user1';
-const PlayListDocRef = firestore().collection(Collection.PlayList).doc(UserId);
+export const PlayListDocRef = firestore()
+  .collection(Collection.PlayList)
+  .doc(UserId);
 
 const PlayListCollectionRef = firestore()
   .doc(PlayListDocRef.path)
@@ -48,12 +51,27 @@ export const getPlaylist = async () => {
   );
 };
 
-export const getTrackFormPlayList = async (playlistId: string) => {
-  return (
-    (await PlayListDocRef.collection(playlistId)
-      .get()
-      .then(data => data.docs.map(t => t.data()))) ?? []
-  );
+export const getTrackFormPlayList = async (
+  playlistId: string,
+  setData?: (data: any) => void,
+) => {
+  // return (
+  //   (await PlayListDocRef.collection(playlistId)
+  //     .get()
+  //     .then(data => data.docs.map(t => t.data()))) ?? []
+  // );
+
+  useEffect(() => {
+    const subscriber = PlayListDocRef.collection(playlistId).onSnapshot(
+      documentSnapshot => {
+        let data: FirebaseFirestoreTypes.DocumentData[] = [];
+        documentSnapshot.docs.map(t => data.push(t.data()));
+        setData?.(data);
+      },
+    );
+    // Stop listening for updates when no longer required
+    return () => subscriber();
+  }, []);
 };
 
 const checkExistsDoc = async ({ docRef, colRef }: any) => {
@@ -63,12 +81,40 @@ const checkExistsDoc = async ({ docRef, colRef }: any) => {
   }
 };
 
-export const checkLoveTrack = async (data: TrackDataItemFields) => {
-  return (
-    (await checkExistsDoc({
-      docRef: `PlayLists/${UserId}/LoveList/${data.id}`,
-    })) ?? false
-  );
+export const checkLoveTrack = async (
+  dataId: string,
+  setData?: (data: any) => void,
+) => {
+  if (typeof setData === 'function') {
+    const subscriptionRef = useRef<any>(null);
+
+    useEffect(() => {
+      if (subscriptionRef?.current) {
+        subscriptionRef?.current(); //hủy lắng nghe sự kiện trước đó
+      }
+
+      const newSubscription = firestore()
+        .doc(`PlayLists/${UserId}/LoveList/${dataId}`)
+        .onSnapshot(documentSnapshot => {
+          setData?.(!!documentSnapshot.data());
+        });
+
+      // Lưu trữ subscriber mới vào ref
+      subscriptionRef.current = newSubscription;
+
+      return () => {
+        if (subscriptionRef.current) {
+          subscriptionRef.current();
+        }
+      };
+    }, [dataId]);
+    return false;
+  } else
+    return (
+      (await checkExistsDoc({
+        docRef: `PlayLists/${UserId}/LoveList/${dataId}`,
+      })) ?? false
+    );
 };
 
 export const addTrackToPlaylist = ({
@@ -97,6 +143,32 @@ export const addTrackToPlaylist = ({
       console.log('Document already exists');
     }
   });
+};
+
+export const removeTrackFromPlaylist = ({
+  data,
+  ref = `PlayLists/${UserId}/LoveList`, // mặc định love list
+  callback = () => {},
+}: AddTrackToPlayListFields) => {
+  const playlistId = ref.split('/')[2];
+  const docRef = firestore().collection(ref).doc(data.id);
+
+  docRef
+    .delete()
+    .then(() => {
+      callback();
+      PlayListCollectionRef.doc(playlistId)
+        .update({
+          total: firestore.FieldValue.increment(-1), //giảm 1 total sau khi xóa
+        })
+        .then(() => {
+          console.log('update total');
+        });
+    })
+    .catch(e => {
+      console.log('lỗi khi xóa track');
+      console.log(e);
+    });
 };
 
 export const addPlaylist = ({

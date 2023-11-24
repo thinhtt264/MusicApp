@@ -14,7 +14,11 @@ import {
   ViewAlbumIcon,
   ViewArtistIcon,
 } from 'src/components/svg';
-import { addTrackToPlaylist, checkLoveTrack } from 'src/common/firebase';
+import {
+  addTrackToPlaylist,
+  checkLoveTrack,
+  removeTrackFromPlaylist,
+} from 'src/common/firebase';
 
 type Props = {
   info: TrackDataItemFields;
@@ -25,12 +29,16 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
   const [isLiked, setLiked] = useState(false);
 
   const handleLikePress = useCallback(() => {
-    addTrackToPlaylist({ data: info, callback: () => {} });
-  }, []);
+    if (isLiked) {
+      removeTrackFromPlaylist({ data: info, callback: () => {} });
+    } else {
+      addTrackToPlaylist({ data: info, callback: () => {} });
+    }
+  }, [isLiked]);
 
   useEffect(() => {
     if (info?.id) {
-      checkLoveTrack(info).then(bool => {
+      checkLoveTrack(info.id).then(bool => {
         setLiked(bool);
       });
     }

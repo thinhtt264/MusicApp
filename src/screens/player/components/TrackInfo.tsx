@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { memo, useCallback, useEffect } from 'react';
 import { fontScale, scale } from 'src/common/scale';
 import { BoldText, RegularText } from 'src/components/text';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -17,10 +17,16 @@ import Constants, {
   MINIPLAYER_HEIGHT,
 } from 'src/themes/Constants';
 import { kWidth } from 'src/common/constants';
+import isEqual from 'react-fast-compare';
+import { formatSearchData } from 'src/store/action-slices';
+import {
+  addTrackToPlaylist,
+  checkLoveTrack,
+  removeTrackFromPlaylist,
+} from 'src/common/firebase';
 
 interface Props {
-  artistName: string;
-  trackName: string;
+  TrackInfo: any;
   translationY: SharedValue<number>;
 }
 
@@ -28,16 +34,21 @@ const AnimatedIcon = Animated.createAnimatedComponent(Ionicons);
 const AnimatedIcon1 = Animated.createAnimatedComponent(Ionicons);
 const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
 
-const TrackInfo = ({
-  trackName = '',
-  artistName = '',
-  translationY,
-}: Props) => {
-  const [liked, setLiked] = React.useState(false);
+const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
+  const [isLiked, setLiked] = React.useState(false);
+  const { trackName, artistName } = formatSearchData(TrackInfo);
 
-  const onPressIcon = () => {
-    setLiked(prev => !prev);
-  };
+  const handleLikePress = useCallback(() => {
+    if (isLiked) {
+      removeTrackFromPlaylist({ data: TrackInfo, callback: () => {} });
+      setLiked(false);
+    } else {
+      addTrackToPlaylist({ data: TrackInfo, callback: () => {} });
+      setLiked(true);
+    }
+  }, [isLiked]);
+
+  checkLoveTrack(TrackInfo.id, bool => setLiked(bool));
 
   const nameStylez = useAnimatedStyle(() => {
     const fontSize = interpolate(
@@ -159,9 +170,9 @@ const TrackInfo = ({
 
       <AnimatedButton
         activeOpacity={1}
-        onPress={onPressIcon}
+        onPress={handleLikePress}
         style={[iconStylez, styles.icon]}>
-        {!liked ? (
+        {!isLiked ? (
           <AnimatedIcon1
             name={'heart-outline'}
             size={scale(26)}
@@ -182,7 +193,7 @@ const TrackInfo = ({
   );
 };
 
-export default TrackInfo;
+export const TrackInfo = memo(TrackInfoComponent, isEqual);
 
 const styles = StyleSheet.create({
   container: {

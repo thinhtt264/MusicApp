@@ -21,12 +21,12 @@ const ScollDownButton = ({ translationY, onPress }: Props) => {
   const insets = useInsets();
 
   const animatedStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      translationY.value,
-      [0, -FULLSCREEN_HEIGHT],
-      [-70, 0],
-      Extrapolate.CLAMP,
-    );
+    // const translateY = interpolate(
+    //   translationY.value,
+    //   [0, -FULLSCREEN_HEIGHT],
+    //   [-70, 0],
+    //   Extrapolate.CLAMP,
+    // );
     const top = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
@@ -34,9 +34,17 @@ const ScollDownButton = ({ translationY, onPress }: Props) => {
       Extrapolate.CLAMP,
     );
 
+    const opacity = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [0, 1],
+      Extrapolate.CLAMP,
+    );
+
     return {
       top,
-      transform: [{ translateY }],
+      opacity
+      // transform: [{ translateY }],
     };
   });
 

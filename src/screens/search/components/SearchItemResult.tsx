@@ -97,7 +97,7 @@ const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
       </View>
       <Portal>
         <BottomModal ref={bottomSheetRef}>
-          {visible ? (
+          {visible ? ( //không cho nó render trước khi modal được mỏ
             <BottomSheetContent info={item} onCloseModal={onCloseModal} />
           ) : null}
         </BottomModal>

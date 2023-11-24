@@ -52,6 +52,13 @@ const TrackImage = React.memo(
 
     const imageStylez = useAnimatedStyle(() => {
       // const translateY = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [0, 0], Extrapolate.CLAMP)
+      const scalez = interpolate(
+        translationY.value,
+        [0, -FULLSCREEN_HEIGHT],
+        [Constants.scale40 / ImageSize, 1],
+        Extrapolate.CLAMP,
+      );
+
       const height = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
@@ -64,6 +71,14 @@ const TrackImage = React.memo(
         [Constants.scale40, ImageSize],
         Extrapolate.CLAMP,
       );
+
+      const translateX = interpolate(
+        translationY.value,
+        [0, -FULLSCREEN_HEIGHT],
+        [-((kWidth * 38) / 100), 0],
+        Extrapolate.CLAMP,
+      );
+
       const borderRadius = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
@@ -72,9 +87,9 @@ const TrackImage = React.memo(
       );
 
       return {
-        // transform: [{ translateY }],
-        height,
-        width,
+        transform: [{ translateX }, { scale: scalez }],
+        height: ImageSize, // Set initial height here if needed
+        width: ImageSize, // Set initial width here if needed
         marginTop: 0,
         borderRadius,
       };
@@ -111,7 +126,7 @@ const TrackImage = React.memo(
       return {
         marginLeft,
       };
-    });    
+    });
 
     return (
       <Animated.View style={containerStyle}>

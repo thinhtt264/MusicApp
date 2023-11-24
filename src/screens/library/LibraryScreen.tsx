@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
@@ -8,20 +8,19 @@ import { RegularText } from 'src/components/text';
 import Colors from 'src/themes/Colors';
 import { Spacer } from 'src/components/spacer';
 import { PlaylistCard } from './components';
-import { useAppSelector } from 'src/common/redux';
 import { getPlaylist } from 'src/common/firebase';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {};
 const LibraryScreen = (props: Props) => {
-  const { translate, navigation, dispatch } = useScreenController();
-  const { loveQueue } = useAppSelector(state => state.profile);
+  const { translate, navigation } = useScreenController();
   const [list, setList] = useState<any>([]);
 
-  useEffect(() => {
+  useFocusEffect(() => {
     getPlaylist().then(res => {
       setList(res);
     });
-  }, []);
+  });
 
   const onNavigate = (data: any) => {
     navigation.navigate({

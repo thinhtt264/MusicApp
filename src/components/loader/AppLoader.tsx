@@ -3,11 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import Colors from 'src/themes/Colors';
 import layout from 'src/themes/Layout';
 import { scale } from 'src/common/scale';
-import { useScreenController } from 'src/common/hooks';
 import { WaveIndicator } from 'react-native-indicators';
 
 const AppLoaderComponent = () => {
-  const { translate } = useScreenController();
   return (
     <View
       style={[

@@ -24,6 +24,7 @@ const SearchScreen = (props: Props) => {
   const { searchData, searchRecentData } = useAppSelector(
     state => state.search,
   );
+  const { currentTrack } = useAppSelector(state => state.player);
 
   const flatListRef = useRef<FlatList>(null);
 
@@ -83,7 +84,11 @@ const SearchScreen = (props: Props) => {
             </View>
 
             <AnimatedList
-              style={styles.item}
+              style={[
+                styles.item,
+                { marginBottom: currentTrack ? scale(60) : 0 },
+              ]}
+              flatlistRef={flatListRef}
               data={searchRecentData?.tracks?.items ?? []}
               ItemSeparatorComponent={() => <Divider height={15} />}
               renderFooter={() => {

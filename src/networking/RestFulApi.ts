@@ -106,7 +106,7 @@ function Request<T = Record<string, unknown>>(
     (defaultConfig.headers as Record<string, string>)[
       tokenKeyHeader
     ] = `Bearer ${access_token}`;
-  }
+  }  
 
   console.log('endpoint: ', `${defaultConfig.baseURL}${config.url}`);
 

@@ -16,6 +16,7 @@ const AnimatedList = Animated.createAnimatedComponent(FlatList);
 const HomeScreen = (props: Props) => {
   const scrollRef = useRef<any>(null);
   const { access_token } = useAppSelector(state => state.auth);
+  const { currentTrack } = useAppSelector(state => state.player);
 
   const onGetHomeData = async (): Promise<void> => {
     // setIsLoading(true);
@@ -75,7 +76,7 @@ const HomeScreen = (props: Props) => {
         bounces={false}
         // onScroll={scrollHandler}
         scrollEventThrottle={16}
-        style={{ flex: 1 }}
+        style={{ flex: 1, marginBottom: currentTrack ? scale(60) : 0 }}
         data={[1]}
         showsVerticalScrollIndicator={false}
         renderItem={() => (

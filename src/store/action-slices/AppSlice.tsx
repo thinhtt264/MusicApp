@@ -42,7 +42,7 @@ const appSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(appInit.fulfilled, (state, action) => {
-      state.env = action.payload;
+      state.env = action.payload;      
     });
   },
 });

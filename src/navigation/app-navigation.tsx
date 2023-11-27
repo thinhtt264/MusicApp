@@ -10,6 +10,7 @@ import { AppLoader } from 'src/components/loader';
 import TrackPlayer from 'react-native-track-player';
 import { Host } from 'react-native-portalize';
 import { getTimeSinceStartup } from 'react-native-startup-time';
+import { SnackBar } from 'src/components/snack-bar';
 
 export const AppNavigation = () => {
   const { loadingApp, theme, env } = useAppSelector(state => state.app);
@@ -40,7 +41,7 @@ export const AppNavigation = () => {
         </Host>
       )}
       {/* Snack bar */}
-      {/* <SnackBar /> */}
+      <SnackBar />
       {/* Modal Alert */}
       {/* <Alert /> */}
       {/* App Loader */}

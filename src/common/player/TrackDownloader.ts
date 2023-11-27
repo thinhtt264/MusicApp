@@ -5,7 +5,6 @@ import { TrackDataFields } from 'src/models/Track';
 
 const musicAppFolderPath = `${RNFS.DownloadDirectoryPath}`;
 
-
 const createDirectoryIfNotExists = async (directoryPath: string) => {
   try {
     const isExists = await RNFS.exists(directoryPath);
@@ -19,7 +18,6 @@ const createDirectoryIfNotExists = async (directoryPath: string) => {
 };
 
 export const downloadTrack = async (data: TrackDataFields) => {
-
   const localFilePath = `${musicAppFolderPath}/LoveList/${data.id}.mp3`;
 
   const fileExists = await RNFS.exists(localFilePath);
@@ -29,31 +27,31 @@ export const downloadTrack = async (data: TrackDataFields) => {
   }
 
   await createDirectoryIfNotExists(`${musicAppFolderPath}/LoveList`); //tạo thư mục tên playlist
+  await linkFileMp3(data, localFilePath);
+};
 
+const linkFileMp3 = async (data: TrackDataFields, localFilePath: string) => {
   try {
     if (!data.url || isFirebaseUrl(data.url) || data.url === '') return '';
 
     const response: any = await RNFS.downloadFile({
       fromUrl: data.url,
       toFile: localFilePath,
-      progress: res => {},
+      progress: res => {
+        console.log('đang tải ' + data.id);
+      },
     }).promise;
 
     if (response.statusCode === 202) {
       setTimeout(() => {
-        downloadTrack(data);
-      }, 1000);
+        linkFileMp3(data, localFilePath);
+      }, 500);
       return;
     }
 
     if (response.statusCode === 200) {
       console.log('Tải và lưu tệp tin thành công');
-      if (fileExists) {
-        // await uploadFileToFirebase({ localFilePath: localFilePath, data });
-        // unLinkFileMp3();
-        return localFilePath;
-      }
-      return '';
+      return localFilePath;
     } else {
       console.error('Lỗi khi tải tệp tin');
       return '';
@@ -63,7 +61,6 @@ export const downloadTrack = async (data: TrackDataFields) => {
     return '';
   }
 };
-
 const unLinkFileMp3 = () => {
   const localFilePath = `${RNFS.DocumentDirectoryPath}/myMusic.mp3`;
   setTimeout(async () => {

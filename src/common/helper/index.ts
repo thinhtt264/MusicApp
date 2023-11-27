@@ -3,3 +3,4 @@ export * from './method/CustomColors';
 export * from './method/Time';
 export * from './method/Type';
 export * from './string';
+export * from './promise'

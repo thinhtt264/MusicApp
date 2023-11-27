@@ -19,6 +19,7 @@ import {
   checkLoveTrack,
   removeTrackFromPlaylist,
 } from 'src/common/firebase';
+import Toast from 'react-native-toast-message';
 
 type Props = {
   info: TrackDataItemFields;
@@ -31,8 +32,16 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
   const handleLikePress = useCallback(() => {
     if (isLiked) {
       removeTrackFromPlaylist({ data: info, callback: () => {} });
+      Toast.show({
+        text1: 'Đã xóa khỏi danh sách',
+        type: 'toastMessage',
+      });
     } else {
       addTrackToPlaylist({ data: info, callback: () => {} });
+      Toast.show({
+        text1: 'Đã thêm vào danh sách yêu thích',
+        type: 'toastMessage',
+      });
     }
   }, [isLiked]);
 

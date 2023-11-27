@@ -1,11 +1,11 @@
-import { takeLeading, call, put, select, delay } from 'redux-saga/effects';
+import { call, put, delay, takeLatest } from 'redux-saga/effects';
 import { createAction } from '@reduxjs/toolkit';
 import { TrackDataFields } from 'src/models/Track';
-import { getTrackInfo } from 'src/common/firebase';
 import { NetWorkService } from 'src/networking/RestFulApi';
 import { selector } from 'src/common/redux';
 import { playerActions } from '../action-slices';
 import { downloadTrack } from 'src/common/player';
+import { deleteAllKey } from 'src/common/storage';
 
 function* fetchAudioWorker(
   action: ReturnType<typeof fetchAudioSagaAction.fetch>,
@@ -20,15 +20,6 @@ function* fetchAudioWorker(
       isNeedToken: false,
     });
 
-  // const trackFormFirebase: any = yield call(getTrackInfo, {
-  //   doc: TrackInfo.id,
-  // });
-
-  // if (trackFormFirebase._data !== undefined) {
-  //   console.log('phát từ firebase');
-  //   action.payload.callback?.(trackFormFirebase._data);
-  //   yield put(playerActions.onSetCurrentTrack(trackFormFirebase._data));
-  // } else {
   try {
     const trackFilePath = yield call(downloadTrack, TrackInfo);
     console.log(trackFilePath);
@@ -52,7 +43,8 @@ function* fetchAudioWorker(
         yield delay(500);
         yield put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
         action.payload.callback?.(TrackInfoWithUrl);
-        downloadTrack(TrackInfoWithUrl);
+        console.log('bị cc j mà qua zo dây');
+        yield call(downloadTrack, TrackInfoWithUrl);
       }
     }
   } catch (e) {
@@ -64,7 +56,6 @@ function* fetchAudioWorker(
     }
   }
 }
-// }
 
 const fetch = createAction<{
   callback: (TrackInfo: TrackDataFields | string) => void;
@@ -72,5 +63,5 @@ const fetch = createAction<{
 export const fetchAudioSagaAction = { fetch };
 
 export function* fetchSaga() {
-  yield takeLeading(fetch.type, fetchAudioWorker);
+  yield takeLatest(fetch.type, fetchAudioWorker);
 }

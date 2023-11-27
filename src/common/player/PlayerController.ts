@@ -17,11 +17,13 @@ import { PlayerProps } from './Type';
 
 const ANDROID_HEAD_PATH = 'file://';
 
-export const startAudio = async (info: PlayerProps) => {
+export const startAudio = async (info: PlayerProps, signal?: AbortSignal) => {
   await TrackPlayer.reset();
-  dispatch(playerControlActionSaga.setCurrentTrack({ PlayerProps: info }));
+  await dispatch(
+    playerControlActionSaga.setCurrentTrack({ PlayerProps: info }),
+  );
 
-  dispatch(
+  await dispatch(
     fetchAudioSagaAction.fetch({
       callback: async TrackInfo => {
         if (typeof TrackInfo === 'string') return;
@@ -29,11 +31,7 @@ export const startAudio = async (info: PlayerProps) => {
       },
     }),
   );
-  // }
-  // Start playing it
-  // if (info.from !== 'home') {
-  //   await TrackPlayer.setPlayWhenReady(true);
-  // }
+
 };
 
 export const startPlaylist = async (queue: TrackDataFields[]) => {

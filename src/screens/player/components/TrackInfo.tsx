@@ -51,42 +51,38 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
   checkLoveTrack(TrackInfo.id, bool => setLiked(bool));
 
   const nameStylez = useAnimatedStyle(() => {
-    const scale = interpolate(
+    const fontSize = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [Constants.fontScale14 / Constants.fontScale18, 1],
+      [Constants.fontScale14, Constants.fontScale18],
       Extrapolate.CLAMP,
     );
-
     return {
-      transform: [{ scale }],
-      fontSize: Constants.fontScale18,
+      fontSize,
     };
   });
 
   const artitStylez = useAnimatedStyle(() => {
-    const scale = interpolate(
+    const fontSize = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [Constants.fontScale11 / Constants.fontScale14, 1],
+      [Constants.fontScale11, Constants.fontScale14],
       Extrapolate.CLAMP,
     );
-
     return {
-      transform: [{ scale }],
-      fontSize: Constants.fontScale14,
+      fontSize,
     };
   });
 
   const trackStylez = useAnimatedStyle(() => {
-    // const height = interpolate(
-    //   translationY.value,
-    //   [0, -FULLSCREEN_HEIGHT],
-    //   [Constants.scale40, MINIPLAYER_HEIGHT],
-    //   Extrapolate.CLAMP,
-    // );
+    const height = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [Constants.scale40, MINIPLAYER_HEIGHT],
+      Extrapolate.CLAMP,
+    );
     return {
-      // height,
+      height,
     };
   });
 
@@ -104,9 +100,17 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
       Extrapolate.CLAMP,
     );
 
+    const transalteX = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [100, 0],
+      Extrapolate.CLAMP,
+    );
+
     return {
       height,
       width,
+      // transform: [{ translateX: transalteX }],
     };
   });
 
@@ -121,20 +125,28 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
     const translateX = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [Constants.scale15, 0],
+      [-Constants.scale25, 0],
       Extrapolate.CLAMP,
     );
 
-    const scale = interpolate(
+    const maxWidth = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [kWidth / 1.2 / (kWidth - Constants.scale50), 1],
+      [kWidth / 2.1, kWidth - Constants.scale50],
+      Extrapolate.CLAMP,
+    );
+
+    const marginTop = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [0, Constants.scale30],
       Extrapolate.CLAMP,
     );
 
     return {
-      transform: [{ translateY }, { translateX }, { scale }],
-      width: kWidth - Constants.scale50,
+      transform: [{ translateY }, { translateX }],
+      maxWidth,
+      marginTop,
     };
   });
 

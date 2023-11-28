@@ -3,9 +3,9 @@ import { playerActions, searchActions } from '../action-slices';
 import { createAction } from '@reduxjs/toolkit';
 import { ChangeTrackProps, PlayerProps } from 'src/common/player/Type';
 import { selector } from 'src/common/redux';
-import TrackPlayer, { Event } from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
 import { fetchAudioSagaAction } from './FetchAudioSaga';
-import { TrackDataItemFields } from 'src/models/Track';
+import { TrackDataFields } from 'src/models/Track';
 import { getRecommend } from './api';
 
 export function* setCurrentTrackWorker(
@@ -42,7 +42,7 @@ export function* onChangeCurrentTrackWorker(
 
   if (Object.keys(newTrack).length !== 0) {
     yield call(TrackPlayer.pause);
-    yield put(playerActions.onResetQueue(newTrackQueue)) // set lại list recommend
+    yield put(playerActions.onResetQueue(newTrackQueue)); // set lại list recommend
     yield put(playerActions.onSetCurrentTrack(newTrack)); // chuyển track để fetch nhạc mới
     //check xem currentTrack có thay đổi hay không
     if (option === 'next') {
@@ -64,21 +64,27 @@ export function* onChangeCurrentTrackWorker(
 function* handleChangeCurrentTrackInQueue({
   currentTrack,
   option,
+  loadmoreRecommend = false,
 }: {
-  currentTrack: any;
+  currentTrack: TrackDataFields;
   option: 'next' | 'previous';
+  loadmoreRecommend?: boolean;
 }): Generator<any, any, any> {
   const trackQueue: any = yield selector(state => state.player.trackQueue);
   let newTrack = {};
   let newTrackQueue = trackQueue;
 
-  if (trackQueue.length === 1) {
+  if (trackQueue.length === 1 || loadmoreRecommend) {
     //nếu không phát từ playlist thì sẽ auto get recommend
     const response = yield call(getRecommend, {
       artists: currentTrack?.artists[0]?.id ?? '',
       tracks: currentTrack?.id ?? '',
     });
-    newTrackQueue = [currentTrack, ...response.tracks];
+    const updatedTracks = response.tracks.map((track: any) => ({
+      ...track,
+      playFrom: 'recommend',
+    }));
+    newTrackQueue = [currentTrack, ...updatedTracks];
   }
 
   const trackIdToFind = currentTrack.id;
@@ -90,10 +96,19 @@ function* handleChangeCurrentTrackInQueue({
     if (option === 'next' && trackIndex < newTrackQueue.length - 1) {
       newTrack = newTrackQueue[trackIndex + 1];
     } else if (
-      // nếu là bài hát cuối trong playlist bấm next sẽ reset playlist
+      // nếu là bài hát cuối trong playlist
       option === 'next' &&
       trackIndex === newTrackQueue.length - 1
     ) {
+      //load tiếp recommend
+      if (currentTrack.playFrom === 'recommend') {
+        return yield handleChangeCurrentTrackInQueue({
+          currentTrack: newTrackQueue[0],
+          option: 'next',
+          loadmoreRecommend: true,
+        });
+      }
+      // bấm next sẽ reset playlist
       newTrack = newTrackQueue[0];
     } else if (option === 'previous' && trackIndex > 0) {
       newTrack = newTrackQueue[trackIndex - 1];

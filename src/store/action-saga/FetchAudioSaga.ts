@@ -43,7 +43,6 @@ function* fetchAudioWorker(
         yield delay(500);
         yield put(playerActions.onSetCurrentTrack(TrackInfoWithUrl));
         action.payload.callback?.(TrackInfoWithUrl);
-        console.log('bị cc j mà qua zo dây');
         yield call(downloadTrack, TrackInfoWithUrl);
       }
     }

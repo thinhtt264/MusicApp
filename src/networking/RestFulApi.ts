@@ -48,6 +48,8 @@ AxiosInstance.interceptors.response.use(
       }
 
       dispatch(authActions.onSetToken(newToken));
+      console.log(originalRequest);
+      
 
       // originalRequest.headers[
       //   tokenKeyHeader
@@ -57,7 +59,6 @@ AxiosInstance.interceptors.response.use(
       //     console.log('call r');
       //   })
       //   .catch(e => {
-      //     console.log('lỗi lòi l ');
       //     console.log(e);
       //   });
     }

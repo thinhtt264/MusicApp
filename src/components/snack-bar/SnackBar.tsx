@@ -9,7 +9,6 @@ import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import { BoldText } from '../text';
 
-type Props = {};
 const toastConfig = {
   toastMessage: ({ text1, props }: any) => (
     <View style={[Layout.rowCenter, styles.toast]}>

@@ -24,7 +24,7 @@ const playerSlice = createSlice({
   initialState,
   reducers: {
     onSetCurrentTrack: (state, { payload }: PayloadAction<any>) => {
-      if (state.currentTrack.id === payload.id) return;      
+      if (state.currentTrack.id === payload.id) return;
       state.currentTrack = { ...state.currentTrack, ...payload };
     },
     onRemoveCurrentTrack: (
@@ -35,11 +35,10 @@ const playerSlice = createSlice({
         state.currentTrack = DEFAULT_INFO;
     },
     onResetQueue: (state, { payload }: PayloadAction<any>) => {
-      state.trackQueue = [];
-
       if (Array.isArray(payload)) {
         state.trackQueue = payload;
       } else {
+        state.trackQueue = [];
         state.trackQueue.push(payload);
       }
     },

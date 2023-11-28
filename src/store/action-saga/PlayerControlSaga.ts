@@ -33,16 +33,16 @@ export function* onChangeCurrentTrackWorker(
   if (res.state === 'loading' || res.state === 'buffering') {
     return;
   }
-  console.log(res);
 
   const result = yield handleChangeCurrentTrackInQueue({
     currentTrack,
     option: option,
   });
-  const { newTrack, trackQueue } = result as any;
+  const { newTrack, newTrackQueue } = result as any;
 
   if (Object.keys(newTrack).length !== 0) {
     yield call(TrackPlayer.pause);
+    yield put(playerActions.onResetQueue(newTrackQueue)) // set lại list recommend
     yield put(playerActions.onSetCurrentTrack(newTrack)); // chuyển track để fetch nhạc mới
     //check xem currentTrack có thay đổi hay không
     if (option === 'next') {
@@ -78,7 +78,7 @@ function* handleChangeCurrentTrackInQueue({
       artists: currentTrack?.artists[0]?.id ?? '',
       tracks: currentTrack?.id ?? '',
     });
-    newTrackQueue = response.tracks;
+    newTrackQueue = [currentTrack, ...response.tracks];
   }
 
   const trackIdToFind = currentTrack.id;

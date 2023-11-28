@@ -24,6 +24,7 @@ import {
   checkLoveTrack,
   removeTrackFromPlaylist,
 } from 'src/common/firebase';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   TrackInfo: any;
@@ -42,9 +43,17 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
     if (isLiked) {
       removeTrackFromPlaylist({ data: TrackInfo, callback: () => {} });
       setLiked(false);
+      Toast.show({
+        text1: 'Đã xóa khỏi danh sách',
+        type: 'toastMessage',
+      });
     } else {
       addTrackToPlaylist({ data: TrackInfo, callback: () => {} });
       setLiked(true);
+      Toast.show({
+        text1: 'Đã thêm vào danh sách yêu thích',
+        type: 'toastMessage',
+      });
     }
   }, [isLiked]);
 
@@ -100,17 +109,9 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
       Extrapolate.CLAMP,
     );
 
-    const transalteX = interpolate(
-      translationY.value,
-      [0, -FULLSCREEN_HEIGHT],
-      [100, 0],
-      Extrapolate.CLAMP,
-    );
-
     return {
       height,
       width,
-      // transform: [{ translateX: transalteX }],
     };
   });
 
@@ -132,7 +133,7 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
     const maxWidth = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
-      [kWidth / 2.1, kWidth - Constants.scale50],
+      [kWidth / 2, kWidth - Constants.scale40],
       Extrapolate.CLAMP,
     );
 
@@ -157,6 +158,7 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
           height: MINIPLAYER_HEIGHT,
           justifyContent: 'center',
           paddingVertical: scale(5),
+          width: '85%',
         }}>
         <Animated.View style={[styles.trackInfo, trackStylez]}>
           <BoldText numberOfLines={1} textStyle={nameStylez}>
@@ -208,6 +210,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    overflow: 'hidden',
   },
   artist: {
     fontSize: fontScale(12),
@@ -219,6 +222,7 @@ const styles = StyleSheet.create({
   icon: {
     alignSelf: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
+    position: 'absolute',
+    right: 0,
   },
 });

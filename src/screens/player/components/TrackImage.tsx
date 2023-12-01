@@ -1,7 +1,7 @@
 import { StyleSheet, Image } from 'react-native';
 import React, { useEffect, useMemo, useRef } from 'react';
 import Animated, {
-  Extrapolate,
+
   SharedValue,
   interpolate,
   useAnimatedStyle,
@@ -51,39 +51,39 @@ const TrackImage = React.memo(
     };
 
     const imageStylez = useAnimatedStyle(() => {
-      // const translateY = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [0, 0], Extrapolate.CLAMP)
+      // const translateY = interpolate(translationY.value, [0, -FULLSCREEN_HEIGHT], [0, 0], 'clamp')
       const scalez = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [Constants.scale40 / ImageSize, 1],
-        Extrapolate.CLAMP,
+        'clamp',
       );
 
       // const height = interpolate(
       //   translationY.value,
       //   [0, -FULLSCREEN_HEIGHT],
       //   [Constants.scale40, ImageSize],
-      //   Extrapolate.CLAMP,
+      //   'clamp',
       // );
       // const width = interpolate(
       //   translationY.value,
       //   [0, -FULLSCREEN_HEIGHT],
       //   [Constants.scale40, ImageSize],
-      //   Extrapolate.CLAMP,
+      //   'clamp',
       // );
 
       const translateX = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [-((kWidth * 38) / 100), 0],
-        Extrapolate.CLAMP,
+        'clamp',
       );
 
       const borderRadius = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [0, Constants.scale10],
-        Extrapolate.CLAMP,
+        'clamp',
       );
 
       return {
@@ -100,13 +100,13 @@ const TrackImage = React.memo(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [MINIPLAYER_HEIGHT, ImageSize],
-        Extrapolate.CLAMP,
+        'clamp',
       );
       const width = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [ImageSize, ImageSize],
-        Extrapolate.CLAMP,
+        'clamp',
       );
 
       return {
@@ -121,7 +121,7 @@ const TrackImage = React.memo(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [Constants.scale10, Constants.scale25],
-        Extrapolate.CLAMP,
+        'clamp',
       );
       return {
         marginLeft,

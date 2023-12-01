@@ -3,7 +3,7 @@ import equals from 'react-fast-compare';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Animated, {
-  Extrapolate,
+
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -22,7 +22,7 @@ const ToTopButtonComponent = (props: ButtonProps) => {
         translationY?.value,
         [2000, 2040],
         [0, 1],
-        Extrapolate.CLAMP,
+        'clamp',
       );
       return {
         opacity,

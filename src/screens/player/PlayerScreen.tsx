@@ -13,6 +13,8 @@ import { scale } from 'src/common/scale';
 import { onSwitchTrack, startAudio } from 'src/common/player';
 import { ControllerBar } from './components';
 import TrackPlayer, {
+  AppKilledPlaybackBehavior,
+  Capability,
   Event,
   State,
   useTrackPlayerEvents,
@@ -21,12 +23,12 @@ import Layout from 'src/themes/Layout';
 import { formatSearchData } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
-import { navigation } from 'src/common/navigation';
 
 const events = [
   Event.PlaybackState,
   Event.PlaybackError,
   Event.PlaybackActiveTrackChanged,
+  Event.PlaybackQueueEnded,
 ];
 
 const PlayerScreen = ({ route, translationY }: any) => {
@@ -53,6 +55,7 @@ const PlayerScreen = ({ route, translationY }: any) => {
 
   const initPlayer = async () => {
     await startAudio({ info: currentTrack, from: 'home' });
+    registerEventListeners();
   };
 
   useEffect(() => {
@@ -81,10 +84,45 @@ const PlayerScreen = ({ route, translationY }: any) => {
       } else if (event.state === State.Ended) {
         switchTrack('next');
       }
-    } else if (event.type === Event.PlaybackActiveTrackChanged) {
-      // console.log('đổi bài');
+    } else if (event.type === Event.PlaybackActiveTrackChanged && event.track) {
+      await TrackPlayer.updateOptions({
+        // Media controls capabilities
+        capabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+          Capability.Stop,
+        ],
+
+        // Capabilities that will show up when the notification is in the compact form on Android
+        compactCapabilities: [Capability.Play, Capability.Pause],
+
+        notificationCapabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SkipToNext,
+          Capability.SkipToPrevious,
+          Capability.Stop,
+        ],
+        android: {
+          appKilledPlaybackBehavior:
+            AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+        },
+        icon: require('src/assests/images/Spotify_Logo.png'),
+        nextIcon: require('src/assests/images/Spotify_Logo.png'),
+        color: 0xffff0000,
+      });
     }
   });
+
+  const registerEventListeners = () => {
+    TrackPlayer.addEventListener(Event.RemoteNext, () => switchTrack('next'));
+    TrackPlayer.addEventListener(Event.RemotePrevious, () =>
+      switchTrack('previous'),
+    );
+  };
+
   const FragmentView =
     bgColor === Colors.grey.player ? (
       <View style={[styles.defaultBackground, { backgroundColor: bgColor }]} />

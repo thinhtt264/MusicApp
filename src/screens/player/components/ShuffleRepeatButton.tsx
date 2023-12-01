@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, View, StyleSheet, ViewProps } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import Animated, {
   Extrapolate,
   SharedValue,
@@ -21,6 +21,7 @@ interface ShuffleRepeatButtonProps {
 }
 
 const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
+const AnimatedIcon = Animated.createAnimatedComponent(FontAwesome6);
 
 const IconHeight = scale(22);
 const IconWidth = scale(26);
@@ -32,7 +33,7 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
     const onPressRepeat = () => {
       checkRepeatMode(mode => {
         if (mode === RepeatMode.Off) {
-          setRepeatMode('Queue');
+          setRepeatMode('Track');
           setstate(true);
         } else {
           setRepeatMode('Off');
@@ -66,17 +67,23 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
     const animatedStylez = useAnimatedStyle(() => {
       if (!translationY) return {};
 
-      const scale = interpolate(
+      const height = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
-        [0, 1], // Giả sử IconHeight và IconWidth là kích thước ban đầu của bạn
-        Extrapolate.CLAMP,
+        [0, IconHeight],
+        'clamp',
+      );
+      const width = interpolate(
+        translationY.value,
+        [0, -FULLSCREEN_HEIGHT],
+        [0, IconWidth],
+        'clamp',
       );
 
       return {
-        transform: [{ scale }],
-        height: IconHeight,
-        width: IconWidth,
+        // transform: [{ scale }],
+        height,
+        width,
       };
     });
 
@@ -84,11 +91,19 @@ const ShuffleRepeatButton: React.FC<ShuffleRepeatButtonProps> = React.memo(
       <AnimatedButton
         onPress={optionPress}
         style={[animatedStylez, styles.container]}>
-        <FontAwesome6
-          name={iconName}
-          size={size}
-          color={applyOption ? Colors.green.default : Colors.white.default}
-        />
+        {!applyOption ? (
+          <AnimatedIcon
+            name={iconName}
+            size={size}
+            color={Colors.white.default}
+          />
+        ) : (
+          <AnimatedIcon
+            name={iconName}
+            size={size}
+            color={Colors.green.default}
+          />
+        )}
       </AnimatedButton>
     );
   },

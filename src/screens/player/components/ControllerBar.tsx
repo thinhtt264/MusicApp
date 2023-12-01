@@ -6,7 +6,7 @@ import { PlayPauseButton } from './PlayPauseButton';
 import SkipButton from './SkipButton';
 import ShuffleRepeatButton from './ShuffleRepeatButton';
 import Animated, {
-  Extrapolate,
+
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
@@ -31,21 +31,21 @@ const ControllerBarComponent = ({
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [-scaleSize135, 0],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     const translateX = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [scaleSize115, 2],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     const width = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [kWidth / 3, kWidth - Constants.scale40],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     const initScale = kWidth / 3 / (kWidth - Constants.scale40); //tính ra % tý lệ của size ban đầu so với size tối đa
 
@@ -53,7 +53,7 @@ const ControllerBarComponent = ({
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [initScale, 1],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     return {

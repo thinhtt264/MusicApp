@@ -6,7 +6,7 @@ import { RegularText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
 import { translate } from 'src/common/language/translate';
 import Animated, {
-  Extrapolate,
+
   SharedValue,
   interpolate,
   useAnimatedStyle,
@@ -42,25 +42,25 @@ const HeaderComponent = (props: Props) => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [0, Constants.scale20],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     const marginTop = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [-Constants.scale20, insets.top + 10],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     const translateY = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [-70, 0],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     const marginBottom = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [spaceSize, Constants.scale20], //chỉnh khoảng cách trên track image
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     return {

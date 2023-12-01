@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { WaveIndicator } from 'react-native-indicators';
 import Animated, {
-  Extrapolate,
+
   FadeIn,
   FadeOut,
   SharedValue,
@@ -40,7 +40,7 @@ export const PlayPauseButton = React.memo(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [1.5, 1],
-        Extrapolate.CLAMP,
+        'clamp',
       );
 
       return {

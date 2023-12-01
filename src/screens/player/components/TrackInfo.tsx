@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Animated, {
   BounceIn,
   BounceOut,
-  Extrapolate,
+
   SharedValue,
   interpolate,
   useAnimatedStyle,
@@ -64,7 +64,7 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [Constants.fontScale14, Constants.fontScale18],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     return {
       fontSize,
@@ -76,7 +76,7 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [Constants.fontScale11, Constants.fontScale14],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     return {
       fontSize,
@@ -88,7 +88,7 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [Constants.scale40, MINIPLAYER_HEIGHT],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     return {
       height,
@@ -100,13 +100,13 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [0, Constants.scale30],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     const width = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [0, Constants.scale30],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     return {
@@ -120,28 +120,28 @@ const TrackInfoComponent = ({ TrackInfo, translationY }: Props) => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [-Constants.scale50, 0],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     const translateX = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [-Constants.scale25, 0],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     const maxWidth = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [kWidth / 2, kWidth - Constants.scale40],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     const marginTop = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [0, Constants.scale30],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     return {

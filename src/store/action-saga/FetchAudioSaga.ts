@@ -5,7 +5,6 @@ import { NetWorkService } from 'src/networking/RestFulApi';
 import { selector } from 'src/common/redux';
 import { playerActions } from '../action-slices';
 import { downloadTrack } from 'src/common/player';
-import { deleteAllKey } from 'src/common/storage';
 
 function* fetchAudioWorker(
   action: ReturnType<typeof fetchAudioSagaAction.fetch>,
@@ -33,11 +32,11 @@ function* fetchAudioWorker(
       action.payload.callback?.(TrackInfoWithUrl);
     } else {
       const response: any = yield call(fetchApi);
-
-      if (response && response?.soundcloudTrack?.audio[0]?.url) {
+      
+      if (response && response?.youtubeVideo?.audio[0]?.url) {
         const TrackInfoWithUrl = {
           ...TrackInfo,
-          url: response.soundcloudTrack.audio[0].url,
+          url: response.youtubeVideo.audio[0].url,
         };
 
         yield delay(500);

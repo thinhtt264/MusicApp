@@ -3,7 +3,7 @@ import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { scale } from 'src/common/scale';
 import Animated, {
-  Extrapolate,
+
   SharedValue,
   interpolate,
   useAnimatedStyle,
@@ -25,20 +25,20 @@ const ScollDownButton = ({ translationY, onPress }: Props) => {
     //   translationY.value,
     //   [0, -FULLSCREEN_HEIGHT],
     //   [-70, 0],
-    //   Extrapolate.CLAMP,
+    //   'clamp',
     // );
     const top = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [0, Constants.scale30 + insets.top - 3],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     const opacity = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [0, 1],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     return {

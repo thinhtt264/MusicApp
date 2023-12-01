@@ -19,7 +19,7 @@ export const ENVDynamic = (env: string) => {
       API_URL: 'https://api.spotify.com/',
       AUTH_URL: 'https://accounts.spotify.com/',
       DOWNLOAD_URL:
-        'https://spotify-scraper.p.rapidapi.com/v1/track/download/soundcloud',
+        'https://spotify-scraper.p.rapidapi.com/v1/track/download',
       RAPID_API_KEY: '2f02633218mshdf13b1dd33255a8p1febdfjsn5d5e8132ac32',
       RAPID_API_HOST: 'spotify-scraper.p.rapidapi.com',
       APP_ENV: 'Dev',

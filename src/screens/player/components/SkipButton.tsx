@@ -4,7 +4,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { scale } from '../../../common/scale/index';
 import Colors from 'src/themes/Colors';
 import Animated, {
-  Extrapolate,
+
   SharedValue,
   interpolate,
   useAnimatedStyle,
@@ -33,19 +33,19 @@ const SkipButton: React.FC<SkipButtonProps> = React.memo(
       //   translationY.value,
       //   [0, -FULLSCREEN_HEIGHT],
       //   [Constants.scale20, IconHeight],
-      //   Extrapolate.CLAMP,
+      //   'clamp',
       // );
       // const width = interpolate(
       //   translationY.value,
       //   [0, -FULLSCREEN_HEIGHT],
       //   [Constants.scale20, IconWidth],
-      //   Extrapolate.CLAMP,
+      //   'clamp',
       // );
       const scale = interpolate(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [1, 1],
-        Extrapolate.CLAMP,
+        'clamp',
       );
 
       return {
@@ -58,7 +58,7 @@ const SkipButton: React.FC<SkipButtonProps> = React.memo(
         translationY.value,
         [0, -FULLSCREEN_HEIGHT],
         [1, IconHeight / 50],
-        Extrapolate.CLAMP,
+        'clamp',
       );
 
       return {

@@ -10,7 +10,7 @@ import Colors from 'src/themes/Colors';
 import { dispatch } from 'src/common/redux';
 import { appActions } from 'src/store/action-slices';
 import Animated, {
-  Extrapolate,
+
   SharedValue,
   interpolate,
   useAnimatedStyle,
@@ -40,7 +40,7 @@ const ProgressBarComponent = ({ translationY, ...props }: Props) => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [-10, 1],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     return { opacity };
   });

@@ -1,6 +1,6 @@
 import React from 'react';
 import Animated, {
-  Extrapolate,
+
   cancelAnimation,
   interpolate,
   runOnJS,
@@ -61,19 +61,19 @@ export const Miniplayer = () => {
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [MINIPLAYER_HEIGHT, kHeight + insets.top],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     const bottomz = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [TAB_HEIGHT, 0],
-      Extrapolate.CLAMP,
+      'clamp',
     );
     const marginHorizontal = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
       [Constants.scale10, 0],
-      Extrapolate.CLAMP,
+      'clamp',
     );
 
     return {
@@ -84,7 +84,7 @@ export const Miniplayer = () => {
   });
 
   const pangestureStyle = useAnimatedStyle(() => {
-    // const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40], Extrapolate.CLAMP);
+    // const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40], 'clamp');
     return {
       height: MINIPLAYER_HEIGHT,
       top: 0,
@@ -96,7 +96,7 @@ export const Miniplayer = () => {
     //   translationY.value,
     //   [0, -FULLSCREEN_HEIGHT],
     //   [MINIPLAYER_HEIGHT, kHeight + insets.top],
-    //   Extrapolate.CLAMP,
+    //   'clamp',
     // );
     return {
       height: kHeight + insets.top,

@@ -1,15 +1,15 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { memo } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { scale } from 'src/common/scale';
 import Animated, {
-
   SharedValue,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import Constants, { FULLSCREEN_HEIGHT } from 'src/themes/Constants';
 import { useInsets } from 'src/common/animated';
+import isEqual from 'react-fast-compare';
 
 type Props = {
   translationY: SharedValue<number>;
@@ -17,7 +17,7 @@ type Props = {
 };
 const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
 
-const ScollDownButton = ({ translationY, onPress }: Props) => {
+const ScollDownButtonComponent = ({ translationY, onPress }: Props) => {
   const insets = useInsets();
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -43,7 +43,7 @@ const ScollDownButton = ({ translationY, onPress }: Props) => {
 
     return {
       top,
-      opacity
+      opacity,
       // transform: [{ translateY }],
     };
   });
@@ -63,7 +63,7 @@ const ScollDownButton = ({ translationY, onPress }: Props) => {
   );
 };
 
-export default ScollDownButton;
+export const ScollDownButton = memo(ScollDownButtonComponent, isEqual);
 
 const styles = StyleSheet.create({
   container: {

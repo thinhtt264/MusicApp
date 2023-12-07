@@ -84,9 +84,9 @@ export const Miniplayer = () => {
   });
 
   const pangestureStyle = useAnimatedStyle(() => {
-    // const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40], 'clamp');
+    const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40], 'clamp');
     return {
-      height: MINIPLAYER_HEIGHT,
+      height: heightz,
       top: 0,
     };
   });

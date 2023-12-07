@@ -29,12 +29,6 @@ const ProgressBarComponent = ({ translationY, ...props }: Props) => {
 
   const forceValuePosition = position >= duration ? 0 : position;
 
-  useEffect(() => {
-    if (buffered >= position && position !== duration) {
-      dispatch(appActions.onSetLoadApp(false));
-    }
-  }, [position, buffered]);
-
   const stylez = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,

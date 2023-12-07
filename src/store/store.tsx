@@ -2,8 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { persistStore } from 'redux-persist';
 import rootReducer from './rootReducer';
-import { playerMiddleware } from './middle-ware';
 import rootSaga from './rootSaga';
+import {createLogger} from 'redux-logger';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -13,7 +13,8 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
       immutableCheck: false,
-    }).concat(sagaMiddleware),
+    }).concat(sagaMiddleware, createLogger()),
+  devTools: __DEV__,
 });
 
 sagaMiddleware.run(rootSaga);

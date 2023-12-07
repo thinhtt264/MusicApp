@@ -1,7 +1,6 @@
 import { StyleSheet, Image } from 'react-native';
 import React, { useEffect, useMemo, useRef } from 'react';
 import Animated, {
-
   SharedValue,
   interpolate,
   useAnimatedStyle,

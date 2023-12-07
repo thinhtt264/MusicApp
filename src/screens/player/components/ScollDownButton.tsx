@@ -21,12 +21,6 @@ const ScollDownButtonComponent = ({ translationY, onPress }: Props) => {
   const insets = useInsets();
 
   const animatedStyle = useAnimatedStyle(() => {
-    // const translateY = interpolate(
-    //   translationY.value,
-    //   [0, -FULLSCREEN_HEIGHT],
-    //   [-70, 0],
-    //   'clamp',
-    // );
     const top = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
@@ -34,6 +28,12 @@ const ScollDownButtonComponent = ({ translationY, onPress }: Props) => {
       'clamp',
     );
 
+    return {
+      top,
+    };
+  });
+
+  const animatedOpacityStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
@@ -42,17 +42,15 @@ const ScollDownButtonComponent = ({ translationY, onPress }: Props) => {
     );
 
     return {
-      top,
       opacity,
-      // transform: [{ translateY }],
     };
-  });
+  }, [translationY.value]);
 
   return (
     <AnimatedButton
       onPress={onPress}
       onLongPress={onPress}
-      style={[animatedStyle, styles.container]}>
+      style={[animatedStyle, animatedOpacityStyle, styles.container]}>
       <Ionicons
         name="chevron-down-outline"
         color={'white'}

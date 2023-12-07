@@ -1,15 +1,15 @@
 import React, { memo } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import equals from 'react-fast-compare';
 import { CustomTextProps } from './type';
 import { fontScale, scale } from 'src/common/scale';
 import { FONT_FAMILY } from 'src/common/constants';
 import { useTheme } from '@react-navigation/native';
 import Animated from 'react-native-reanimated';
+import isEqual from 'react-fast-compare';
 
 const BoldTextComponents = (props: CustomTextProps) => {
   const theme = useTheme();
-  const AnimatedText = Animated.Text
+  const AnimatedText = Animated.Text;
 
   return (
     <AnimatedText
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const BoldText = memo(BoldTextComponents, equals);
+export const BoldText = memo(BoldTextComponents, isEqual);

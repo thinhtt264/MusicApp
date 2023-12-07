@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import React, { memo, useCallback, useRef, useState } from 'react';
+import React, { memo } from 'react';
 import isEqual from 'react-fast-compare';
 import Layout from 'src/themes/Layout';
 import FastImage from 'react-native-fast-image';
@@ -12,31 +12,21 @@ import Colors from 'src/themes/Colors';
 import { kWidth } from 'src/common/constants';
 import { dispatch, useAppSelector } from 'src/common/redux';
 import { searchActions } from 'src/store/action-slices';
-import { BottomModal } from 'src/components/modal';
-import { BottomSheetRef } from 'src/components/modal/type';
-import { Portal } from 'react-native-portalize';
-import BottomSheetContent from './BottomSheetContent';
 
 interface Props {
   onNavigate: (item: TrackDataItemFields) => void;
   item: TrackDataItemFields;
   isRecentList: boolean;
+  openBottomModal: (item: TrackDataItemFields) => void;
 }
 
-const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
+const SearchItemComponent = ({
+  onNavigate,
+  item,
+  isRecentList,
+  openBottomModal,
+}: Props) => {
   const { currentTrack } = useAppSelector(state => state.player);
-  const bottomSheetRef = useRef<BottomSheetRef>(null);
-  const [visible, setVisible] = useState(false);
-
-  const openBottomModal = useCallback(() => {
-    bottomSheetRef.current?.onOpen(0);
-    setVisible(true);
-  }, []);
-
-  const onCloseModal = useCallback(() => {
-    bottomSheetRef.current?.onClose();
-    setVisible(false);
-  }, []);
 
   return (
     <>
@@ -86,7 +76,9 @@ const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
             />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.rightIcon} onPress={openBottomModal}>
+          <TouchableOpacity
+            style={styles.rightIcon}
+            onPress={() => openBottomModal(item)}>
             <SimpleLineIcons
               name="options-vertical"
               size={scale(16)}
@@ -95,13 +87,6 @@ const SearchItemComponent = ({ onNavigate, item, isRecentList }: Props) => {
           </TouchableOpacity>
         )}
       </View>
-      <Portal>
-        <BottomModal ref={bottomSheetRef}>
-          {visible ? ( //không cho nó render trước khi modal được mỏ
-            <BottomSheetContent info={item} onCloseModal={onCloseModal} />
-          ) : null}
-        </BottomModal>
-      </Portal>
     </>
   );
 };

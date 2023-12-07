@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { TrackDataItemFields } from 'src/models/Track';
 import Layout from 'src/themes/Layout';
@@ -20,6 +20,7 @@ import {
   removeTrackFromPlaylist,
 } from 'src/common/firebase';
 import Toast from 'react-native-toast-message';
+import { AnimatedImage } from 'src/components/image';
 
 type Props = {
   info: TrackDataItemFields;
@@ -181,10 +182,10 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
   return (
     <View style={styles.container}>
       <View style={[Layout.rowVCenter, { paddingHorizontal: scale(15) }]}>
-        <Image
-          style={styles.img}
+        <AnimatedImage
+          containerStyle={styles.img}
           resizeMode="cover"
-          source={{ uri: info?.album?.images[0]?.url ?? '' }}
+          source={info?.album?.images[0]?.url ?? ''}
         />
         <View style={[Layout.colVCenter, styles.cardInfo]}>
           <BoldText textStyle={{ fontSize: fontScale(16) }} numberOfLines={1}>

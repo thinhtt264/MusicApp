@@ -4,7 +4,7 @@ import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { fontScale, scale } from 'src/common/scale';
-import { SearchBox } from './components';
+import { BottomSheetContent, SearchBox } from './components';
 import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
@@ -16,6 +16,9 @@ import { getSearchData } from 'src/store/action-thunk';
 import { AnimatedList } from 'src/components/list';
 import { startAudio } from 'src/common/player';
 import TrackPlayer from 'react-native-track-player';
+import { Portal } from 'react-native-portalize';
+import { BottomModal } from 'src/components/modal';
+import { BottomSheetRef } from 'src/components/modal/type';
 
 interface Props {}
 
@@ -25,8 +28,22 @@ const SearchScreen = (props: Props) => {
     state => state.search,
   );
   const { currentTrack } = useAppSelector(state => state.player);
+  const [visible, setVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const flatListRef = useRef<FlatList>(null);
+  const bottomSheetRef = useRef<BottomSheetRef>(null);
+
+  const onCloseModal = useCallback(() => {
+    bottomSheetRef.current?.onClose();
+    setVisible(false);
+  }, []);
+
+  const openBottomModal = useCallback((item: any) => {
+    bottomSheetRef.current?.onOpen(0);
+    setSelectedItem(item);
+    setVisible(true);
+  }, []);
 
   const onNavigate = async (item: any) => {
     await startAudio({ info: item, from: 'search' });
@@ -40,6 +57,7 @@ const SearchScreen = (props: Props) => {
           onNavigate={onNavigate}
           item={item}
           isRecentList={isRecentList}
+          openBottomModal={item => openBottomModal(item)}
         />
       );
     },
@@ -100,6 +118,16 @@ const SearchScreen = (props: Props) => {
             />
           </>
         )}
+        <Portal>
+          <BottomModal ref={bottomSheetRef}>
+            {visible ? ( //không cho nó render trước khi modal được mỏ
+              <BottomSheetContent
+                info={selectedItem as any}
+                onCloseModal={onCloseModal}
+              />
+            ) : null}
+          </BottomModal>
+        </Portal>
       </>
     </Container>
   );

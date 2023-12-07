@@ -1,11 +1,10 @@
 import React, { memo } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import equals from 'react-fast-compare';
 import { CustomTextProps } from './type';
 import { fontScale } from 'src/common/scale';
 import { FONT_FAMILY } from 'src/common/constants';
-import Colors from 'src/themes/Colors';
 import { useTheme } from '@react-navigation/native';
+import isEqual from 'react-fast-compare';
 
 const MediumTextComponents = (props: CustomTextProps) => {
   const theme = useTheme();
@@ -27,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export const MediumText = memo(MediumTextComponents, equals);
+export const MediumText = memo(MediumTextComponents, isEqual);

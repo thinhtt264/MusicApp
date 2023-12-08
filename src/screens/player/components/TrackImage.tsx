@@ -1,4 +1,4 @@
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 import React, { useEffect, useMemo, useRef } from 'react';
 import Animated, {
   SharedValue,
@@ -132,7 +132,8 @@ const TrackImage = React.memo(
         <AnimatedCarousel
           ref={carouselRef}
           CellRendererComponent={null}
-          scrollEnabled={-translationY.value >= FULLSCREEN_HEIGHT}
+          // scrollEnabled={-translationY.value >= FULLSCREEN_HEIGHT}
+          scrollEnabled={false}
           windowSize={1}
           itemWidth={ImageSize}
           sliderWidth={ImageSize}

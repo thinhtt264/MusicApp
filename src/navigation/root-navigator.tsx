@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { dispatch, useAppSelector } from 'src/common/redux';
 import HomeStack from './stacks/HomeStack';
 import { authRequestToken } from 'src/store/action-thunk';
@@ -12,7 +12,9 @@ const RootNavigator = () => {
     state => state.auth,
   );
   const { env } = useAppSelector(state => state.app);
-  const tokenReady = !!access_token && !(tokenExpiration <= Date.now());
+  const [tokenReady, setTokenReady] = useState(
+    !!access_token && !(tokenExpiration <= Date.now()),
+  );
 
   const requestToken = async () => {
     await dispatch(
@@ -24,7 +26,9 @@ const RootNavigator = () => {
     );
   };
 
-  useEffect(() => {}, [access_token]);
+  useEffect(() => {
+    setTokenReady(!!access_token && !(tokenExpiration <= Date.now()));
+  }, [tokenExpiration]);
 
   useEffect(() => {
     if (isLogin) {
@@ -35,7 +39,7 @@ const RootNavigator = () => {
       } else {
       }
     }
-  }, [isLogin]);
+  }, [isLogin, tokenReady]);
 
   return (
     <RootStack.Navigator

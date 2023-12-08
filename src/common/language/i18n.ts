@@ -31,9 +31,9 @@ i18next
     defaultNS: 'common',
     debug: false,
 
-    // cache: {
-    //   enabled: true
-    // },
+    cache: {
+      enabled: true,
+    },
 
     interpolation: {
       escapeValue: false, // not needed for react as it does escape per default to prevent xss!

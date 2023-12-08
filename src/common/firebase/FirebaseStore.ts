@@ -66,7 +66,9 @@ export const getTrackFormPlayList = async (
       documentSnapshot => {
         let data: FirebaseFirestoreTypes.DocumentData[] = [];
         documentSnapshot.docs.map(t => data.push(t.data()));
-        setData?.(data);
+        const totalItems = documentSnapshot.size;
+
+        setData?.({ data, totalItems });
       },
     );
     // Stop listening for updates when no longer required
@@ -96,7 +98,7 @@ export const checkLoveTrack = async (
       const newSubscription = firestore()
         .doc(`PlayLists/${UserId}/LoveList/${dataId}`)
         .onSnapshot(documentSnapshot => {
-          setData?.(!!documentSnapshot.data());
+          setData?.(documentSnapshot.exists);
         });
 
       // Lưu trữ subscriber mới vào ref

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { FlatList, StyleSheet, Keyboard } from 'react-native';
+import { FlatList, Keyboard } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -16,7 +16,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
     renderItem,
     renderFooter = null,
     renderHeader,
-    flatlistRef,
+    flatListRef,
     totalPages,
     onGetData,
   } = props;
@@ -34,8 +34,8 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
     page,
   }));
 
-  const onBackToTop = useCallback((): void => {
-    flatlistRef?.current?.scrollToOffset({ offset: 0, animated: true });
+  const onBackToTop = useCallback(() => {
+    flatListRef?.current?.scrollToOffset({ offset: 0, animated: true });
   }, []);
 
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -47,6 +47,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
     if (currentPage > totalPages) {
       return;
     }
+
     handleGetData(currentPage);
     setPage(prev => prev + 10);
   };
@@ -61,16 +62,17 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
     }
   }, [onGetData]);
 
-  const handleGetData = useCallback(async (pageNumber = 0): Promise<void> => {
-    try {
-      setIsLoadMore(true);
-      onGetData(pageNumber);
-    } finally {
-      setTimeout(() => {
+  const handleGetData = useCallback(
+    async (pageNumber = 0): Promise<void> => {
+      try {
+        setIsLoadMore(true);
+        onGetData(pageNumber);
+      } finally {
         setIsLoadMore(false);
-      }, 200);
-    }
-  }, [onGetData]);
+      }
+    },
+    [onGetData],
+  );
 
   return (
     <>
@@ -79,7 +81,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
         onScroll={scrollHandler}
         onScrollBeginDrag={Keyboard.dismiss}
         keyExtractor={(item, index) => index.toString()}
-        ref={flatlistRef}
+        ref={flatListRef}
         data={data}
         renderItem={renderItem}
         removeClippedSubviews
@@ -108,5 +110,3 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
 });
 
 export default LoadMoreList;
-
-const styles = StyleSheet.create({});

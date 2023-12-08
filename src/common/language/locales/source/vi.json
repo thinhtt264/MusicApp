@@ -49,7 +49,10 @@
   },
   "search": {
     "placeholder": "Bạn muốn nghe gì?",
-    "recent": "Các tìm kiếm gần đây"
+    "recent": "Các tìm kiếm gần đây",
+    "track": "Bài hát",
+    "artist": "Nghệ sĩ",
+    "folower": "Người theo dõi"
   },
   "player": {
     "fromSearch": "ĐANG PHÁT TỪ TÌM KIẾM",

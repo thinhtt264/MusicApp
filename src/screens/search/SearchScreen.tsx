@@ -1,10 +1,10 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { fontScale, scale } from 'src/common/scale';
-import { BottomSheetContent, SearchBox } from './components';
+import { BottomSheetContent, SearchBox, TagFilter } from './components';
 import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
@@ -24,7 +24,7 @@ interface Props {}
 
 const SearchScreen = (props: Props) => {
   const { translate, dispatch } = useScreenController();
-  const { searchData, searchRecentData } = useAppSelector(
+  const { searchData, searchRecentData, selectedFilter } = useAppSelector(
     state => state.search,
   );
   const { currentTrack } = useAppSelector(state => state.player);
@@ -51,9 +51,18 @@ const SearchScreen = (props: Props) => {
   };
 
   const renderItem = useCallback(
-    ({ item, isRecentList = false }: { item: any; isRecentList?: boolean }) => {
+    ({
+      item,
+      isRecentList = false,
+      selectedFilter = 'track',
+    }: {
+      item: any;
+      isRecentList?: boolean;
+      selectedFilter?: string;
+    }) => {
       return (
         <SearchItemResult
+          selectedFilter={selectedFilter}
           onNavigate={onNavigate}
           item={item}
           isRecentList={isRecentList}
@@ -65,11 +74,11 @@ const SearchScreen = (props: Props) => {
   );
 
   const onGetData = useCallback(
-    async ({ query = '', pageNumber = 0 }) => {
+    async ({ query = '', pageNumber = 0, type = 'track' }) => {
       await dispatch(
         getSearchData({
           keyword: query || searchData.keyword,
-          type: 'track',
+          type: type,
           offset: pageNumber,
         }),
       );
@@ -77,22 +86,67 @@ const SearchScreen = (props: Props) => {
     [searchData.keyword],
   );
 
+  const onFilterChange = useCallback(
+    (type: string) => {
+      onGetData({
+        query: searchData.keyword,
+        pageNumber: 0,
+        type: type,
+      });
+    },
+    [searchData.keyword],
+  );
+
+  useEffect(() => {
+    if (!searchData.keyword) return;
+    onFilterChange(selectedFilter);
+  }, [selectedFilter]);
+
   return (
     <Container style={styles.container}>
       <>
         <Header title={translate('home:search')} />
-        <SearchBox onGetData={value => onGetData({ query: value })} />
+        <SearchBox
+          onGetData={value => onGetData({ query: value, type: selectedFilter })}
+        />
 
         {searchData.keyword ? (
-          <LoadMoreList
-            onGetData={page => onGetData({ pageNumber: page })}
-            totalPages={searchData.tracks.total}
-            style={styles.item}
-            flatlistRef={flatListRef}
-            data={searchData?.tracks?.items ?? []}
-            ItemSeparatorComponent={() => <Divider height={15} />}
-            renderItem={({ item }: any) => renderItem({ item: item })}
-          />
+          <>
+            <View style={{ marginTop: scale(10) }}>
+              <TagFilter selectedFilter={selectedFilter} />
+            </View>
+            {selectedFilter === 'track' ? (
+              <LoadMoreList
+                key={`loadMoreList_track`}
+                onGetData={page =>
+                  onGetData({ pageNumber: page, type: selectedFilter })
+                }
+                totalPages={searchData?.tracks?.total}
+                style={styles.item}
+                flatListRef={flatListRef}
+                data={searchData?.tracks?.items ?? []}
+                ItemSeparatorComponent={() => <Divider height={15} />}
+                renderItem={({ item }: any) =>
+                  renderItem({ item: item, selectedFilter: selectedFilter })
+                }
+              />
+            ) : (
+              <LoadMoreList
+                key={`loadMoreList_artist`}
+                onGetData={page =>
+                  onGetData({ pageNumber: page, type: selectedFilter })
+                }
+                flatListRef={flatListRef}
+                totalPages={searchData?.artists?.total}
+                style={styles.item}
+                data={searchData?.artists?.items ?? []}
+                ItemSeparatorComponent={() => <Divider height={20} />}
+                renderItem={({ item }: any) =>
+                  renderItem({ item: item, selectedFilter: selectedFilter })
+                }
+              />
+            )}
+          </>
         ) : (
           <>
             <View style={{ marginTop: scale(20) }}>
@@ -106,7 +160,7 @@ const SearchScreen = (props: Props) => {
                 styles.item,
                 { marginBottom: currentTrack ? scale(60) : 0 },
               ]}
-              flatlistRef={flatListRef}
+              flatListRef={flatListRef}
               data={searchRecentData?.tracks?.items ?? []}
               ItemSeparatorComponent={() => <Divider height={15} />}
               renderFooter={() => {
@@ -145,7 +199,7 @@ const styles = StyleSheet.create({
     height: scale(45),
   },
   item: {
-    marginTop: scale(20),
+    marginTop: scale(15),
   },
   artists: {
     color: Colors.unActive,

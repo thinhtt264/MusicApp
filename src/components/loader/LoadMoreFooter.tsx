@@ -10,7 +10,7 @@ interface Props {
 }
 
 const LoatMoreFooterComponent = ({ page, totalPages }: Props) => {
-  if (page < totalPages && page !== 1) {
+  if (page < totalPages && page !== 1 && totalPages > 10) {
     return (
       <ActivityIndicator
         style={styles.indicator}

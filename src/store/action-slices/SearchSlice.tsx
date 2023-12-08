@@ -1,18 +1,25 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { getSearchData } from '../action-thunk';
 import { GetSearchDataResponseFields } from 'src/models/Api';
-import { uniqBy } from 'lodash';
 import { isOnlyWhitespace } from 'src/common/regex';
 import { TrackDataFields } from 'src/models/Track';
 
 export interface SearchStateType {
   searchData: GetSearchDataResponseFields;
   searchRecentData: GetSearchDataResponseFields;
+  selectedFilter: string | 'track';
 }
 const initialState: SearchStateType = {
   searchData: {
     keyword: '',
     offset: 0,
+    artists: {
+      items: [],
+      next: '',
+      offset: 0,
+      previous: '',
+      total: 0,
+    },
     tracks: {
       items: [],
       next: '',
@@ -23,6 +30,13 @@ const initialState: SearchStateType = {
   },
   searchRecentData: {
     keyword: '',
+    artists: {
+      items: [],
+      next: '',
+      offset: 0,
+      previous: '',
+      total: 0,
+    },
     tracks: {
       items: [],
       next: '',
@@ -31,6 +45,7 @@ const initialState: SearchStateType = {
       total: 0,
     },
   },
+  selectedFilter: 'track',
 };
 
 const searchSlice = createSlice({
@@ -40,7 +55,9 @@ const searchSlice = createSlice({
     setKeyword: (state, { payload }: PayloadAction<string>) => {
       state.searchData.keyword = payload;
     },
-
+    onSetFilter: (state, { payload }: PayloadAction<string>) => {
+      state.selectedFilter = payload;
+    },
     addSearchRecentList: (
       state,
       { payload }: PayloadAction<TrackDataFields>,
@@ -81,10 +98,20 @@ const searchSlice = createSlice({
       if (payload.offset === 0) {
         state.searchData = payload;
       } else {
-        state.searchData.tracks.items = [
-          ...state.searchData.tracks.items,
-          ...payload.tracks.items,
-        ];
+        if (state.selectedFilter === 'track') {
+          state.searchData.tracks = {
+            ...state.searchData.tracks,
+            items: [...state.searchData.tracks.items, ...payload.tracks.items],
+          };
+        } else if (state.selectedFilter === 'artist') {
+          state.searchData.artists = {
+            ...state.searchData.artists,
+            items: [
+              ...state.searchData.artists.items,
+              ...payload.artists.items,
+            ],
+          };
+        }
       }
     });
   },

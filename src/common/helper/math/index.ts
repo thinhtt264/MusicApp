@@ -9,6 +9,6 @@ export const isNumber = (num: any): boolean => {
   return !isNaN(parseFloat(String(num)));
 };
 
-export const formatMoney = (number: number) => {
-  return `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')} đ`;
+export const formatNumber = (number: number) => {
+  return `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
 };

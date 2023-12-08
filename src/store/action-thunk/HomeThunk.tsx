@@ -41,8 +41,8 @@ export const getSearchData = createAsyncThunk<
   GetSearchDataFields
 >('home/getSearchData', async fields => {
   const url = endpoints.home.search
-    .replace('$keyword', fields.keyword.toString())
-    .replace('$type', fields.type.toString())
+    .replace(/\$keyword/g, fields.keyword.toString())
+    .replace(/\$type/g, fields.type.toString())
     .replace('$offset', fields.offset.toString());
 
   const response = await NetWorkService.Get<GetSearchDataResponseFields>({

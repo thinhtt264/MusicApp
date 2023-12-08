@@ -33,9 +33,7 @@ const ScollDownButtonComponent = ({ translationY, onPress }: Props) => {
     };
   });
 
-  const animatedOpacityStyle = useAnimatedStyle(() => {
-    console.log('mắc cc j zo dây');
-    
+  const animatedOpacityStyle = useAnimatedStyle(() => {    
     const opacity = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],

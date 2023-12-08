@@ -21,7 +21,7 @@ type Props = {
     name: string;
     total: number;
   };
-  onNavigate: (data: { id: string; name: string; total: number }) => void;
+  onNavigate: (data: { id: string; name: string }) => void;
 };
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -52,9 +52,7 @@ const PlaylistCardComponent = ({ item, onNavigate }: Props) => {
       onPressOut={onPressOut}
       style={[Layout.rowVCenter, stylez]}
       activeOpacity={1}
-      onPress={() =>
-        onNavigate({ id: item.id, name: item.name, total: item.total })
-      }>
+      onPress={() => onNavigate({ id: item.id, name: item.name })}>
       <AnimatedImage
         source={item.img}
         resizeMode="cover"

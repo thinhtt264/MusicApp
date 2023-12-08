@@ -1,4 +1,5 @@
-import { TrackDataItemFields } from "./Track";
+import { ArtistDataItemFields } from './Artist';
+import { TrackDataItemFields } from './Track';
 
 export interface ResponseBase<T = any> {
   code: number;
@@ -50,6 +51,13 @@ export interface GetSearchDataFields {
 export interface GetSearchDataResponseFields {
   offset?: number;
   keyword: string;
+  artists: {
+    items: ArtistDataItemFields[];
+    next: string;
+    offset: number;
+    previous: string;
+    total: number;
+  };
   tracks: {
     items: TrackDataItemFields[];
     next: string;
@@ -82,5 +90,5 @@ export interface GetRecommendFields {
 }
 
 export interface GetRecommendResponseFields {
-  tracks: TrackDataItemFields[]
+  tracks: TrackDataItemFields[];
 }

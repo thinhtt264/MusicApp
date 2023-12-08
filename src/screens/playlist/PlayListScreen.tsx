@@ -16,16 +16,13 @@ type Props = {};
 const PlayListScreen = (props: Props) => {
   const { translate, route } = useScreenController();
   const [listTrack, setListTrack] = useState<any>();
-  const { id: playlistId, name, total } = route.params?.data;
+  const [totalItems, setTotalItems] = useState(0);
 
-  // useEffect(() => {
-  //   getTrackFormPlayList(playlistId).then(res => {
-  //     setListTrack(res);
-  //   });
-  // }, []);
+  const { id: playlistId, name } = route.params?.data;
 
-  getTrackFormPlayList(playlistId, data => {
+  getTrackFormPlayList(playlistId, ({ data, totalItems }) => {
     setListTrack(data);
+    setTotalItems(totalItems);
   });
 
   const onPlayQueue = () => {
@@ -37,7 +34,7 @@ const PlayListScreen = (props: Props) => {
       <BackHeader title={name} />
       <View style={styles.body}>
         <RegularText>
-          {total} {translate('library:song').toLowerCase()}
+          {totalItems} {translate('library:song').toLowerCase()}
         </RegularText>
         <FlatList
           data={listTrack}

@@ -43,6 +43,7 @@ export interface TrackDataFields extends TrackDataItemFields {
 }
 
 export interface TrackDataItemFields {
+  onNavigate(item: any): void;
   album?: Album;
   artists: Artist[];
   available_markets?: string[];

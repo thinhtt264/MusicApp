@@ -1,3 +1,4 @@
 import { SearchBox } from './SearchBox';
 import BottomSheetContent from './BottomSheetContent';
-export { SearchBox, BottomSheetContent };
+import { TagFilter } from './TagFilter';
+export { SearchBox, BottomSheetContent, TagFilter };

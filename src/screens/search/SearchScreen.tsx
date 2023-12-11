@@ -19,6 +19,8 @@ import TrackPlayer from 'react-native-track-player';
 import { Portal } from 'react-native-portalize';
 import { BottomModal } from 'src/components/modal';
 import { BottomSheetRef } from 'src/components/modal/type';
+import { useFocusEffect } from '@react-navigation/native';
+import FastImage from 'react-native-fast-image';
 
 interface Props {}
 
@@ -101,6 +103,15 @@ const SearchScreen = (props: Props) => {
     if (!searchData.keyword) return;
     onFilterChange(selectedFilter);
   }, [selectedFilter]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        FastImage.clearDiskCache();
+        FastImage.clearMemoryCache();
+      };
+    }, []),
+  );
 
   return (
     <Container style={styles.container}>

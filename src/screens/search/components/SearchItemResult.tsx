@@ -91,6 +91,7 @@ const SearchItemComponent = ({
         <FastImage
           source={{
             uri: props.item?.images?.[0]?.url,
+            priority: FastImage.priority.normal,
           }}
           style={styles.artistImage}
           resizeMode="cover"

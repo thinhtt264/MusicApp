@@ -8,11 +8,8 @@ import {
 import React, { useLayoutEffect, useRef } from 'react';
 import Layout from 'src/themes/Layout';
 import { AnimatedList } from 'src/components/list';
-import Animated, {
-  Extrapolate,
-  interpolate,
+import {
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import { Banner } from 'src/components/header';
@@ -21,6 +18,7 @@ import { ArtistDataItemFields } from 'src/models/Artist';
 import { BoldText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
 import { isIos } from 'src/common/device';
+import Colors from 'src/themes/Colors';
 
 type Props = {};
 
@@ -146,14 +144,20 @@ const ArtistScreen = (props: Props) => {
       <Banner img={item.images[0].url} translationY={translationY} />
 
       <AnimatedList
+        bounces={false}
         keyExtractor={(_, index) => index.toString()}
         data={data}
         onScroll={scrollHandler}
+        style={{}}
+        contentContainerStyle={{
+          marginTop: 250,
+          backgroundColor: Colors.black.default,
+        }}
         scrollEventThrottle={16}
         renderItem={({ item }: any) => (
           <View
             style={{
-              height: scale(50),
+              height: scale(100),
             }}>
             <BoldText>{item.item}</BoldText>
           </View>

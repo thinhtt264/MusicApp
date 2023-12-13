@@ -26,59 +26,62 @@ const BannerComponent = ({ img, translationY }: Props) => {
     'worklet';
     const opacity = interpolate(
       translationY.value,
-      [0, 100, 200],
-      [1, 1, 0],
+      [0, 200],
+      [1, 0],
       Extrapolate.CLAMP,
     );
 
-    const height = interpolate(
+    const translateY = interpolate(
       translationY.value,
-      [0, Scroll_Distance],
-      [Header_Max_Height, Header_Min_Height],
-      Extrapolate.CLAMP,
+      [0, Header_Max_Height],
+      [0, -Header_Max_Height],
     );
 
     const backgroundColor = interpolateColor(
       translationY.value,
-      [0, 100, 200],
-      ['rgba(255, 0, 0, 0)', 'rgba(255, 0, 0, 0)', 'rgba(255, 0, 0, 1)'],
+      [0, 200],
+      ['rgba(255, 0, 0, 0)', 'rgba(255, 0, 0, 1)'],
     );
 
     return {
-      // opacity,
+      opacity,
       backgroundColor,
-      height,
+      // transform: [{ translateY }],
     };
   });
 
   const headerStylez = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
-      [0, 100, 200],
-      [0, 0, 1],
+      [0, 160],
+      [0, 1],
       Extrapolate.CLAMP,
     );
 
     return {
       opacity,
+      height: 80,
+      zIndex: 999,
+      backgroundColor: 'rgba(255, 0, 0, 1)',
     };
   });
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
-      <FastImage
-        source={{ uri: img }}
-        resizeMode="cover"
-        style={styles.background}
-      />
+    <>
       <Animated.View
         style={[
           headerStylez,
-          Layout.fill,
           Layout.absolute,
           { backgroundColor: 'green' },
         ]}></Animated.View>
-    </Animated.View>
+      <Animated.View style={[styles.container, Layout.absolute, animatedStyle]}>
+        <FastImage
+          source={{ uri: img }}
+          resizeMode="cover"
+          style={[styles.background]}
+        />
+      </Animated.View>
+    </>
   );
 };
 
@@ -86,9 +89,10 @@ export const Banner = memo(BannerComponent, isEqual);
 
 const styles = StyleSheet.create({
   container: {
-    // height: scale(250),
+    height: 250,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: -1,
   },
   background: {
     width: '100%',

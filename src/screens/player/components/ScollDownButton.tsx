@@ -33,7 +33,7 @@ const ScollDownButtonComponent = ({ translationY, onPress }: Props) => {
     };
   });
 
-  const animatedOpacityStyle = useAnimatedStyle(() => {    
+  const animatedOpacityStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
       [0, -FULLSCREEN_HEIGHT],
@@ -61,7 +61,12 @@ const ScollDownButtonComponent = ({ translationY, onPress }: Props) => {
   );
 };
 
-export const ScollDownButton = memo(ScollDownButtonComponent, isEqual);
+export const ScollDownButton = memo(
+  ScollDownButtonComponent,
+  (prevProps, nextProps) => {
+    return prevProps.translationY.value === nextProps.translationY.value;
+  },
+);
 
 const styles = StyleSheet.create({
   container: {

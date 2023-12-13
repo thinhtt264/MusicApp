@@ -1,8 +1,6 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { memo } from 'react';
-import isEqual from 'react-fast-compare';
 import Layout from 'src/themes/Layout';
-import FastImage from 'react-native-fast-image';
 import { MediumText } from 'src/components/text';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -11,16 +9,17 @@ import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import { kWidth } from 'src/common/constants';
 import { dispatch, useAppSelector } from 'src/common/redux';
-import { searchActions } from 'src/store/action-slices';
+import { FilterParams, searchActions } from 'src/store/action-slices';
 import { ArtistDataItemFields } from 'src/models/Artist';
 import { translate } from 'src/common/language/translate';
 import { formatNumber } from '../../../common/helper/math/index';
+import { AnimatedImage } from 'src/components/image';
 
 interface Props {
-  onNavigate: (item: any) => void;
+  onNavigate: (item: any, type: FilterParams) => void;
   item: any;
   isRecentList: boolean;
-  selectedFilter: string;
+  selectedFilter: FilterParams;
   openBottomModal: (item: TrackDataItemFields) => void;
 }
 
@@ -35,7 +34,7 @@ const SearchItemComponent = ({
 
   const TrackItem = (props: {
     item: TrackDataItemFields;
-    onNavigate: (item: TrackDataItemFields) => void;
+    onNavigate: (item: any, type: FilterParams) => void;
   }) => {
     return (
       <TouchableOpacity
@@ -45,12 +44,12 @@ const SearchItemComponent = ({
             flex: 1,
           },
         ]}
-        onPress={() => props.onNavigate(props.item)}>
-        <FastImage
+        onPress={() => props.onNavigate(props.item, selectedFilter)}>
+        <AnimatedImage
           source={{
-            uri: props.item?.album?.images[0]?.url,
+            uri: props.item?.album?.images[2]?.url,
           }}
-          style={styles.trackImage}
+          containerStyle={styles.trackImage}
           resizeMode="cover"
         />
         <View style={styles.info}>
@@ -77,7 +76,7 @@ const SearchItemComponent = ({
 
   const ArtistItem = (props: {
     item: ArtistDataItemFields;
-    onNavigate: (item: ArtistDataItemFields) => void;
+    onNavigate: (item: any, type: FilterParams) => void;
   }) => {
     return (
       <TouchableOpacity
@@ -87,13 +86,12 @@ const SearchItemComponent = ({
             flex: 1,
           },
         ]}
-        onPress={() => props.onNavigate(props.item)}>
-        <FastImage
+        onPress={() => props.onNavigate(props.item, selectedFilter)}>
+        <AnimatedImage
           source={{
-            uri: props.item?.images?.[0]?.url,
-            priority: FastImage.priority.normal,
+            uri: props.item?.images?.[2]?.url,
           }}
-          style={styles.artistImage}
+          containerStyle={styles.artistImage}
           resizeMode="cover"
         />
         <View style={styles.info}>
@@ -150,7 +148,12 @@ const SearchItemComponent = ({
   );
 };
 
-export const SearchItemResult = memo(SearchItemComponent, isEqual);
+export const SearchItemResult = memo(
+  SearchItemComponent,
+  (prevProps, nextProps) => {
+    return prevProps.item.id === nextProps.item.id;
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -162,6 +165,7 @@ const styles = StyleSheet.create({
     width: scale(50),
     height: scale(50),
     borderRadius: scale(50) / 2,
+    overflow: 'hidden',
   },
   trackImage: {
     width: scale(55),

@@ -25,7 +25,7 @@
     "viewAll": "Xem tất cả",
     "home": "Trang chủ",
     "search": "Tìm kiếm",
-    "librarystack": "Thư viện"
+    "library": "Thư viện"
   },
   "validation": {
     "require": "Trường này là bắt buộc",

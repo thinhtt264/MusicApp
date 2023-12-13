@@ -1,4 +1,4 @@
-import { LibraryStackParamList } from "./stacks/LibraryStack";
+import { LibraryStackParamList } from './stacks/LibraryStack';
 
 export type NavigationStackNames = {
   AuthStack: undefined;
@@ -7,6 +7,7 @@ export type NavigationStackNames = {
   HomeTab: undefined;
   PlayerStack: undefined;
   LibraryStack: LibraryStackParamList;
+  SearchStack: undefined;
 };
 
 export type ScreenNames = {
@@ -15,7 +16,8 @@ export type ScreenNames = {
   RegisterScreen: undefined;
   PlaylistScreen: undefined;
   Home: undefined;
-  Search: undefined;
+  SearchScreen: undefined;
+  ArtistScreen: undefined;
 };
 
 export type RouteNames = ScreenNames & NavigationStackNames;
@@ -27,5 +29,5 @@ export type RouteParams = {
 
 export type NavigationType = {
   name: keyof RouteNames;
-  params?: RouteParams;
+  params?: RouteParams | object;
 };

@@ -11,13 +11,13 @@ const AnimatedList = (props: AnimatedListProps<any>) => {
     renderItem,
     renderFooter = null,
     renderHeader,
-    flatlistRef = null,
+    flatListRef = null,
   } = props;
 
   return (
     <List
       {...props}
-      ref={flatlistRef}
+      ref={flatListRef}
       data={data}
       renderItem={renderItem}
       removeClippedSubviews

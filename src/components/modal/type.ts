@@ -7,6 +7,7 @@ export interface BottomSheetProps {
     | SharedValue<(string | number)[]>
     | Readonly<(string | number)[] | SharedValue<(string | number)[]>>;
   children: ReactNode;
+  onCloseModal: () => void;
 }
 
 export type BottomSheetRef = {

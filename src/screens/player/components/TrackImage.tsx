@@ -132,8 +132,7 @@ const TrackImage = React.memo(
         <AnimatedCarousel
           ref={carouselRef}
           CellRendererComponent={null}
-          // scrollEnabled={-translationY.value >= FULLSCREEN_HEIGHT}
-          scrollEnabled={false}
+          scrollEnabled={-translationY.value >= FULLSCREEN_HEIGHT}
           windowSize={1}
           itemWidth={ImageSize}
           sliderWidth={ImageSize}

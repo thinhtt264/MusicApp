@@ -26,7 +26,7 @@ const HomeStack = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="HomeTab" component={HomeTab} />
-      <Stack.Screen name="PlayerStack" component={PlayerStack} />
+      {/* <Stack.Screen name="PlayerStack" component={PlayerStack} /> */}
     </Stack.Navigator>
   );
 };

@@ -9,7 +9,7 @@ interface Album {
   external_urls: ExternalUrls;
   href: string;
   id: string;
-  images: [{ url: string }]; // You can define an interface for images if needed
+  images: Array<{ url: string }>;
   name: string;
   release_date: string;
   release_date_precision: string;

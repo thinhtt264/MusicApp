@@ -25,7 +25,7 @@ import FastImage from 'react-native-fast-image';
 interface Props {}
 
 const SearchScreen = (props: Props) => {
-  const { translate, dispatch } = useScreenController();
+  const { translate, dispatch, navigation } = useScreenController();
   const { searchData, searchRecentData, selectedFilter } = useAppSelector(
     state => state.search,
   );
@@ -37,8 +37,8 @@ const SearchScreen = (props: Props) => {
   const bottomSheetRef = useRef<BottomSheetRef>(null);
 
   const onCloseModal = useCallback(() => {
-    bottomSheetRef.current?.onClose();
     setVisible(false);
+    bottomSheetRef.current?.onClose();
   }, []);
 
   const openBottomModal = useCallback((item: any) => {
@@ -47,10 +47,19 @@ const SearchScreen = (props: Props) => {
     setVisible(true);
   }, []);
 
-  const onNavigate = async (item: any) => {
-    await startAudio({ info: item, from: 'search' });
-    await TrackPlayer.setPlayWhenReady(true);
-  };
+  const onNavigate = useCallback(async (item: any, type: string) => {
+    if (type === 'track') {
+      await startAudio({ info: item, from: 'search' });
+      await TrackPlayer.setPlayWhenReady(true);
+    } else {
+      navigation.navigate({
+        name: 'ArtistScreen',
+        params: {
+          item: item,
+        },
+      });
+    }
+  }, []);
 
   const renderItem = useCallback(
     ({
@@ -60,7 +69,7 @@ const SearchScreen = (props: Props) => {
     }: {
       item: any;
       isRecentList?: boolean;
-      selectedFilter?: string;
+      selectedFilter?: any;
     }) => {
       return (
         <SearchItemResult
@@ -103,6 +112,8 @@ const SearchScreen = (props: Props) => {
     if (!searchData.keyword) return;
     onFilterChange(selectedFilter);
   }, [selectedFilter]);
+
+  useEffect(() => {}, [visible]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -184,8 +195,8 @@ const SearchScreen = (props: Props) => {
           </>
         )}
         <Portal>
-          <BottomModal ref={bottomSheetRef}>
-            {visible ? ( //không cho nó render trước khi modal được mỏ
+          <BottomModal onCloseModal={onCloseModal} ref={bottomSheetRef}>
+            {visible ? (
               <BottomSheetContent
                 info={selectedItem as any}
                 onCloseModal={onCloseModal}

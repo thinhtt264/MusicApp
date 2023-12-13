@@ -1,4 +1,5 @@
 import { Ref, RefObject } from 'react';
+import { FlatList } from 'react-native';
 import { FlatListProps } from 'react-native';
 
 export interface LoadMoreListProps<T> extends AnimatedListProps<T> {
@@ -15,5 +16,5 @@ export interface AnimatedListProps<T> extends FlatListProps<any> {
   renderHeader?: any;
   renderFooter?: any;
   renderItem: any;
-  flatListRef?: RefObject<any>;
+  flatListRef?: RefObject<FlatList<T>>;
 }

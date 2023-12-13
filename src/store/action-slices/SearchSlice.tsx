@@ -4,10 +4,11 @@ import { GetSearchDataResponseFields } from 'src/models/Api';
 import { isOnlyWhitespace } from 'src/common/regex';
 import { TrackDataFields } from 'src/models/Track';
 
+export type FilterParams = 'track' | 'artist';
 export interface SearchStateType {
   searchData: GetSearchDataResponseFields;
   searchRecentData: GetSearchDataResponseFields;
-  selectedFilter: string | 'track';
+  selectedFilter: FilterParams;
 }
 const initialState: SearchStateType = {
   searchData: {
@@ -55,7 +56,7 @@ const searchSlice = createSlice({
     setKeyword: (state, { payload }: PayloadAction<string>) => {
       state.searchData.keyword = payload;
     },
-    onSetFilter: (state, { payload }: PayloadAction<string>) => {
+    onSetFilter: (state, { payload }: PayloadAction<any>) => {
       state.selectedFilter = payload;
     },
     addSearchRecentList: (

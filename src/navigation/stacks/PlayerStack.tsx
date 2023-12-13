@@ -1,10 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import {
-  NativeStackNavigationProp,
-  createNativeStackNavigator,
-} from '@react-navigation/native-stack';
-import { RouteProp } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { PlayerScreen } from 'src/screens';
 
 interface Props {}
@@ -30,5 +25,3 @@ const PlayerStack = (props: Props) => {
 };
 
 export default PlayerStack;
-
-const styles = StyleSheet.create({});

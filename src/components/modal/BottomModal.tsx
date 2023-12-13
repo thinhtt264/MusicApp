@@ -14,7 +14,7 @@ import Colors from 'src/themes/Colors';
 const BottomModal = forwardRef((props: BottomSheetProps, ref) => {
   const { colors } = useTheme();
 
-  const { snapPoints = ['50%', '100%'], children } = props;
+  const { snapPoints = ['50%', '100%'], children, onCloseModal } = props;
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPointBottomSheet = useMemo(() => snapPoints, []);
@@ -36,6 +36,7 @@ const BottomModal = forwardRef((props: BottomSheetProps, ref) => {
     (props: any) => (
       <BottomSheetBackdrop
         {...props}
+        onPress={onCloseModal}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
       />

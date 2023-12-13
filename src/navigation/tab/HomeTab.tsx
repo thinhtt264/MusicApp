@@ -11,11 +11,11 @@ import { translate } from 'src/common/language/translate';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Colors from 'src/themes/Colors';
 import { LibraryIcon } from 'src/components/svg';
-import { HomeScreen, SearchScreen } from 'src/screens';
+import { HomeScreen } from 'src/screens';
 import { TAB_HEIGHT } from 'src/common/constants';
 import { Miniplayer } from 'src/components/mini-player';
 import { useAppSelector } from 'src/common/redux';
-import { LibraryStack } from '../stacks';
+import { LibraryStack, SearchStack } from '../stacks';
 
 interface Props {
   size: number;
@@ -37,7 +37,7 @@ const renderIcon = (props: Props) => {
     case 'Home': {
       return <Octicons name="home" size={size} color={color} />;
     }
-    case 'Search': {
+    case 'SearchStack': {
       return <Octicons name="search" size={size} color={color} />;
     }
     case 'LibraryStack': {
@@ -119,7 +119,7 @@ export const TabBar = (props: BottomTabBarProps) => {
 
 export type HomeTabParamList = {
   Home: undefined;
-  Search: undefined;
+  SearchStack: undefined;
   LibraryStack: undefined;
 };
 
@@ -141,8 +141,16 @@ const HomeTab = () => {
           </View>
         )}>
         <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Search" component={SearchScreen} />
-        <Tab.Screen name="LibraryStack" component={LibraryStack} />
+        <Tab.Screen
+          name="SearchStack"
+          component={SearchStack}
+          options={{ title: translate('home:search') }}
+        />
+        <Tab.Screen
+          name="LibraryStack"
+          component={LibraryStack}
+          options={{ title: translate('home:library') }}
+        />
       </Tab.Navigator>
     </View>
   );

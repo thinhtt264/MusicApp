@@ -4,11 +4,11 @@ import Layout from 'src/themes/Layout';
 import { MediumText } from 'src/components/text';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { TrackDataItemFields } from 'src/models/Track';
+import { TrackDataFields, TrackDataItemFields } from 'src/models/Track';
 import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import { kWidth } from 'src/common/constants';
-import { dispatch, useAppSelector } from 'src/common/redux';
+import { dispatch } from 'src/common/redux';
 import { FilterParams, searchActions } from 'src/store/action-slices';
 import { ArtistDataItemFields } from 'src/models/Artist';
 import { translate } from 'src/common/language/translate';
@@ -21,6 +21,7 @@ interface Props {
   isRecentList: boolean;
   selectedFilter: FilterParams;
   openBottomModal: (item: TrackDataItemFields) => void;
+  currentTrack: TrackDataFields;
 }
 
 const SearchItemComponent = ({
@@ -29,12 +30,12 @@ const SearchItemComponent = ({
   isRecentList,
   openBottomModal,
   selectedFilter,
+  currentTrack,
 }: Props) => {
-  const { currentTrack } = useAppSelector(state => state.player);
-
   const TrackItem = (props: {
     item: TrackDataItemFields;
     onNavigate: (item: any, type: FilterParams) => void;
+    type: FilterParams;
   }) => {
     return (
       <TouchableOpacity
@@ -44,8 +45,9 @@ const SearchItemComponent = ({
             flex: 1,
           },
         ]}
-        onPress={() => props.onNavigate(props.item, selectedFilter)}>
+        onPress={() => props.onNavigate(props.item, props.type)}>
         <AnimatedImage
+          key={props.item.id}
           source={{
             uri: props.item?.album?.images[2]?.url,
           }}
@@ -77,6 +79,7 @@ const SearchItemComponent = ({
   const ArtistItem = (props: {
     item: ArtistDataItemFields;
     onNavigate: (item: any, type: FilterParams) => void;
+    type: FilterParams;
   }) => {
     return (
       <TouchableOpacity
@@ -86,8 +89,9 @@ const SearchItemComponent = ({
             flex: 1,
           },
         ]}
-        onPress={() => props.onNavigate(props.item, selectedFilter)}>
+        onPress={() => props.onNavigate(props.item, props.type)}>
         <AnimatedImage
+          key={props.item.id}
           source={{
             uri: props.item?.images?.[2]?.url,
           }}
@@ -107,51 +111,78 @@ const SearchItemComponent = ({
     );
   };
 
+  const RecentList = () => {
+    return (
+      <>
+        {item.type === 'artists' ? (
+          <ArtistItem onNavigate={onNavigate} item={item} type={'artist'} />
+        ) : (
+          <TrackItem onNavigate={onNavigate} item={item} type="track" />
+        )}
+
+        <TouchableOpacity
+          style={styles.rightIcon}
+          onPress={() => {
+            dispatch(
+              searchActions.removeSearchRecentList(isRecentList ? item.id : ''),
+            );
+          }}>
+          <MaterialIcons
+            size={scale(24)}
+            color={Colors.unActive}
+            name="close"
+          />
+        </TouchableOpacity>
+      </>
+    );
+  };
+
   return (
     <>
       <View style={[Layout.rowBetween, styles.container]}>
-        {selectedFilter === 'track' ? (
-          <TrackItem onNavigate={onNavigate} item={item} />
-        ) : (
-          <ArtistItem onNavigate={onNavigate} item={item} />
-        )}
-
         {isRecentList ? (
-          <TouchableOpacity
-            style={styles.rightIcon}
-            onPress={() => {
-              dispatch(
-                searchActions.removeSearchRecentList(
-                  isRecentList ? item.id : '',
-                ),
-              );
-            }}>
-            <MaterialIcons
-              size={scale(24)}
-              color={Colors.unActive}
-              name="close"
-            />
-          </TouchableOpacity>
-        ) : selectedFilter === 'track' ? (
-          <TouchableOpacity
-            style={styles.rightIcon}
-            onPress={() => openBottomModal(item)}>
-            <SimpleLineIcons
-              name="options-vertical"
-              size={scale(16)}
-              color={Colors.unActive}
-            />
-          </TouchableOpacity>
-        ) : null}
+          <RecentList />
+        ) : (
+          <>
+            {selectedFilter === 'track' ? (
+              <TrackItem onNavigate={onNavigate} item={item} type="track" />
+            ) : (
+              <ArtistItem onNavigate={onNavigate} item={item} type="artist" />
+            )}
+
+            {selectedFilter === 'track' ? (
+              <TouchableOpacity
+                style={styles.rightIcon}
+                onPress={() => openBottomModal(item)}>
+                <SimpleLineIcons
+                  name="options-vertical"
+                  size={scale(16)}
+                  color={Colors.unActive}
+                />
+              </TouchableOpacity>
+            ) : null}
+          </>
+        )}
       </View>
     </>
   );
 };
-
 export const SearchItemResult = memo(
   SearchItemComponent,
   (prevProps, nextProps) => {
-    return prevProps.item.id === nextProps.item.id;
+    const prevId = prevProps.item.id;
+    const currentId = nextProps.item.id;
+    const prevCurrentTrackId = prevProps.currentTrack.id;
+    const nextCurrentTrackId = nextProps.currentTrack.id;
+
+    return (
+      //bằng nhau không render
+      prevId === currentId &&
+      //nếu item hiện tại bằng với current track thì render đổi màu
+      currentId !== nextCurrentTrackId &&
+      //nếu current trước đó bằng item hiện tại thì render đổi màu
+      prevCurrentTrackId !== currentId
+    );
   },
 );
 

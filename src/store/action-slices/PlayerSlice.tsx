@@ -8,7 +8,7 @@ interface PlayerState {
   trackQueue: TrackDataItemFields[];
 }
 
-const DEFAULT_INFO = {
+const DEFAULT_INFO: any = {
   url: '',
   artists: [],
   external_urls: { spotify: '' },

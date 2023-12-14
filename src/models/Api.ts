@@ -67,6 +67,18 @@ export interface GetSearchDataResponseFields {
   };
 }
 
+export interface GetSearchRecentDataFields {
+  offset?: number;
+  keyword: string;
+  lists: {
+    items: any[];
+    next: string;
+    offset: number;
+    previous: string;
+    total: number;
+  };
+}
+
 export interface GetLinkDownLoadFields {
   baseUrl: string;
   link: string;

@@ -1,5 +1,11 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, {
+  useRef,
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
@@ -21,6 +27,7 @@ import { BottomModal } from 'src/components/modal';
 import { BottomSheetRef } from 'src/components/modal/type';
 import { useFocusEffect } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import { searchActions } from 'src/store/action-slices';
 
 interface Props {}
 
@@ -47,7 +54,7 @@ const SearchScreen = (props: Props) => {
     setVisible(true);
   }, []);
 
-  const onNavigate = useCallback(async (item: any, type: string) => {
+  const onNavigate = useCallback(async (item: any, type: string) => {    
     if (type === 'track') {
       await startAudio({ info: item, from: 'search' });
       await TrackPlayer.setPlayWhenReady(true);
@@ -58,6 +65,7 @@ const SearchScreen = (props: Props) => {
           item: item,
         },
       });
+      dispatch(searchActions.addSearchRecentList({ ...item, type }));
     }
   }, []);
 
@@ -66,13 +74,11 @@ const SearchScreen = (props: Props) => {
       item,
       isRecentList = false,
       selectedFilter = 'track',
-    }: {
-      item: any;
-      isRecentList?: boolean;
-      selectedFilter?: any;
-    }) => {
+      currentTrack,
+    }: any) => {
       return (
         <SearchItemResult
+          currentTrack={currentTrack}
           selectedFilter={selectedFilter}
           onNavigate={onNavigate}
           item={item}
@@ -149,7 +155,11 @@ const SearchScreen = (props: Props) => {
                 data={searchData?.tracks?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={15} />}
                 renderItem={({ item }: any) =>
-                  renderItem({ item: item, selectedFilter: selectedFilter })
+                  renderItem({
+                    item: item,
+                    selectedFilter: selectedFilter,
+                    currentTrack: currentTrack,
+                  })
                 }
               />
             ) : (
@@ -164,7 +174,11 @@ const SearchScreen = (props: Props) => {
                 data={searchData?.artists?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={20} />}
                 renderItem={({ item }: any) =>
-                  renderItem({ item: item, selectedFilter: selectedFilter })
+                  renderItem({
+                    item: item,
+                    selectedFilter: selectedFilter,
+                    currentTrack: currentTrack,
+                  })
                 }
               />
             )}
@@ -183,13 +197,17 @@ const SearchScreen = (props: Props) => {
                 { marginBottom: currentTrack ? scale(60) : 0 },
               ]}
               flatListRef={flatListRef}
-              data={searchRecentData?.tracks?.items ?? []}
+              data={searchRecentData?.lists?.items ?? []}
               ItemSeparatorComponent={() => <Divider height={15} />}
               renderFooter={() => {
                 return <View style={{ marginBottom: scale(55) }} />;
               }}
               renderItem={({ item }: any) =>
-                renderItem({ item: item, isRecentList: true })
+                renderItem({
+                  item: item,
+                  isRecentList: true,
+                  currentTrack: currentTrack,
+                })
               }
             />
           </>

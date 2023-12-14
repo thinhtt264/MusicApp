@@ -26,6 +26,7 @@ const Colors = {
     lighter: '#444444',
     lighter1: '#666666',
     backdrop: '#747373',
+    blur: '#858585',
   },
   red: '#F95B51',
   unActive: '#A7A7A7',

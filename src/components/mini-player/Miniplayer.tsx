@@ -1,6 +1,5 @@
 import React from 'react';
 import Animated, {
-
   cancelAnimation,
   interpolate,
   runOnJS,
@@ -20,6 +19,7 @@ import Constants, {
 import Layout from 'src/themes/Layout';
 import { useInsets } from 'src/common/animated';
 import { ScollDownButton } from 'src/screens/player/components';
+import { scale } from 'src/common/scale';
 
 export const Miniplayer = () => {
   const translationY = useSharedValue(0);
@@ -84,7 +84,12 @@ export const Miniplayer = () => {
   });
 
   const pangestureStyle = useAnimatedStyle(() => {
-    const heightz = interpolate(translationY.value, [0, -(FULLSCREEN_HEIGHT)], [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40], 'clamp');
+    const heightz = interpolate(
+      translationY.value,
+      [0, -FULLSCREEN_HEIGHT],
+      [MINIPLAYER_HEIGHT, MINIPLAYER_HEIGHT + 40],
+      'clamp',
+    );
     return {
       height: heightz,
       top: 0,
@@ -157,5 +162,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 999,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
 });

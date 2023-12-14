@@ -1,13 +1,15 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { getSearchData } from '../action-thunk';
-import { GetSearchDataResponseFields } from 'src/models/Api';
+import {
+  GetSearchDataResponseFields,
+  GetSearchRecentDataFields,
+} from 'src/models/Api';
 import { isOnlyWhitespace } from 'src/common/regex';
-import { TrackDataFields } from 'src/models/Track';
 
 export type FilterParams = 'track' | 'artist';
 export interface SearchStateType {
   searchData: GetSearchDataResponseFields;
-  searchRecentData: GetSearchDataResponseFields;
+  searchRecentData: GetSearchRecentDataFields;
   selectedFilter: FilterParams;
 }
 const initialState: SearchStateType = {
@@ -31,14 +33,7 @@ const initialState: SearchStateType = {
   },
   searchRecentData: {
     keyword: '',
-    artists: {
-      items: [],
-      next: '',
-      offset: 0,
-      previous: '',
-      total: 0,
-    },
-    tracks: {
+    lists: {
       items: [],
       next: '',
       offset: 0,
@@ -59,28 +54,26 @@ const searchSlice = createSlice({
     onSetFilter: (state, { payload }: PayloadAction<any>) => {
       state.selectedFilter = payload;
     },
-    addSearchRecentList: (
-      state,
-      { payload }: PayloadAction<TrackDataFields>,
-    ) => {
-      const existingIndex = state.searchRecentData.tracks.items.findIndex(
+    addSearchRecentList: (state, { payload }) => {
+      const type = payload?.type === 'track' ? 'tracks' : 'artists';
+      const existingIndex = state.searchRecentData.lists.items.findIndex(
         item => item.id === payload.id,
       );
 
       if (existingIndex === -1) {
-        state.searchRecentData.tracks.items.unshift(payload);
-        state.searchRecentData.tracks.total += 1;
+        state.searchRecentData.lists.items.unshift({ ...payload, type: type });
+        state.searchRecentData.lists.total += 1;
       }
     },
 
     removeSearchRecentList: (state, { payload }) => {
-      const indexToRemove = state.searchRecentData.tracks.items.findIndex(
+      const indexToRemove = state.searchRecentData.lists.items.findIndex(
         item => item.id === payload,
       );
 
       if (indexToRemove !== -1) {
-        state.searchRecentData.tracks.items.splice(indexToRemove, 1);
-        state.searchRecentData.tracks.total -= 1;
+        state.searchRecentData.lists.items.splice(indexToRemove, 1);
+        state.searchRecentData.lists.total -= 1;
       }
     },
   },

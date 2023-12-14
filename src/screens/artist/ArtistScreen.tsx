@@ -141,7 +141,11 @@ const ArtistScreen = (props: Props) => {
 
   return (
     <View style={[Layout.fill]}>
-      <Banner img={item.images[0].url} translationY={translationY} />
+      <Banner
+        img={item.images[0].url}
+        name={item.name}
+        translationY={translationY}
+      />
 
       <AnimatedList
         bounces={false}
@@ -150,7 +154,7 @@ const ArtistScreen = (props: Props) => {
         onScroll={scrollHandler}
         style={{}}
         contentContainerStyle={{
-          marginTop: 250,
+          marginTop: scale(265),
           backgroundColor: Colors.black.default,
         }}
         scrollEventThrottle={16}

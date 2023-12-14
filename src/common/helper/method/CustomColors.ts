@@ -32,11 +32,15 @@ function isColorBright(
   return brightness >= threshold;
 }
 
-export const getBlurhashColor = async (url: string): Promise<string> => {
+export const getBlurhashColor = async (
+  url: string,
+  x = 1,
+  y = 2,
+): Promise<string> => {
   try {
     if (!url) return '';
 
-    const blurhashPromise = Blurhash.encode(url, 1, 2);
+    const blurhashPromise = Blurhash.encode(url, x, y);
 
     const timeoutPromise = new Promise<string>((resolve, reject) =>
       setTimeout(() => reject(`Timed out after 3000 ms`), 3000),

@@ -1,10 +1,4 @@
-import {
-  FlatList,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { FlatList, StatusBar, StyleSheet, View } from 'react-native';
 import React, { useLayoutEffect, useRef } from 'react';
 import Layout from 'src/themes/Layout';
 import { AnimatedList } from 'src/components/list';
@@ -19,12 +13,14 @@ import { BoldText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
 import { isIos } from 'src/common/device';
 import Colors from 'src/themes/Colors';
+import { HeaderList } from './components';
 
 type Props = {};
 
 const ArtistScreen = (props: Props) => {
   const { route } = useScreenController();
   const item = route?.params?.item as ArtistDataItemFields;
+  const { blurHashColor, bgColor } = route?.params as any;
 
   const scrollRef = useRef<FlatList>(null);
 
@@ -142,30 +138,42 @@ const ArtistScreen = (props: Props) => {
   return (
     <View style={[Layout.fill]}>
       <Banner
-        img={item.images[0].url}
+        blurHashColor={blurHashColor}
+        bgColor={bgColor}
+        img={item?.images[0]?.url}
         name={item.name}
         translationY={translationY}
       />
 
       <AnimatedList
         bounces={false}
+        overScrollMode="never"
         keyExtractor={(_, index) => index.toString()}
         data={data}
         onScroll={scrollHandler}
-        style={{}}
         contentContainerStyle={{
-          marginTop: scale(265),
           backgroundColor: Colors.black.default,
+          marginTop: scale(260),
         }}
         scrollEventThrottle={16}
-        renderItem={({ item }: any) => (
-          <View
-            style={{
-              height: scale(100),
-            }}>
-            <BoldText>{item.item}</BoldText>
-          </View>
+        ListHeaderComponent={() => (
+          <HeaderList
+            follower={item.followers.total}
+            onPlayQueue={() => {}}
+            bgColor={bgColor}
+          />
         )}
+        renderItem={({ item, index }: any) => {
+          return (
+            <View
+              style={{
+                height: scale(100),
+                paddingHorizontal: scale(10),
+              }}>
+              <BoldText>{item.item}</BoldText>
+            </View>
+          );
+        }}
       />
     </View>
   );

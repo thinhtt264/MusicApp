@@ -28,6 +28,7 @@ import { BottomSheetRef } from 'src/components/modal/type';
 import { useFocusEffect } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { searchActions } from 'src/store/action-slices';
+import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 
 interface Props {}
 
@@ -54,15 +55,23 @@ const SearchScreen = (props: Props) => {
     setVisible(true);
   }, []);
 
-  const onNavigate = useCallback(async (item: any, type: string) => {    
+  const onNavigate = useCallback(async (item: any, type: string) => {
     if (type === 'track') {
       await startAudio({ info: item, from: 'search' });
       await TrackPlayer.setPlayWhenReady(true);
     } else {
+      const bgColor = await getBackGroundPlayer(item.images[0].url);
+      const blurHashColor =
+        bgColor !== Colors.grey.player
+          ? await getBlurhashColor(item.images[0].url)
+          : false;
+
       navigation.navigate({
         name: 'ArtistScreen',
         params: {
           item: item,
+          bgColor: bgColor,
+          blurHashColor: blurHashColor,
         },
       });
       dispatch(searchActions.addSearchRecentList({ ...item, type }));

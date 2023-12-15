@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { memo, useCallback, useLayoutEffect, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 import isEqual from 'react-fast-compare';
 import FastImage from 'react-native-fast-image';
 import Animated, {
@@ -11,52 +11,37 @@ import Animated, {
 } from 'react-native-reanimated';
 import { fontScale, scale } from 'src/common/scale';
 import Layout from 'src/themes/Layout';
-import { getBlurhashColor } from 'src/common/helper';
 import Colors from 'src/themes/Colors';
 import { Blurhash } from 'react-native-blurhash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { navigation } from 'src/common/navigation';
 import Constants from 'src/themes/Constants';
-import { SemiBoldText } from '../text';
+import { BoldText, SemiBoldText } from '../text';
+import LinearGradient from 'react-native-linear-gradient';
 
 type Props = {
+  blurHashColor: string;
+  bgColor: string;
   img: string;
   name: string;
   translationY: SharedValue<number>;
 };
 const Header_Max_Height = scale(380);
 const Header_Min_Height = scale(80);
-const Header_Distance = scale(265);
+const Header_Distance = scale(260);
 
-const BannerComponent = ({ img, name, translationY }: Props) => {
-  const [bgColor, setBgColor] = useState('');
-
-  const animatedStyle = useAnimatedStyle(() => {
-    'worklet';
-    const opacity = interpolate(
-      translationY.value,
-      [0, 200],
-      [1, 0],
-      Extrapolate.CLAMP,
-    );
-
-    const backgroundColor = interpolateColor(
-      translationY.value,
-      [0, 200],
-      ['rgba(255, 0, 0, 0)', 'rgba(255, 0, 0, 1)'],
-    );
-
-    return {
-      opacity,
-      backgroundColor,
-    };
-  }, [translationY.value]);
-
+const BannerComponent = ({
+  bgColor,
+  blurHashColor,
+  img,
+  name,
+  translationY,
+}: Props) => {
   const headerStylez = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
-      [0, 160],
-      [0, 1],
+      [0, 140, 150],
+      [0, 0, 1],
       Extrapolate.CLAMP,
     );
 
@@ -94,8 +79,8 @@ const BannerComponent = ({ img, name, translationY }: Props) => {
   const headerNameStylez = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
-      [0, Header_Distance],
-      [0, 1],
+      [160, 200, 240],
+      [0, 0.5, 1],
       Extrapolate.CLAMP,
     );
 
@@ -105,80 +90,100 @@ const BannerComponent = ({ img, name, translationY }: Props) => {
     };
   }, [translationY.value]);
 
-  useLayoutEffect(() => {
-    getBgColor(img);
-  }, [img]);
+  const titleStylez = useAnimatedStyle(() => {
+    const translateY = interpolate(
+      translationY.value,
+      [0, Header_Distance],
+      [0, -Header_Distance],
+      Extrapolate.CLAMP,
+    );
 
-  const getBgColor = useCallback(async (img: string) => {
-    const blurHashColor = await getBlurhashColor(img);
-    setBgColor(blurHashColor || Colors.grey.player);
-  }, []);
+    const backgroundColor = interpolateColor(
+      translationY.value,
+      [0, 300],
+      ['transparent', bgColor],
+    );
+
+    return {
+      transform: [{ translateY }],
+      backgroundColor,
+    };
+  }, [translationY.value, bgColor]);
+
+  const testStylez = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      translationY.value,
+      [0, 220],
+      ['transparent', bgColor],
+    );
+
+    return {
+      backgroundColor,
+    };
+  }, [translationY.value, bgColor]);
 
   // if (!bgColor) return <></>;
 
   const FragmentView =
-    bgColor === Colors.grey.player ? (
-      <View />
+    blurHashColor === Colors.grey.player ? (
+      <View style={[Layout.fill, { backgroundColor: bgColor }]} />
     ) : (
-      <Blurhash blurhash={bgColor} style={Layout.fill} />
+      <Animated.View style={[Layout.fill, testStylez]} />
     );
 
-  const Header = useCallback(
-    ({ bgColor, name, headerStylez, FragmentView }: any) => {
-      return (
-        <Animated.View
-          style={[
-            Layout.absolute,
-            {
-              backgroundColor: bgColor === Colors.grey.player ? bgColor : '',
-            },
-            styles.header,
-          ]}>
-          <Animated.View style={[Layout.fill]}>
+  const Header = useCallback(({ name, headerStylez, FragmentView }: any) => {
+    return (
+      <Animated.View style={[Layout.absolute, styles.header]}>
+        <Animated.View style={[Layout.fill]}>
+          <Animated.View style={[Layout.center, styles.backBtn, buttonStylez]}>
+            <Icon
+              onPress={navigation.goBack}
+              name="arrow-back"
+              size={scale(24)}
+              color={'white'}
+              style={{ marginLeft: scale(1) }}
+            />
             <Animated.View
-              style={[Layout.center, styles.backBtn, buttonStylez]}>
-              <Icon
-                onPress={navigation.goBack}
-                name="arrow-back"
-                size={scale(24)}
-                color={'white'}
-                style={{ marginLeft: scale(1) }}
-              />
-              <Animated.View
-                style={[Layout.absolute, styles.wrapBtn, wrapButtonStylez]}
-              />
-            </Animated.View>
-
-            <Animated.View style={headerNameStylez}>
-              <SemiBoldText textStyle={styles.headerName}>{name}</SemiBoldText>
-            </Animated.View>
+              style={[Layout.absolute, styles.wrapBtn, wrapButtonStylez]}
+            />
           </Animated.View>
 
-          <Animated.View
-            style={[Layout.absolute, headerStylez, { zIndex: -1 }]}>
-            {FragmentView}
+          <Animated.View style={headerNameStylez}>
+            <SemiBoldText textStyle={styles.headerName}>{name}</SemiBoldText>
           </Animated.View>
         </Animated.View>
-      );
-    },
-    [],
-  );
+
+        <Animated.View style={[Layout.absolute, headerStylez, { zIndex: -1 }]}>
+          {FragmentView}
+        </Animated.View>
+      </Animated.View>
+    );
+  }, []);
 
   return (
     <>
       <Header
-        bgColor={bgColor}
         name={name}
         headerStylez={headerStylez}
         FragmentView={FragmentView}
       />
-      <Animated.View style={[styles.container, Layout.absolute, animatedStyle]}>
-        <FastImage
-          source={{ uri: img }}
-          resizeMode="cover"
-          style={[styles.background]}
-        />
-      </Animated.View>
+      <View style={[styles.container, Layout.absolute]}>
+        <Animated.View style={[Layout.absolute, { zIndex: -10 }]}>
+          <FastImage
+            source={{ uri: img }}
+            resizeMode="cover"
+            style={[styles.background]}
+          />
+        </Animated.View>
+
+        <Animated.View style={[styles.title, titleStylez]}>
+          <LinearGradient
+            style={styles.gradient}
+            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.6)']}>
+            <BoldText textStyle={styles.name}>{name}</BoldText>
+          </LinearGradient>
+        </Animated.View>
+      </View>
     </>
   );
 };
@@ -196,7 +201,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingTop: 30,
-    opacity: 0.9,
+    opacity: 1,
   },
   header: {
     zIndex: 1,
@@ -222,5 +227,17 @@ const styles = StyleSheet.create({
     bottom: scale(14),
     left: scale(62),
     fontSize: fontScale(16),
+  },
+  title: {
+    height: Header_Distance,
+    width: '100%',
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  name: {
+    fontSize: fontScale(42),
+    paddingHorizontal: scale(10),
   },
 });

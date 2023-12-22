@@ -1,20 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import React from 'react';
 import { MaterialIndicator } from 'react-native-indicators';
 import { scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import Layout from 'src/themes/Layout';
 
-type Props = {};
+type Props = {
+  style?: ViewStyle;
+};
 
-const ScreenLoader = (props: Props) => {
+const ScreenLoader = ({ style = {} }: Props) => {
   return (
-    <View style={[Layout.center]}>
+    <View style={[Layout.center, style]}>
       <MaterialIndicator size={scale(50)} color={Colors.green.default} />
     </View>
   );
 };
 
 export default ScreenLoader;
-
-const styles = StyleSheet.create({});

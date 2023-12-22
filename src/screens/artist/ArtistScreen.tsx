@@ -1,5 +1,10 @@
-import { FlatList, StatusBar, StyleSheet, View } from 'react-native';
-import React, { useLayoutEffect, useRef } from 'react';
+import { StatusBar, StyleSheet, View } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import Layout from 'src/themes/Layout';
 import { AnimatedList } from 'src/components/list';
 import {
@@ -9,20 +14,32 @@ import {
 import { Banner } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { ArtistDataItemFields } from 'src/models/Artist';
-import { BoldText } from 'src/components/text';
-import { fontScale, scale } from 'src/common/scale';
+import { scale } from 'src/common/scale';
 import { isIos } from 'src/common/device';
 import Colors from 'src/themes/Colors';
-import { HeaderList } from './components';
+import {
+  AlbumReleateItem,
+  ArtistAlbumItem,
+  ArtistRelateItem,
+  CategoryList,
+  HeaderList,
+  TopTrackItem,
+} from './components';
+import { getArtistData } from 'src/store/action-thunk';
+import { useAppSelector } from 'src/common/redux';
+import { ScreenLoader } from 'src/components/loader';
+import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 
 type Props = {};
 
 const ArtistScreen = (props: Props) => {
-  const { route } = useScreenController();
-  const item = route?.params?.item as ArtistDataItemFields;
-  const { blurHashColor, bgColor } = route?.params as any;
+  const { route, dispatch } = useScreenController();
+  const { artistData } = useAppSelector(state => state.artist);
+  const [isLoading, setLoading] = useState(true);
+  const [blurHashColor, setBlurHashColor] = useState('');
+  const [bgColor, setBgColor] = useState('');
 
-  const scrollRef = useRef<FlatList>(null);
+  const artistParams = route?.params?.item as ArtistDataItemFields;
 
   const translationY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -36,141 +53,94 @@ const ArtistScreen = (props: Props) => {
     }
     return () => {};
   }, []);
-  const data = [
-    {
-      item: 'item 1',
-      id: 1,
+
+  useEffect(() => {
+    Promise.all([
+      dispatch(getArtistData({ id: artistParams.id, limit: 4 })),
+      getContainerColor(),
+    ]).finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  const getContainerColor = useCallback(async () => {
+    const bgColor = await getBackGroundPlayer(artistParams?.images[0]?.url);
+    const blurHashColor =
+      bgColor !== Colors.grey.player
+        ? await getBlurhashColor(artistParams?.images[0]?.url)
+        : false;
+    setBgColor(bgColor ?? '');
+    setBlurHashColor(blurHashColor !== false ? blurHashColor : '');
+  }, [artistParams]);
+
+  const renderSwitchedItem = useCallback(
+    (index: number, item: any) => {
+      switch (index) {
+        case 0:
+          return (
+            <TopTrackItem item={item} data={artistData?.topTracks ?? []} />
+          );
+        case 1:
+          return (
+            <ArtistAlbumItem
+              item={item}
+              data={artistData?.artistAlbum?.items ?? []}
+            />
+          );
+        case 2:
+          return (
+            <AlbumReleateItem
+              item={item}
+              name={artistParams.name}
+              data={artistData?.relatedAlbum?.items ?? []}
+            />
+          );
+        case 3:
+          return (
+            <ArtistRelateItem
+              item={item}
+              data={artistData?.relatedArtist ?? []}
+            />
+          );
+        default:
+          return null;
+      }
     },
-    {
-      item: 'item 2',
-      id: 2,
-    },
-    {
-      item: 'item 3',
-      id: 4,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-    {
-      item: 'item 3',
-      id: 3,
-    },
-  ];
+    [artistData],
+  );
+
+  if (isLoading) return <ScreenLoader style={styles.loading} />;
 
   return (
     <View style={[Layout.fill]}>
       <Banner
         blurHashColor={blurHashColor}
         bgColor={bgColor}
-        img={item?.images[0]?.url}
-        name={item.name}
+        img={artistParams?.images[0]?.url}
+        name={artistParams.name}
         translationY={translationY}
       />
 
       <AnimatedList
         bounces={false}
         overScrollMode="never"
-        keyExtractor={(_, index) => index.toString()}
-        data={data}
+        keyExtractor={item => item.id}
+        data={CategoryList}
         onScroll={scrollHandler}
-        contentContainerStyle={{
-          backgroundColor: Colors.black.default,
-          marginTop: scale(260),
-        }}
+        contentContainerStyle={styles.wrapContent}
         scrollEventThrottle={16}
         ListHeaderComponent={() => (
           <HeaderList
-            follower={item.followers.total}
+            follower={artistParams.followers.total}
             onPlayQueue={() => {}}
             bgColor={bgColor}
           />
         )}
+        ItemSeparatorComponent={() => <View style={styles.divider} />}
         renderItem={({ item, index }: any) => {
           return (
-            <View
-              style={{
-                height: scale(100),
-                paddingHorizontal: scale(10),
-              }}>
-              <BoldText>{item.item}</BoldText>
+            <View style={styles.renderItem}>
+              {renderSwitchedItem(index, item)}
             </View>
           );
         }}
@@ -181,4 +151,17 @@ const ArtistScreen = (props: Props) => {
 
 export default ArtistScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  wrapContent: {
+    backgroundColor: Colors.black.default,
+    marginTop: scale(260),
+    paddingBottom: scale(360),
+  },
+  renderItem: { paddingHorizontal: scale(10) },
+  divider: {
+    height: scale(30),
+  },
+  loading: {
+    flex: 1,
+  },
+});

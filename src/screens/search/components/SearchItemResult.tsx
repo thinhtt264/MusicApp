@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'space-between',
-    flex: 1,
+    // flex: 1,
   },
   artistImage: {
     width: scale(50),

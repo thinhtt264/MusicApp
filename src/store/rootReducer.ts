@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistCombineReducers, persistReducer } from 'redux-persist';
 import {
   appReducer,
+  artistReducer,
   authReducer,
   homeReducer,
   playerReducer,
@@ -52,6 +53,7 @@ const rootReducer = persistCombineReducers(rootPersistConfig, {
   player: persistReducer(playerPersistConfig, playerReducer),
   search: persistReducer(searchPersistConfig, searchReducer),
   profile: persistReducer(profilePersistConfig, profileReducer),
+  artist: artistReducer,
 });
 
 export default rootReducer;

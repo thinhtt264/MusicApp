@@ -29,6 +29,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { searchActions } from 'src/store/action-slices';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
+import { ScreenLoader } from 'src/components/loader';
+import Layout from 'src/themes/Layout';
 
 interface Props {}
 
@@ -60,18 +62,10 @@ const SearchScreen = (props: Props) => {
       await startAudio({ info: item, from: 'search' });
       await TrackPlayer.setPlayWhenReady(true);
     } else {
-      const bgColor = await getBackGroundPlayer(item.images[0].url);
-      const blurHashColor =
-        bgColor !== Colors.grey.player
-          ? await getBlurhashColor(item.images[0].url)
-          : false;
-
       navigation.navigate({
         name: 'ArtistScreen',
         params: {
           item: item,
-          bgColor: bgColor,
-          blurHashColor: blurHashColor,
         },
       });
       dispatch(searchActions.addSearchRecentList({ ...item, type }));
@@ -160,9 +154,11 @@ const SearchScreen = (props: Props) => {
                 }
                 totalPages={searchData?.tracks?.total}
                 style={styles.item}
+                contentContainerStyle={Layout.fill}
                 flatListRef={flatListRef}
                 data={searchData?.tracks?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={15} />}
+                ListEmptyComponent={() => <ScreenLoader style={styles.empty} />}
                 renderItem={({ item }: any) =>
                   renderItem({
                     item: item,
@@ -180,8 +176,10 @@ const SearchScreen = (props: Props) => {
                 flatListRef={flatListRef}
                 totalPages={searchData?.artists?.total}
                 style={styles.item}
+                contentContainerStyle={Layout.fill}
                 data={searchData?.artists?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={20} />}
+                ListEmptyComponent={() => <ScreenLoader style={styles.empty} />}
                 renderItem={({ item }: any) =>
                   renderItem({
                     item: item,
@@ -205,6 +203,7 @@ const SearchScreen = (props: Props) => {
                 styles.item,
                 { marginBottom: currentTrack ? scale(60) : 0 },
               ]}
+              contentContainerStyle={Layout.fill}
               flatListRef={flatListRef}
               data={searchRecentData?.lists?.items ?? []}
               ItemSeparatorComponent={() => <Divider height={15} />}
@@ -262,5 +261,8 @@ const styles = StyleSheet.create({
   info: {
     marginLeft: scale(10),
     justifyContent: 'center',
+  },
+  empty: {
+    flex: 1,
   },
 });

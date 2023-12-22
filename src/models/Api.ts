@@ -1,4 +1,4 @@
-import { ArtistDataItemFields } from './Artist';
+import { ArtistDataField, ArtistDataItemFields } from './Artist';
 import { TrackDataItemFields } from './Track';
 
 export interface ResponseBase<T = any> {
@@ -104,3 +104,11 @@ export interface GetRecommendFields {
 export interface GetRecommendResponseFields {
   tracks: TrackDataItemFields[];
 }
+
+export interface GetTopTracksFields {
+  id: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface GetTopTracksResponseFields extends ArtistDataField {}

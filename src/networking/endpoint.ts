@@ -12,5 +12,11 @@ const endpoints = {
     getRecommend:
       'v1/recommendations?market=VN&seed_artists=$artists&seed_tracks=$tracks&limit=10',
   },
+  artist: {
+    topTrack: 'v1/artists/$id/top-tracks?market=VN',
+    relatedArtist: 'v1/artists/$id/related-artists',
+    artistAlbum: 'v1/artists/$id/albums?market=VN&limit=$limit&offset=$offset',
+    relatedAlbum: 'v1/artists/$id/albums?include_groups=appears_on&market=VN&limit=10&offset=0',
+  },
 };
 export { endpoints };

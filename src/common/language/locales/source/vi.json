@@ -64,6 +64,12 @@
     "song": "Bài hát",
     "popular": "Phổ biến",
     "artistRelated": "Fan cũng thích",
+    "alBumRelated": "Có sự tham gia của {{artist}}",
     "popularAlbum": "Bản phát hành mới phổ biến"
+  },
+  "album": {
+    "single": "Đĩa Đơn",
+    "album": "Album",
+    "showAllAlbum": "Xem danh sách đĩa nhạc"
   }
 }

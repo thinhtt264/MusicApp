@@ -1,3 +1,6 @@
+import { Album } from './Album';
+import { TrackDataItemFields } from './Track';
+
 interface ExternalUrls {
   spotify: string;
 }
@@ -24,4 +27,27 @@ export interface ArtistDataItemFields {
   popularity?: number;
   type?: string;
   uri?: string;
+}
+
+export interface ArtistDataField {
+  topTracks: TrackDataItemFields[];
+  relatedArtist: ArtistDataItemFields[];
+  relatedAlbum: {
+    limit: number;
+    offset: number;
+    next: string;
+    total: number;
+    items: Album[];
+  };
+  artistAlbum: {
+    limit: number;
+    offset: number;
+    next: string;
+    total: number;
+    items: Album[];
+  };
+}
+
+export interface ArtistState {
+  artistData: ArtistDataField;
 }

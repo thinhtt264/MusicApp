@@ -80,6 +80,7 @@ export function decode83(str: string): number {
 }
 
 export const getBackGroundPlayer = async (link: string) => {
+  if (!link) return 'rgb(72,72,72)';
   const blurhash = await getBlurhashColor(link);
   if (blurhash == null || blurhash.length < 7) return undefined;
 

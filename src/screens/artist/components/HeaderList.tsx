@@ -11,41 +11,26 @@ import LinearGradient from 'react-native-linear-gradient';
 import { RegularText } from 'src/components/text';
 import { formatNumber } from 'src/common/helper';
 import { translate } from 'src/common/language/translate';
+import Divider from 'src/components/divier';
 
 type Props = {
-  onPlayQueue: () => void;
   follower: number;
   bgColor: string;
 };
 
-const HeaderListComponent = ({ onPlayQueue, bgColor, follower }: Props) => {
+const HeaderListComponent = ({ bgColor, follower }: Props) => {
   return (
     <View style={styles.wrapper}>
       <LinearGradient colors={[bgColor, 'black']} style={styles.gradient} />
       <View style={[styles.container]}>
-        <View>
-          <RegularText textStyle={styles.follower}>
-            {formatNumber(follower)} - {translate('search:folower')}
-          </RegularText>
-        </View>
+        <RegularText textStyle={styles.follower}>
+          {formatNumber(follower)} - {translate('search:folower')}
+        </RegularText>
         <View style={[Layout.rowBetween]}>
           <View />
-
           <View style={[Layout.rowVCenter, { gap: scale(20) }]}>
             <ShuffleRepeatButton option="shuffle" size={scale(18)} />
-            <TouchableOpacity onPress={onPlayQueue}>
-              <Animated.View
-                style={[styles.playButton]}
-                entering={FadeIn.duration(500)}
-                exiting={FadeOut}>
-                <FontAwesome6
-                  size={scale(16)}
-                  style={[{ marginLeft: scale(2) }]}
-                  name={'play'}
-                  color={Colors.black.default}
-                />
-              </Animated.View>
-            </TouchableOpacity>
+            <Divider width={scale(30)} />
           </View>
         </View>
       </View>
@@ -60,14 +45,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: scale(10),
-  },
-  playButton: {
-    height: scale(40),
-    width: scale(40),
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.green.default,
-    borderRadius: scale(20),
   },
   wrapper: {
     height: scale(80),

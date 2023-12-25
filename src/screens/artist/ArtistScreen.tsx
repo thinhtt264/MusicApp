@@ -22,6 +22,7 @@ import {
   ArtistAlbumItem,
   ArtistRelateItem,
   CategoryList,
+  FloatingButton,
   HeaderList,
   TopTrackItem,
 } from './components';
@@ -121,6 +122,8 @@ const ArtistScreen = (props: Props) => {
         translationY={translationY}
       />
 
+      <FloatingButton translationY={translationY} />
+
       <AnimatedList
         bounces={false}
         overScrollMode="never"
@@ -132,7 +135,6 @@ const ArtistScreen = (props: Props) => {
         ListHeaderComponent={() => (
           <HeaderList
             follower={artistParams.followers.total}
-            onPlayQueue={() => {}}
             bgColor={bgColor}
           />
         )}

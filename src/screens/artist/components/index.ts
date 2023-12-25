@@ -4,6 +4,7 @@ import { TopTrackItem } from './TopTrackItem';
 import ArtistAlbumItem from './ArtistAlbumItem';
 import ArtistRelateItem from './ArtistRelateItem';
 import AlbumReleateItem from './AlbumReleateItem';
+import { FloatingButton } from './FloatingButton';
 export {
   HeaderList,
   CategoryList,
@@ -11,4 +12,5 @@ export {
   ArtistAlbumItem,
   ArtistRelateItem,
   AlbumReleateItem,
+  FloatingButton,
 };

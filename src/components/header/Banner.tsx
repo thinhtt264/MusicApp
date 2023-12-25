@@ -27,7 +27,7 @@ type Props = {
   translationY: SharedValue<number>;
 };
 const Header_Max_Height = scale(380);
-const Header_Min_Height = scale(80);
+export const Header_Min_Height = scale(80);
 const Header_Distance = scale(260);
 
 const BannerComponent = ({

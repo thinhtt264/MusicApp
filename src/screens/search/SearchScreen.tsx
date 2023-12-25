@@ -15,7 +15,7 @@ import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
 import { BoldText } from 'src/components/text';
-import { kWidth } from 'src/common/constants';
+import { kHeight, kWidth } from 'src/common/constants';
 import { SearchItemResult } from './components/SearchItemResult';
 import LoadMoreList from 'src/components/list/LoadMoreList';
 import { getSearchData } from 'src/store/action-thunk';
@@ -154,7 +154,6 @@ const SearchScreen = (props: Props) => {
                 }
                 totalPages={searchData?.tracks?.total}
                 style={styles.item}
-                contentContainerStyle={Layout.fill}
                 flatListRef={flatListRef}
                 data={searchData?.tracks?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={15} />}
@@ -176,7 +175,6 @@ const SearchScreen = (props: Props) => {
                 flatListRef={flatListRef}
                 totalPages={searchData?.artists?.total}
                 style={styles.item}
-                contentContainerStyle={Layout.fill}
                 data={searchData?.artists?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={20} />}
                 ListEmptyComponent={() => <ScreenLoader style={styles.empty} />}
@@ -203,7 +201,6 @@ const SearchScreen = (props: Props) => {
                 styles.item,
                 { marginBottom: currentTrack ? scale(60) : 0 },
               ]}
-              contentContainerStyle={Layout.fill}
               flatListRef={flatListRef}
               data={searchRecentData?.lists?.items ?? []}
               ItemSeparatorComponent={() => <Divider height={15} />}
@@ -264,5 +261,6 @@ const styles = StyleSheet.create({
   },
   empty: {
     flex: 1,
+    height: kHeight - scale(280),
   },
 });

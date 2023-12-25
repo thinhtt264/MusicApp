@@ -25,7 +25,9 @@ const RenderItem = ({ item }: { item: Album }) => {
     <TouchableOpacity style={[Layout.rowVCenter]} activeOpacity={0.6}>
       <Image style={styles.image} source={{ uri: item?.images[1].url }} />
       <View style={[Layout.colVCenter, styles.wrapInfo]}>
-        <BoldText textStyle={styles.name}>{item?.name}</BoldText>
+        <BoldText numberOfLines={1} textStyle={styles.name}>
+          {item?.name}
+        </BoldText>
         <MediumText textStyle={styles.albumType}>{`${getYear(
           item?.release_date,
         )} - ${translate(`album:${item.album_type}`)}`}</MediumText>
@@ -87,6 +89,8 @@ const styles = StyleSheet.create({
   wrapInfo: {
     gap: scale(2),
     marginLeft: scale(8),
+    overflow: 'hidden',
+    flex: 1,
   },
   footer: {
     borderWidth: 0.5,

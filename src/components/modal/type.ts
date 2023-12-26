@@ -11,6 +11,6 @@ export interface BottomSheetProps {
 }
 
 export type BottomSheetRef = {
-  onOpen: (index: 0 | 1) => {};
+  onOpen: (index: number) => {};
   onClose: () => {};
 };

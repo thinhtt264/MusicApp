@@ -110,5 +110,9 @@ export interface GetTopTracksFields {
   limit?: number;
   offset?: number;
 }
+export interface GetArtistInfoFields {
+  id: string;
+}
+export interface GetArtistInfoResponseFields extends ArtistDataItemFields {}
 
 export interface GetTopTracksResponseFields extends ArtistDataField {}

@@ -10,6 +10,7 @@ import { HeaderList, TrackCard } from './components';
 import { Spacer } from 'src/components/spacer';
 import { startPlaylist } from 'src/common/player';
 import { ScreenLoader } from 'src/components/loader';
+import { useAppSelector } from 'src/common/redux';
 
 type Props = {};
 
@@ -17,6 +18,7 @@ const PlayListScreen = (props: Props) => {
   const { translate, route } = useScreenController();
   const [listTrack, setListTrack] = useState<any>();
   const [totalItems, setTotalItems] = useState(0);
+  const { currentTrack } = useAppSelector(state => state.player);
 
   const { id: playlistId, name } = route.params?.data;
 
@@ -42,6 +44,7 @@ const PlayListScreen = (props: Props) => {
           ListHeaderComponent={() => <HeaderList onPlayQueue={onPlayQueue} />}
           renderItem={({ item }) => <TrackCard item={item} />}
           ItemSeparatorComponent={() => <Spacer size={scale(12)} />}
+          style={{ marginBottom: currentTrack ? scale(100) : scale(30) }}
           ListEmptyComponent={
             <View style={{ marginTop: '40%' }}>
               <ScreenLoader />

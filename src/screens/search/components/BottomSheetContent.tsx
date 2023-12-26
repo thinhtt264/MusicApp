@@ -21,13 +21,15 @@ import {
 } from 'src/common/firebase';
 import Toast from 'react-native-toast-message';
 import { AnimatedImage } from 'src/components/image';
+import { navigation } from 'src/common/navigation';
 
 type Props = {
   info: TrackDataItemFields;
   onCloseModal: () => void;
+  selectArtist: (item: any) => void;
 };
 
-const BottomSheetContent = ({ info, onCloseModal }: Props) => {
+const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
   const [isLiked, setLiked] = useState(false);
 
   const handleLikePress = useCallback(() => {
@@ -53,6 +55,20 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
       });
     }
   }, []);
+
+  const onShowArtist = () => {
+    if (info.artists.length > 1) {
+      selectArtist(info.artists);
+    } else {
+      onCloseModal();
+      navigation.navigate({
+        name: 'ArtistScreen',
+        params: {
+          item: { id: info.artists[0].id, name: info.artists[0].name },
+        },
+      });
+    }
+  };
 
   const OptionCard = ({ item }: any) => {
     const renderIcon = () => {
@@ -131,7 +147,10 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
       const iconHandlers = [
         {
           id: 0,
-          onPress: handleLikePress,
+          onPress: () => {
+            handleLikePress();
+            onCloseModal();
+          },
         },
         {
           id: 1,
@@ -154,7 +173,7 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
         {
           id: 4,
           onPress: () => {
-            // Do something else
+            onShowArtist();
           },
         },
       ];
@@ -162,10 +181,9 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
       return (
         <TouchableOpacity
           style={[Layout.rowVCenter, styles.option]}
-          onPress={() => {
-            iconHandlers[item.id] && iconHandlers[item.id].onPress();
-            onCloseModal();
-          }}>
+          onPress={() =>
+            iconHandlers[item.id] && iconHandlers[item.id].onPress()
+          }>
           <IconComponent />
           <View style={{ paddingLeft: scale(10) }}>
             <BoldText textStyle={{ fontSize: fontScale(15) }}>
@@ -179,29 +197,26 @@ const BottomSheetContent = ({ info, onCloseModal }: Props) => {
   };
 
   if (!info) return null;
+
   return (
     <View style={styles.container}>
-      <View style={[Layout.rowVCenter, { paddingHorizontal: scale(15) }]}>
+      <View style={[Layout.rowVCenter, styles.header]}>
         <AnimatedImage
           containerStyle={styles.img}
           resizeMode="cover"
           source={info?.album?.images[0]?.url ?? ''}
         />
         <View style={[Layout.colVCenter, styles.cardInfo]}>
-          <BoldText textStyle={{ fontSize: fontScale(16) }} numberOfLines={1}>
+          <BoldText textStyle={styles.trackName} numberOfLines={1}>
             {info.name}
           </BoldText>
           <Spacer size={scale(5)} />
-          <RegularText
-            textStyle={{ fontSize: fontScale(12), color: Colors.unActive }}>
+          <RegularText textStyle={styles.artistName}>
             {info.artists[0].name}
           </RegularText>
         </View>
       </View>
-      <Spacer
-        size={scale(15)}
-        style={{ borderBottomColor: Colors.grey.placeHolder, borderWidth: 0.2 }}
-      />
+      <Spacer size={scale(15)} style={styles.divider} />
       {optionList.Card_Music.map((i: any, index) => {
         return (
           <View key={index} style={{ paddingHorizontal: scale(15) }}>
@@ -234,4 +249,8 @@ const styles = StyleSheet.create({
   option: {
     // borderWidth:2, borderColor:'red'
   },
+  header: { paddingHorizontal: scale(15) },
+  artistName: { fontSize: fontScale(12), color: Colors.unActive },
+  trackName: { fontSize: fontScale(16) },
+  divider: { borderBottomColor: Colors.grey.placeHolder, borderWidth: 0.2 },
 });

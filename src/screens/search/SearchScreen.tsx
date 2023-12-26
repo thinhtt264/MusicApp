@@ -10,7 +10,12 @@ import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { fontScale, scale } from 'src/common/scale';
-import { BottomSheetContent, SearchBox, TagFilter } from './components';
+import {
+  BottomSheetContent,
+  SearchBox,
+  SelectArtist,
+  TagFilter,
+} from './components';
 import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
@@ -25,10 +30,8 @@ import TrackPlayer from 'react-native-track-player';
 import { Portal } from 'react-native-portalize';
 import { BottomModal } from 'src/components/modal';
 import { BottomSheetRef } from 'src/components/modal/type';
-import { useFocusEffect } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import { searchActions } from 'src/store/action-slices';
-import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
 import { ScreenLoader } from 'src/components/loader';
 import Layout from 'src/themes/Layout';
 
@@ -42,17 +45,19 @@ const SearchScreen = (props: Props) => {
   const { currentTrack } = useAppSelector(state => state.player);
   const [visible, setVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedArtist, setSelectedArtist] = useState([]);
 
   const flatListRef = useRef<FlatList>(null);
   const bottomSheetRef = useRef<BottomSheetRef>(null);
 
   const onCloseModal = useCallback(() => {
     setVisible(false);
+    setSelectedArtist([]);
     bottomSheetRef.current?.onClose();
   }, []);
 
-  const openBottomModal = useCallback((item: any) => {
-    bottomSheetRef.current?.onOpen(0);
+  const openBottomModal = useCallback((item: any, position = 1) => {
+    bottomSheetRef.current?.onOpen(position);
     setSelectedItem(item);
     setVisible(true);
   }, []);
@@ -124,17 +129,16 @@ const SearchScreen = (props: Props) => {
 
   useEffect(() => {
     FastImage.clearDiskCache();
-    FastImage.clearMemoryCache();    
+    FastImage.clearMemoryCache();
   }, []);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     return () => {
-  //       FastImage.clearDiskCache();
-  //       FastImage.clearMemoryCache();
-  //     };
-  //   }, []),
-  // );
+  const selectArtist = (item: any) => {
+    setSelectedArtist(item);
+    bottomSheetRef.current?.onClose();
+    setTimeout(() => {
+      bottomSheetRef.current?.onOpen(0);
+    }, 200);
+  };
 
   return (
     <Container style={styles.container}>
@@ -223,10 +227,21 @@ const SearchScreen = (props: Props) => {
         <Portal>
           <BottomModal onCloseModal={onCloseModal} ref={bottomSheetRef}>
             {visible ? (
-              <BottomSheetContent
-                info={selectedItem as any}
-                onCloseModal={onCloseModal}
-              />
+              selectedArtist.length > 0 ? (
+                <SelectArtist
+                  data={selectedArtist}
+                  onPressItem={(item: any) => {
+                    onCloseModal();
+                    onNavigate(item, 'artist');
+                  }}
+                />
+              ) : (
+                <BottomSheetContent
+                  info={selectedItem as any}
+                  onCloseModal={onCloseModal}
+                  selectArtist={(item: any) => selectArtist(item)}
+                />
+              )
             ) : null}
           </BottomModal>
         </Portal>

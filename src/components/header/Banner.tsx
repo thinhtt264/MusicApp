@@ -12,7 +12,6 @@ import Animated, {
 import { fontScale, scale } from 'src/common/scale';
 import Layout from 'src/themes/Layout';
 import Colors from 'src/themes/Colors';
-import { Blurhash } from 'react-native-blurhash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { navigation } from 'src/common/navigation';
 import Constants from 'src/themes/Constants';

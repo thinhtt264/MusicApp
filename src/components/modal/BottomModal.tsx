@@ -14,7 +14,7 @@ import Colors from 'src/themes/Colors';
 const BottomModal = forwardRef((props: BottomSheetProps, ref) => {
   const { colors } = useTheme();
 
-  const { snapPoints = ['50%', '100%'], children, onCloseModal } = props;
+  const { snapPoints = ['30%', '50%', '100%'], children, onCloseModal } = props;
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPointBottomSheet = useMemo(() => snapPoints, []);
@@ -25,11 +25,15 @@ const BottomModal = forwardRef((props: BottomSheetProps, ref) => {
 
   useImperativeHandle(ref, () => ({
     onOpen: (index: number) => openBottomSheet(index),
-    onClose: () => bottomSheetRef.current?.close(),
+    onClose: () => closeBottomSheet(),
   }));
 
   const openBottomSheet = (index: number) => {
     bottomSheetRef.current?.snapToIndex(index);
+  };
+
+  const closeBottomSheet = () => {
+    bottomSheetRef.current?.close();
   };
 
   const renderBackdrop = useCallback(

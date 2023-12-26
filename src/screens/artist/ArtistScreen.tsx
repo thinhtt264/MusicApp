@@ -26,7 +26,7 @@ import {
   HeaderList,
   TopTrackItem,
 } from './components';
-import { getArtistData } from 'src/store/action-thunk';
+import { getArtistData, getArtistInfo } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
 import { ScreenLoader } from 'src/components/loader';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
@@ -42,6 +42,8 @@ const ArtistScreen = (props: Props) => {
   const [bgColor, setBgColor] = useState('');
 
   const artistParams = route?.params?.item as ArtistDataItemFields;
+
+  const [artistInfo, setArtistInfo] = useState(artistParams);
 
   const translationY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -68,11 +70,19 @@ const ArtistScreen = (props: Props) => {
   };
 
   const getContainerColor = useCallback(async () => {
-    const bgColor = await getBackGroundPlayer(artistParams?.images[0]?.url);
+    let imgUrl = '';
+
+    if (artistParams && artistParams.images && artistParams.images.length > 0) {
+      imgUrl = artistParams.images[0].url;
+    } else {
+      const response = await dispatch(getArtistInfo({ id: artistParams.id }));
+      imgUrl = await response?.payload?.images[0]?.url;
+      setArtistInfo(response?.payload);
+    }
+
+    const bgColor = await getBackGroundPlayer(imgUrl);
     const blurHashColor =
-      bgColor !== Colors.grey.player
-        ? await getBlurhashColor(artistParams?.images[0]?.url)
-        : false;
+      bgColor !== Colors.grey.player ? await getBlurhashColor(imgUrl) : false;
     setBgColor(bgColor ?? '');
     setBlurHashColor(blurHashColor !== false ? blurHashColor : '');
   }, [artistParams]);
@@ -88,7 +98,7 @@ const ArtistScreen = (props: Props) => {
           return (
             <TopTrackItem
               item={item}
-              data={artistData?.topTracks.slice(0, 5) ?? []}
+              data={artistData?.topTracks?.slice(0, 5) ?? []}
             />
           );
         case 1:
@@ -127,8 +137,8 @@ const ArtistScreen = (props: Props) => {
       <Banner
         blurHashColor={blurHashColor}
         bgColor={bgColor}
-        img={artistParams?.images[0]?.url}
-        name={artistParams.name}
+        img={artistInfo?.images[0]?.url}
+        name={artistInfo.name}
         translationY={translationY}
       />
 
@@ -144,7 +154,7 @@ const ArtistScreen = (props: Props) => {
         scrollEventThrottle={16}
         ListHeaderComponent={() => (
           <HeaderList
-            follower={artistParams.followers.total}
+            follower={artistInfo?.followers?.total}
             bgColor={bgColor}
           />
         )}

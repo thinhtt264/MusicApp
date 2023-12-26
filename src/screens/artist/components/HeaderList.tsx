@@ -24,7 +24,7 @@ const HeaderListComponent = ({ bgColor, follower }: Props) => {
       <LinearGradient colors={[bgColor, 'black']} style={styles.gradient} />
       <View style={[styles.container]}>
         <RegularText textStyle={styles.follower}>
-          {formatNumber(follower)} - {translate('search:folower')}
+          {formatNumber(follower ?? 0)} - {translate('search:folower')}
         </RegularText>
         <View style={[Layout.rowBetween]}>
           <View />

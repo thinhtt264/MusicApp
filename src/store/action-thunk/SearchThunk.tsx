@@ -1,17 +1,23 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { GetTopTracksFields, GetTopTracksResponseFields } from 'src/models/Api';
+import {
+  GetArtistInfoFields,
+  GetArtistInfoResponseFields,
+  GetTopTracksFields,
+  GetTopTracksResponseFields,
+} from 'src/models/Api';
 import { NetWorkService } from 'src/networking/RestFulApi';
 import { endpoints } from 'src/networking/endpoint';
 interface ApiCall {
   key: string;
   url: string;
+  id: string;
 }
 
 export const getArtistData = createAsyncThunk<
   GetTopTracksResponseFields,
   GetTopTracksFields
 >('artist/getArtistData', async fields => {
-  const apiCalls = [
+  const apiCalls: ApiCall[] = [
     {
       key: 'topTracks',
       id: 'tracks',
@@ -55,4 +61,15 @@ export const getArtistData = createAsyncThunk<
   }, {});
 
   return { ...formatData, id: fields.id.toString() };
+});
+
+export const getArtistInfo = createAsyncThunk<
+  GetArtistInfoResponseFields,
+  GetArtistInfoFields
+>('artist/getArtistInfo', async fields => {
+  const response = await NetWorkService.Get<GetArtistInfoResponseFields>({
+    url: endpoints.artist.getArtist.replace('$id', fields.id.toString()),
+  });
+
+  return response;
 });

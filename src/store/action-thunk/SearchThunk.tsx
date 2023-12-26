@@ -45,7 +45,7 @@ export const getArtistData = createAsyncThunk<
 
   const formatData = apiCalls.reduce((result: any, apiCall, index) => {
     if (apiCall.key === 'topTracks') {
-      result[apiCall.key] = responses[index][apiCall.id].slice(0, 5);
+      result[apiCall.key] = responses[index][apiCall.id];
       return result;
     }
     result[apiCall.key] = apiCall.id

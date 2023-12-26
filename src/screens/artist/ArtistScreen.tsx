@@ -86,7 +86,10 @@ const ArtistScreen = (props: Props) => {
       switch (index) {
         case 0:
           return (
-            <TopTrackItem item={item} data={artistData?.topTracks ?? []} />
+            <TopTrackItem
+              item={item}
+              data={artistData?.topTracks.slice(0, 5) ?? []}
+            />
           );
         case 1:
           return (

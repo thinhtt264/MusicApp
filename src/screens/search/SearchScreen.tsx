@@ -122,16 +122,19 @@ const SearchScreen = (props: Props) => {
     onFilterChange(selectedFilter);
   }, [selectedFilter]);
 
-  useEffect(() => {}, [visible]);
+  useEffect(() => {
+    FastImage.clearDiskCache();
+    FastImage.clearMemoryCache();    
+  }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      return () => {
-        FastImage.clearDiskCache();
-        FastImage.clearMemoryCache();
-      };
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     return () => {
+  //       FastImage.clearDiskCache();
+  //       FastImage.clearMemoryCache();
+  //     };
+  //   }, []),
+  // );
 
   return (
     <Container style={styles.container}>

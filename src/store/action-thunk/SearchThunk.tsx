@@ -54,5 +54,5 @@ export const getArtistData = createAsyncThunk<
     return result;
   }, {});
 
-  return formatData;
+  return { ...formatData, id: fields.id.toString() };
 });

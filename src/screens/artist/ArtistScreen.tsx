@@ -30,6 +30,7 @@ import { getArtistData } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
 import { ScreenLoader } from 'src/components/loader';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
+import { startPlaylist } from 'src/common/player';
 
 type Props = {};
 
@@ -56,13 +57,15 @@ const ArtistScreen = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    Promise.all([
-      dispatch(getArtistData({ id: artistParams.id, limit: 4 })),
-      getContainerColor(),
-    ]).finally(() => {
+    Promise.all([getData(), getContainerColor()]).finally(() => {
       setLoading(false);
     });
   }, []);
+
+  const getData = () => {
+    if (artistData.id === artistParams.id) return;
+    dispatch(getArtistData({ id: artistParams.id, limit: 4 }));
+  };
 
   const getContainerColor = useCallback(async () => {
     const bgColor = await getBackGroundPlayer(artistParams?.images[0]?.url);
@@ -73,6 +76,10 @@ const ArtistScreen = (props: Props) => {
     setBgColor(bgColor ?? '');
     setBlurHashColor(blurHashColor !== false ? blurHashColor : '');
   }, [artistParams]);
+
+  const onPlayQeue = () => {
+    startPlaylist(artistData?.topTracks ?? []);
+  };
 
   const renderSwitchedItem = useCallback(
     (index: number, item: any) => {
@@ -122,7 +129,7 @@ const ArtistScreen = (props: Props) => {
         translationY={translationY}
       />
 
-      <FloatingButton translationY={translationY} />
+      <FloatingButton translationY={translationY} onPress={onPlayQeue} />
 
       <AnimatedList
         bounces={false}

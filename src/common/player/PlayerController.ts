@@ -34,7 +34,7 @@ export const startAudio = async (info: PlayerProps, signal?: AbortSignal) => {
 
 };
 
-export const startPlaylist = async (queue: TrackDataFields[]) => {
+export const startPlaylist = async (queue: TrackDataFields[]) => {  
   await TrackPlayer.reset();
   await dispatch(playerActions.onResetQueue(queue));
   await startAudio({ from: 'queue', info: queue[0] });

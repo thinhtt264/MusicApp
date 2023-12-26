@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ArtistScreen, SearchScreen } from 'src/screens';
+import {  ArtistScreen, SearchScreen } from 'src/screens';
 
 interface Props {}
 

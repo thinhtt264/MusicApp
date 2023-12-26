@@ -172,7 +172,7 @@ const BannerComponent = ({
           <FastImage
             source={{ uri: img }}
             resizeMode="cover"
-            style={[styles.background]}
+            style={styles.background}
           />
         </Animated.View>
 
@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingTop: 30,
-    opacity: 1,
   },
   header: {
     zIndex: 1,

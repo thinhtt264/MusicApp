@@ -46,6 +46,7 @@ export interface ArtistDataField {
     total: number;
     items: Album[];
   };
+  id: string;
 }
 
 export interface ArtistState {

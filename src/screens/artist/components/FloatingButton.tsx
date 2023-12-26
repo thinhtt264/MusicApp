@@ -16,11 +16,12 @@ import Constants from 'src/themes/Constants';
 
 type Props = {
   translationY: SharedValue<number>;
+  onPress: () => void;
 };
 const Header_Distance = scale(250);
 const topz = scale(310);
 const AnimatedButton = Animated.createAnimatedComponent(TouchableOpacity);
-const FloatingButtonComponent = ({ translationY }: Props) => {
+const FloatingButtonComponent = ({ translationY, onPress }: Props) => {
   const stylez = useAnimatedStyle(() => {
     const top = interpolate(
       translationY.value,
@@ -35,7 +36,7 @@ const FloatingButtonComponent = ({ translationY }: Props) => {
 
   return (
     <AnimatedButton
-      onPress={() => {}}
+      onPress={onPress}
       style={[styles.floatingBtn, stylez]}
       activeOpacity={0.7}>
       <Animated.View

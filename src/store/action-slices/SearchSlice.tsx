@@ -5,12 +5,18 @@ import {
   GetSearchRecentDataFields,
 } from 'src/models/Api';
 import { isOnlyWhitespace } from 'src/common/regex';
+import { TrackDataItemFields } from 'src/models/Track';
 
 export type FilterParams = 'track' | 'artist';
+export interface SelectTrackFields extends TrackDataItemFields {
+  position: number;
+}
+
 export interface SearchStateType {
   searchData: GetSearchDataResponseFields;
   searchRecentData: GetSearchRecentDataFields;
   selectedFilter: FilterParams;
+  selectedTrack: SelectTrackFields | null;
 }
 const initialState: SearchStateType = {
   searchData: {
@@ -42,6 +48,7 @@ const initialState: SearchStateType = {
     },
   },
   selectedFilter: 'track',
+  selectedTrack: null,
 };
 
 const searchSlice = createSlice({
@@ -53,6 +60,13 @@ const searchSlice = createSlice({
     },
     onSetFilter: (state, { payload }: PayloadAction<any>) => {
       state.selectedFilter = payload;
+    },
+    onSelectTrack: (state, { payload }: PayloadAction<SelectTrackFields>) => {
+      if (state.selectedTrack && state.selectedTrack.id === payload.id) return;
+      state.selectedTrack = payload;
+    },
+    onDeleteSelectTrack: state => {
+      state.selectedTrack = null;
     },
     addSearchRecentList: (state, { payload }) => {
       const type = payload?.type === 'track' ? 'tracks' : 'artists';

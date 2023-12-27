@@ -6,11 +6,11 @@ import { navigationRef } from 'src/common/navigation';
 import { appInit } from 'src/store/action-thunk/AppThunk';
 import RootNavigator from './root-navigator';
 import { MyAppTheme } from 'src/themes';
-import { AppLoader } from 'src/components/loader';
 import TrackPlayer from 'react-native-track-player';
 import { Host } from 'react-native-portalize';
 import { getTimeSinceStartup } from 'react-native-startup-time';
 import { SnackBar } from 'src/components/snack-bar';
+import { SelectTrackModal } from 'src/components/modal';
 
 export const AppNavigation = () => {
   const { loadingApp, theme, env } = useAppSelector(state => state.app);
@@ -38,6 +38,7 @@ export const AppNavigation = () => {
       {init && env && (
         <Host>
           <RootNavigator />
+          <SelectTrackModal />
         </Host>
       )}
       {/* Snack bar */}

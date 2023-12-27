@@ -26,7 +26,7 @@ import { navigation } from 'src/common/navigation';
 type Props = {
   info: TrackDataItemFields;
   onCloseModal: () => void;
-  selectArtist: (item: any) => void;
+  selectArtist?: (item: any) => void;
 };
 
 const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
@@ -58,7 +58,7 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
 
   const onShowArtist = () => {
     if (info.artists.length > 1) {
-      selectArtist(info.artists);
+      selectArtist?.(info.artists)
     } else {
       onCloseModal();
       navigation.navigate({

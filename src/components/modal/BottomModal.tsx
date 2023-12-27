@@ -40,7 +40,10 @@ const BottomModal = forwardRef((props: BottomSheetProps, ref) => {
     (props: any) => (
       <BottomSheetBackdrop
         {...props}
-        onPress={onCloseModal}
+        onPress={() => {
+          onCloseModal();
+          closeBottomSheet();
+        }}
         disappearsOnIndex={-1}
         appearsOnIndex={0}
       />

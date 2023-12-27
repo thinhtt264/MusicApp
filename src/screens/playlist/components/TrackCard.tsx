@@ -1,5 +1,5 @@
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { useCallback, useRef, useState } from 'react';
+import React from 'react';
 import { BoldText, RegularText } from 'src/components/text';
 import { TrackDataItemFields } from 'src/models/Track';
 import { formatSearchData } from 'src/store/action-slices';
@@ -8,33 +8,17 @@ import Colors from 'src/themes/Colors';
 import Layout from 'src/themes/Layout';
 import { fontScale, scale } from 'src/common/scale';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { Portal } from 'react-native-portalize';
-import { BottomModal } from 'src/components/modal';
-import { BottomSheetContent } from 'src/screens/search/components';
-import { BottomSheetRef } from 'src/components/modal/type';
 import { startAudio } from 'src/common/player';
 import TrackPlayer from 'react-native-track-player';
 
 type Props = {
   item: TrackDataItemFields;
+  onOpenModal: (item: any) => void;
 };
 
-const TrackCard = ({ item }: Props) => {
+const TrackCard = ({ item, onOpenModal }: Props) => {
   const { currentTrack } = useAppSelector(state => state.player);
   const { trackName, albumImage, artistName } = formatSearchData(item);
-  const [visible, setVisible] = useState(false);
-
-  const bottomSheetRef = useRef<BottomSheetRef>(null);
-
-  const onOpenModal = useCallback(() => {
-    bottomSheetRef.current?.onOpen(0);
-    setVisible(true);
-  }, []);
-
-  const onCloseModal = useCallback(() => {
-    bottomSheetRef.current?.onClose();
-    setVisible(false);
-  }, []);
 
   const onOpenTrack = async () => {
     await startAudio({ info: item, from: 'playlist' });
@@ -69,7 +53,9 @@ const TrackCard = ({ item }: Props) => {
             </RegularText>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.optionIcon} onPress={onOpenModal}>
+        <TouchableOpacity
+          style={styles.optionIcon}
+          onPress={() => onOpenModal(item)}>
           <SimpleLineIcons
             name="options-vertical"
             size={scale(16)}
@@ -77,13 +63,6 @@ const TrackCard = ({ item }: Props) => {
           />
         </TouchableOpacity>
       </View>
-      <Portal>
-        <BottomModal ref={bottomSheetRef}>
-          {visible ? (
-            <BottomSheetContent info={item} onCloseModal={onCloseModal} />
-          ) : null}
-        </BottomModal>
-      </Portal>
     </>
   );
 };

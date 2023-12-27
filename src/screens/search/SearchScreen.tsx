@@ -1,39 +1,24 @@
 import { FlatList, StyleSheet, View } from 'react-native';
-import React, {
-  useRef,
-  useCallback,
-  useState,
-  useEffect,
-  useMemo,
-} from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { Container } from 'src/components/container';
 import { Header } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { fontScale, scale } from 'src/common/scale';
-import {
-  BottomSheetContent,
-  SearchBox,
-  SelectArtist,
-  TagFilter,
-} from './components';
+import { SearchBox, TagFilter } from './components';
 import { useAppSelector } from 'src/common/redux';
 import Divider from 'src/components/divier';
 import Colors from 'src/themes/Colors';
 import { BoldText } from 'src/components/text';
-import { kHeight, kWidth } from 'src/common/constants';
+import { TAB_HEIGHT, kHeight, kWidth } from 'src/common/constants';
 import { SearchItemResult } from './components/SearchItemResult';
 import LoadMoreList from 'src/components/list/LoadMoreList';
 import { getSearchData } from 'src/store/action-thunk';
 import { AnimatedList } from 'src/components/list';
 import { startAudio } from 'src/common/player';
 import TrackPlayer from 'react-native-track-player';
-import { Portal } from 'react-native-portalize';
-import { BottomModal } from 'src/components/modal';
-import { BottomSheetRef } from 'src/components/modal/type';
 import FastImage from 'react-native-fast-image';
 import { searchActions } from 'src/store/action-slices';
 import { ScreenLoader } from 'src/components/loader';
-import Layout from 'src/themes/Layout';
 
 interface Props {}
 
@@ -43,24 +28,11 @@ const SearchScreen = (props: Props) => {
     state => state.search,
   );
   const { currentTrack } = useAppSelector(state => state.player);
-  const [visible, setVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [selectedArtist, setSelectedArtist] = useState([]);
-
   const flatListRef = useRef<FlatList>(null);
-  const bottomSheetRef = useRef<BottomSheetRef>(null);
 
-  const onCloseModal = useCallback(() => {
-    setVisible(false);
-    setSelectedArtist([]);
-    bottomSheetRef.current?.onClose();
-  }, []);
-
-  const openBottomModal = useCallback((item: any, position = 1) => {
-    bottomSheetRef.current?.onOpen(position);
-    setSelectedItem(item);
-    setVisible(true);
-  }, []);
+  const openBottomModal = (item: any, position = 1) => {
+    dispatch(searchActions.onSelectTrack({ ...item, position }));
+  };
 
   const onNavigate = useCallback(async (item: any, type: string) => {
     if (type === 'track') {
@@ -132,14 +104,6 @@ const SearchScreen = (props: Props) => {
     FastImage.clearMemoryCache();
   }, []);
 
-  const selectArtist = (item: any) => {
-    setSelectedArtist(item);
-    bottomSheetRef.current?.onClose();
-    setTimeout(() => {
-      bottomSheetRef.current?.onOpen(0);
-    }, 200);
-  };
-
   return (
     <Container style={styles.container}>
       <>
@@ -160,7 +124,12 @@ const SearchScreen = (props: Props) => {
                   onGetData({ pageNumber: page, type: selectedFilter })
                 }
                 totalPages={searchData?.tracks?.total}
-                style={styles.item}
+                style={[
+                  styles.item,
+                  {
+                    marginBottom: currentTrack.id ? scale(60) : TAB_HEIGHT + 10,
+                  },
+                ]}
                 flatListRef={flatListRef}
                 data={searchData?.tracks?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={15} />}
@@ -181,7 +150,12 @@ const SearchScreen = (props: Props) => {
                 }
                 flatListRef={flatListRef}
                 totalPages={searchData?.artists?.total}
-                style={styles.item}
+                style={[
+                  styles.item,
+                  {
+                    marginBottom: currentTrack.id ? scale(60) : TAB_HEIGHT + 10,
+                  },
+                ]}
                 data={searchData?.artists?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={20} />}
                 ListEmptyComponent={() => <ScreenLoader style={styles.empty} />}
@@ -206,7 +180,7 @@ const SearchScreen = (props: Props) => {
             <AnimatedList
               style={[
                 styles.item,
-                { marginBottom: currentTrack ? scale(60) : 0 },
+                { marginBottom: currentTrack.id ? scale(60) : TAB_HEIGHT + 10 },
               ]}
               flatListRef={flatListRef}
               data={searchRecentData?.lists?.items ?? []}
@@ -224,27 +198,6 @@ const SearchScreen = (props: Props) => {
             />
           </>
         )}
-        <Portal>
-          <BottomModal onCloseModal={onCloseModal} ref={bottomSheetRef}>
-            {visible ? (
-              selectedArtist.length > 0 ? (
-                <SelectArtist
-                  data={selectedArtist}
-                  onPressItem={(item: any) => {
-                    onCloseModal();
-                    onNavigate(item, 'artist');
-                  }}
-                />
-              ) : (
-                <BottomSheetContent
-                  info={selectedItem as any}
-                  onCloseModal={onCloseModal}
-                  selectArtist={(item: any) => selectArtist(item)}
-                />
-              )
-            ) : null}
-          </BottomModal>
-        </Portal>
       </>
     </Container>
   );

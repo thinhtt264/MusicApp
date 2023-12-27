@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getTrackFormPlayList } from 'src/common/firebase';
 import { BackHeader } from 'src/components/header';
@@ -11,16 +11,21 @@ import { Spacer } from 'src/components/spacer';
 import { startPlaylist } from 'src/common/player';
 import { ScreenLoader } from 'src/components/loader';
 import { useAppSelector } from 'src/common/redux';
+import { searchActions } from 'src/store/action-slices';
 
 type Props = {};
 
 const PlayListScreen = (props: Props) => {
-  const { translate, route } = useScreenController();
+  const { translate, route, dispatch } = useScreenController();
   const [listTrack, setListTrack] = useState<any>();
   const [totalItems, setTotalItems] = useState(0);
   const { currentTrack } = useAppSelector(state => state.player);
 
   const { id: playlistId, name } = route.params?.data;
+
+  const onOpenModal = (item: any, position = 1) => {
+    dispatch(searchActions.onSelectTrack({ ...item, position }));
+  };
 
   getTrackFormPlayList(playlistId, ({ data, totalItems }) => {
     setListTrack(data);
@@ -42,9 +47,13 @@ const PlayListScreen = (props: Props) => {
           data={listTrack}
           keyExtractor={(item, index) => index.toString()}
           ListHeaderComponent={() => <HeaderList onPlayQueue={onPlayQueue} />}
-          renderItem={({ item }) => <TrackCard item={item} />}
+          renderItem={({ item }) => (
+            <TrackCard
+              item={item}
+              onOpenModal={(item: any) => onOpenModal(item)}
+            />
+          )}
           ItemSeparatorComponent={() => <Spacer size={scale(12)} />}
-          style={{ marginBottom: currentTrack ? scale(100) : scale(30) }}
           ListEmptyComponent={
             <View style={{ marginTop: '40%' }}>
               <ScreenLoader />

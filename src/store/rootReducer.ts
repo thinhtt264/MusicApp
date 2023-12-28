@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistCombineReducers, persistReducer } from 'redux-persist';
 import {
+  alBumReducer,
   appReducer,
   artistReducer,
   authReducer,
@@ -54,6 +55,7 @@ const rootReducer = persistCombineReducers(rootPersistConfig, {
   search: persistReducer(searchPersistConfig, searchReducer),
   profile: persistReducer(profilePersistConfig, profileReducer),
   artist: artistReducer,
+  album: alBumReducer,
 });
 
 export default rootReducer;

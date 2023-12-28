@@ -4,6 +4,7 @@ import {
   GetArtistInfoResponseFields,
   GetTopTracksFields,
   GetTopTracksResponseFields,
+  getAlBumResponseFields,
 } from 'src/models/Api';
 import { NetWorkService } from 'src/networking/RestFulApi';
 import { endpoints } from 'src/networking/endpoint';
@@ -75,41 +76,13 @@ export const getArtistInfo = createAsyncThunk<
 });
 
 export const getAlbumData = createAsyncThunk<
-  GetTopTracksResponseFields,
+  getAlBumResponseFields,
   GetTopTracksFields
 >('album/getAlbum', async fields => {
-  const apiCalls: ApiCall[] = [
-    {
-      key: 'getAlbum',
-      id: 'tracks',
-      url: endpoints.album.getAlbum.replace('$id', fields.id.toString()),
-    },
-    // {
-    //   key: 'relatedArtist',
-    //   id: 'artists',
-    //   url: endpoints.artist.relatedArtist.replace('$id', fields.id.toString()),
-    // },
-  ];
 
-  const responses = await Promise.all(
-    apiCalls.map(apiCall =>
-      NetWorkService.Get<GetTopTracksResponseFields>({ url: apiCall.url }),
-    ),
-  );
+  const response = await NetWorkService.Get<GetArtistInfoResponseFields>({
+    url: endpoints.album.getAlbum.replace('$id', fields.id.toString()),
+  });
 
-  console.log(responses);
-  return responses;
-
-  const formatData = apiCalls.reduce((result: any, apiCall, index) => {
-    if (apiCall.key === 'topTracks') {
-      result[apiCall.key] = responses[index][apiCall.id];
-      return result;
-    }
-    result[apiCall.key] = apiCall.id
-      ? responses[index][apiCall.id]
-      : responses[index];
-    return result;
-  }, {});
-
-  return { ...formatData, id: fields.id.toString() };
+  return { ...response, id: fields.id.toString() };
 });

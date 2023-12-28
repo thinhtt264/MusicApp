@@ -58,7 +58,7 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
 
   const onShowArtist = () => {
     if (info.artists.length > 1) {
-      selectArtist?.(info.artists)
+      selectArtist?.(info.artists);
     } else {
       onCloseModal();
       navigation.navigate({
@@ -68,6 +68,16 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
         },
       });
     }
+  };
+
+  const onShowAlbum = () => {
+    onCloseModal();
+    navigation.navigate({
+      name: 'AlbumScreen',
+      params: {
+        item: { id: info.album?.id, name: info.album?.name },
+      },
+    });
   };
 
   const OptionCard = ({ item }: any) => {
@@ -167,7 +177,7 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
         {
           id: 3,
           onPress: () => {
-            // Do something else
+            onShowAlbum();
           },
         },
         {

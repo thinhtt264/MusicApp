@@ -18,6 +18,7 @@ export type ScreenNames = {
   Home: undefined;
   SearchScreen: undefined;
   ArtistScreen: undefined;
+  AlbumScreen: undefined;
 };
 
 export type RouteNames = ScreenNames & NavigationStackNames;

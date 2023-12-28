@@ -7,19 +7,25 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useScreenController } from 'src/common/hooks';
+import { getAlbumData } from 'src/store/action-thunk';
+import { useAppSelector } from 'src/common/redux';
 
 type Props = {};
 
 const AlbumScreen = (props: Props) => {
-  const { dispatch, navigation, translate } = useScreenController();
+  const { dispatch, navigation, translate, route } = useScreenController();
+  const { albumData } = useAppSelector(state => state.album);
+
+  const albumParams = route?.params?.item;
 
   const translationY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
     translationY.value = event.contentOffset.y;
   });
+  console.log(albumData);
 
   useEffect(() => {
-    dispatch()
+    dispatch(getAlbumData({ id: albumParams.id }));
   }, []);
 
   return <View style={[Layout.fill]}></View>;

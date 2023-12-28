@@ -16,6 +16,7 @@ import { TAB_HEIGHT } from 'src/common/constants';
 import { Miniplayer } from 'src/components/mini-player';
 import { useAppSelector } from 'src/common/redux';
 import { LibraryStack, SearchStack } from '../stacks';
+import { Portal } from 'react-native-portalize';
 
 interface Props {
   size: number;
@@ -135,10 +136,10 @@ const HomeTab = () => {
           tabBarShowLabel: false,
         }}
         tabBar={props => (
-          <View>
+          <Portal>
             {currentTrack.id && <Miniplayer />}
             <TabBar {...props} />
-          </View>
+          </Portal>
         )}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen

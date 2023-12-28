@@ -150,15 +150,17 @@ const SearchScreen = (props: Props) => {
                 }
                 flatListRef={flatListRef}
                 totalPages={searchData?.artists?.total}
-                style={[
-                  styles.item,
-                  {
-                    marginBottom: currentTrack.id ? scale(60) : TAB_HEIGHT + 10,
-                  },
-                ]}
+                style={[styles.item]}
                 data={searchData?.artists?.items ?? []}
                 ItemSeparatorComponent={() => <Divider height={20} />}
                 ListEmptyComponent={() => <ScreenLoader style={styles.empty} />}
+                ListFooterComponent={() => (
+                  <View
+                    style={{
+                      height: currentTrack.id ? scale(60) : TAB_HEIGHT + 10,
+                    }}
+                  />
+                )}
                 renderItem={({ item }: any) =>
                   renderItem({
                     item: item,

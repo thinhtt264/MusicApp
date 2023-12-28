@@ -115,8 +115,8 @@ const searchSlice = createSlice({
           state.searchData.artists = {
             ...state.searchData.artists,
             items: [
-              ...state.searchData.artists.items,
-              ...payload.artists.items,
+              ...state.searchData?.artists?.items,
+              ...payload.artists?.items,
             ],
           };
         }

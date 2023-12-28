@@ -12,6 +12,8 @@ import { startPlaylist } from 'src/common/player';
 import { ScreenLoader } from 'src/components/loader';
 import { useAppSelector } from 'src/common/redux';
 import { searchActions } from 'src/store/action-slices';
+import { TAB_HEIGHT } from 'src/common/constants';
+import { MINIPLAYER_HEIGHT } from 'src/themes/Constants';
 
 type Props = {};
 
@@ -46,6 +48,7 @@ const PlayListScreen = (props: Props) => {
         <FlatList
           data={listTrack}
           keyExtractor={(item, index) => index.toString()}
+          showsVerticalScrollIndicator={false}
           ListHeaderComponent={() => <HeaderList onPlayQueue={onPlayQueue} />}
           renderItem={({ item }) => (
             <TrackCard
@@ -54,6 +57,13 @@ const PlayListScreen = (props: Props) => {
             />
           )}
           ItemSeparatorComponent={() => <Spacer size={scale(12)} />}
+          ListFooterComponent={() => (
+            <Spacer
+              size={
+                currentTrack.id ? MINIPLAYER_HEIGHT + scale(60) : TAB_HEIGHT
+              }
+            />
+          )}
           ListEmptyComponent={
             <View style={{ marginTop: '40%' }}>
               <ScreenLoader />
@@ -72,5 +82,6 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: scale(15),
     flex: 1,
+    gap: scale(10),
   },
 });

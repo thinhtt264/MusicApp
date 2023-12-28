@@ -158,6 +158,7 @@ const ArtistScreen = (props: Props) => {
             bgColor={bgColor}
           />
         )}
+        style={styles.item}
         ItemSeparatorComponent={() => <View style={styles.divider} />}
         renderItem={({ item, index }: any) => {
           return (
@@ -185,5 +186,8 @@ const styles = StyleSheet.create({
   },
   loading: {
     flex: 1,
+  },
+  item: {
+    marginBottom: scale(30),
   },
 });

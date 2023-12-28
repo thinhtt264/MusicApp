@@ -20,5 +20,8 @@ const endpoints = {
       'v1/artists/$id/albums?include_groups=appears_on&market=VN&limit=10&offset=0',
     getArtist: 'v1/artists/$id',
   },
+  album: {
+    getAlbum: 'v1/albums/$id?market=VN',
+  },
 };
 export { endpoints };

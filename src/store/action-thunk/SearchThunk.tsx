@@ -73,3 +73,43 @@ export const getArtistInfo = createAsyncThunk<
 
   return response;
 });
+
+export const getAlbumData = createAsyncThunk<
+  GetTopTracksResponseFields,
+  GetTopTracksFields
+>('album/getAlbum', async fields => {
+  const apiCalls: ApiCall[] = [
+    {
+      key: 'getAlbum',
+      id: 'tracks',
+      url: endpoints.album.getAlbum.replace('$id', fields.id.toString()),
+    },
+    // {
+    //   key: 'relatedArtist',
+    //   id: 'artists',
+    //   url: endpoints.artist.relatedArtist.replace('$id', fields.id.toString()),
+    // },
+  ];
+
+  const responses = await Promise.all(
+    apiCalls.map(apiCall =>
+      NetWorkService.Get<GetTopTracksResponseFields>({ url: apiCall.url }),
+    ),
+  );
+
+  console.log(responses);
+  return responses;
+
+  const formatData = apiCalls.reduce((result: any, apiCall, index) => {
+    if (apiCall.key === 'topTracks') {
+      result[apiCall.key] = responses[index][apiCall.id];
+      return result;
+    }
+    result[apiCall.key] = apiCall.id
+      ? responses[index][apiCall.id]
+      : responses[index];
+    return result;
+  }, {});
+
+  return { ...formatData, id: fields.id.toString() };
+});

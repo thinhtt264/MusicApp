@@ -5,6 +5,7 @@ import PlayerScreen from 'src/screens/player/PlayerScreen';
 import LibraryScreen from './library/LibraryScreen';
 import PlayListScreen from './playlist/PlayListScreen';
 import ArtistScreen from './artist/ArtistScreen';
+import AlbumScreen from './album/AlbumScreen';
 
 export {
   HomeScreen,
@@ -14,4 +15,5 @@ export {
   LibraryScreen,
   PlayListScreen,
   ArtistScreen,
+  AlbumScreen,
 };

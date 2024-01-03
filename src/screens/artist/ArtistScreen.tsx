@@ -30,12 +30,15 @@ import { getArtistData, getArtistInfo } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
 import { ScreenLoader } from 'src/components/loader';
 import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
-import { startPlaylist } from 'src/common/player';
+import { startAudio, startPlaylist } from 'src/common/player';
+import { searchActions } from 'src/store/action-slices';
+import TrackPlayer from 'react-native-track-player';
+import { AlbumParams } from 'src/models/Album';
 
 type Props = {};
 
 const ArtistScreen = (props: Props) => {
-  const { route, dispatch } = useScreenController();
+  const { route, dispatch, navigation } = useScreenController();
   const { artistData } = useAppSelector(state => state.artist);
   const [isLoading, setLoading] = useState(true);
   const [blurHashColor, setBlurHashColor] = useState('');
@@ -65,7 +68,7 @@ const ArtistScreen = (props: Props) => {
   }, []);
 
   const getData = () => {
-    if (artistData.id === artistParams.id) return;
+    // if (artistData.id === artistParams.id) return;
     dispatch(getArtistData({ id: artistParams.id, limit: 4 }));
   };
 
@@ -91,6 +94,33 @@ const ArtistScreen = (props: Props) => {
     startPlaylist(artistData?.topTracks ?? []);
   };
 
+  const openBottomModal = (item: any, position = 1) => {
+    dispatch(
+      searchActions.onSelectTrack({
+        ...item,
+        position,
+        from: 'artist',
+      }),
+    );
+  };
+
+  const onPlayTrack = async (item: any) => {
+    await startAudio({
+      info: item,
+      from: 'album',
+    });
+    await TrackPlayer.setPlayWhenReady(true);
+  };
+
+  const onGoAlbumScreen = (item: AlbumParams) => {
+    navigation.push({
+      name: 'AlbumScreen',
+      params: {
+        item,
+      },
+    });
+  };
+
   const renderSwitchedItem = useCallback(
     (index: number, item: any) => {
       switch (index) {
@@ -99,11 +129,14 @@ const ArtistScreen = (props: Props) => {
             <TopTrackItem
               item={item}
               data={artistData?.topTracks?.slice(0, 5) ?? []}
+              openBottomModal={openBottomModal}
+              onPlayTrack={onPlayTrack}
             />
           );
         case 1:
           return (
             <ArtistAlbumItem
+              onGoAlbumScreen={onGoAlbumScreen}
               item={item}
               data={artistData?.artistAlbum?.items ?? []}
             />
@@ -111,8 +144,9 @@ const ArtistScreen = (props: Props) => {
         case 2:
           return (
             <AlbumReleateItem
+              onGoAlbumScreen={onGoAlbumScreen}
               item={item}
-              name={artistParams.name}
+              name={artistParams?.name}
               data={artistData?.relatedAlbum?.items ?? []}
             />
           );

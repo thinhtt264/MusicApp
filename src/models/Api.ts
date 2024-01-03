@@ -114,7 +114,16 @@ export interface GetTopTracksFields {
 export interface GetArtistInfoFields {
   id: string;
 }
+
+export interface GetSeveralArtistInfoFields {
+  ids: string[];
+}
+
 export interface GetArtistInfoResponseFields extends ArtistDataItemFields {}
+
+export interface GetSeveralArtistInfoResponseFields {
+  artists: ArtistDataItemFields[];
+}
 
 export interface GetTopTracksResponseFields extends ArtistDataField {}
 

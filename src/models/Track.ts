@@ -18,7 +18,7 @@ interface Album {
   uri: string;
 }
 
-interface Artist {
+export interface Artist {
   external_urls: ExternalUrls;
   href: string;
   id: string;
@@ -35,7 +35,9 @@ export type PlayFromState =
   | 'search'
   | 'recommend'
   | 'playlist'
-  | 'queue';
+  | 'queue'
+  | 'album'
+  | 'artist';
 
 export interface TrackDataFields extends TrackDataItemFields {
   url?: string;

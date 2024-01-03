@@ -79,3 +79,9 @@ export type AlbumDataItemFields = {
 export interface AlbumState {
   albumData: AlbumDataItemFields;
 }
+
+export interface AlbumParams {
+  id: string;
+  name: string;
+  album: Album | '';
+}

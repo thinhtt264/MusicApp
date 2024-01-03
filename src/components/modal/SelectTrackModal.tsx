@@ -15,7 +15,7 @@ import { searchActions } from 'src/store/action-slices';
 type Props = {};
 
 const SelectTrackModalComponent = (props: Props) => {
-//   const { currentTrack } = useAppSelector(state => state.player);
+  //   const { currentTrack } = useAppSelector(state => state.player);
   const { selectedTrack } = useAppSelector(state => state.search);
 
   const [visible, setVisible] = useState(false);
@@ -36,7 +36,7 @@ const SelectTrackModalComponent = (props: Props) => {
   }, []);
 
   const onNavigate = useCallback(async (item: any, type: string) => {
-    navigation.navigate({
+    navigation.push({
       name: 'ArtistScreen',
       params: {
         item: item,

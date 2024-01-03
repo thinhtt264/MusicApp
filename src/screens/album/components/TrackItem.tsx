@@ -1,16 +1,9 @@
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React from 'react';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { memo, useCallback } from 'react';
 import Layout from 'src/themes/Layout';
 import { BoldText, MediumText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
-import { TrackDataItemFields } from 'src/models/Track';
-import { formatNumber } from 'src/common/helper';
+import { Artist, TrackDataFields, TrackDataItemFields } from 'src/models/Track';
 import Colors from 'src/themes/Colors';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Animated, {
@@ -19,24 +12,25 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import isEqual from 'react-fast-compare';
 
 type Props = {
   item: any;
-  data: TrackDataItemFields[];
+  tracks: TrackDataFields[];
   openBottomModal: (item: TrackDataItemFields) => void;
-  onPlayTrack: (item: TrackDataItemFields) => void;
+  onPlayTrack: (item: TrackDataFields) => void;
 };
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 
 const TopTrackComponent = ({
-  data,
+  tracks,
   item,
   openBottomModal,
   onPlayTrack,
 }: Props) => {
   const HeaderList = (name: string) => {
-    return <BoldText textStyle={styles.header}>{name}</BoldText>;
+    return <View style={styles.header} />;
   };
 
   return (
@@ -49,7 +43,7 @@ const TopTrackComponent = ({
           index={index}
         />
       )}
-      data={data}
+      data={tracks}
       keyExtractor={(item, index) => index.toString()}
       ItemSeparatorComponent={() => <View style={styles.divider} />}
       ListHeaderComponent={() => HeaderList(item.name)}
@@ -57,7 +51,7 @@ const TopTrackComponent = ({
   );
 };
 
-export const TopTrackItem = TopTrackComponent;
+export const TrackItem = memo(TopTrackComponent, isEqual);
 
 const RenderItem = ({
   item,
@@ -68,7 +62,7 @@ const RenderItem = ({
   item: TrackDataItemFields;
   index: number;
   openBottomModal: (item: TrackDataItemFields) => void;
-  onPlayTrack: (item: TrackDataItemFields) => void;
+  onPlayTrack: (item: TrackDataFields) => void;
 }) => {
   const scaleAble = useSharedValue<number>(1);
 
@@ -88,31 +82,28 @@ const RenderItem = ({
     };
   }, [scaleAble.value]);
 
+  const artistSperator = useCallback((artists: Artist[]) => {
+    return artists.map(artist => artist.name).join(', ');
+  }, []);
+
   return (
     <AnimatedTouchableOpacity
       onPressIn={onPressIn}
       onPressOut={onPressOut}
-      onLongPress={() => openBottomModal(item)}
       onPress={() => onPlayTrack(item)}
+      onLongPress={() => openBottomModal(item)}
       activeOpacity={1}
       style={[Layout.rowBetween, stylez]}>
       <View style={[Layout.rowVCenter, styles.container]}>
         <MediumText>{index + 1}</MediumText>
 
         <View style={[Layout.rowVCenter, styles.wrapInfo]}>
-          <Image
-            source={{ uri: item?.album?.images[0]?.url }}
-            style={styles.image}
-          />
           <View style={styles.name}>
             <BoldText numberOfLines={1} textStyle={styles.title}>
               {item?.name}
             </BoldText>
             <MediumText textStyle={styles.follower}>
-              {formatNumber(
-                Math.floor(Math.random() * 1000) *
-                  ((item?.popularity ?? 24) + 555),
-              )}
+              {artistSperator(item?.artists)}
             </MediumText>
           </View>
         </View>
@@ -130,6 +121,7 @@ const RenderItem = ({
     </AnimatedTouchableOpacity>
   );
 };
+
 const styles = StyleSheet.create({
   image: {
     width: scale(35),
@@ -153,8 +145,8 @@ const styles = StyleSheet.create({
     fontSize: fontScale(16),
   },
   header: {
-    fontSize: fontScale(20),
     marginBottom: scale(15),
+    marginTop: scale(10),
   },
   container: {
     flex: 1,

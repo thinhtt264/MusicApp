@@ -2,12 +2,11 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
-import { Album } from 'src/models/Album';
+import { Album, AlbumParams } from 'src/models/Album';
 import Layout from 'src/themes/Layout';
 import { fontScale, scale } from 'src/common/scale';
 import { BoldText, MediumText } from 'src/components/text';
@@ -18,11 +17,27 @@ import Colors from 'src/themes/Colors';
 type Props = {
   item: any;
   data: Album[];
+  onGoAlbumScreen: (item: AlbumParams) => void;
 };
 
-const RenderItem = ({ item }: { item: Album }) => {
+const RenderItem = ({
+  item,
+  onGoAlbumScreen,
+}: {
+  item: Album;
+  onGoAlbumScreen: (item: AlbumParams) => void;
+}) => {
   return (
-    <TouchableOpacity style={[Layout.rowVCenter]} activeOpacity={0.6}>
+    <TouchableOpacity
+      style={[Layout.rowVCenter]}
+      activeOpacity={0.6}
+      onPress={() =>
+        onGoAlbumScreen({
+          album: '',
+          id: item?.id,
+          name: item?.name,
+        })
+      }>
       <Image style={styles.image} source={{ uri: item?.images[1].url }} />
       <View style={[Layout.colVCenter, styles.wrapInfo]}>
         <BoldText numberOfLines={1} textStyle={styles.name}>
@@ -36,7 +51,7 @@ const RenderItem = ({ item }: { item: Album }) => {
   );
 };
 
-const ArtistAlbumItem = ({ item, data }: Props) => {
+const ArtistAlbumItem = ({ item, data, onGoAlbumScreen }: Props) => {
   const HeaderList = (name: string) => {
     return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
@@ -56,7 +71,9 @@ const ArtistAlbumItem = ({ item, data }: Props) => {
   return (
     <FlatList
       data={data}
-      renderItem={({ item }: any) => <RenderItem item={item} />}
+      renderItem={({ item }: any) => (
+        <RenderItem item={item} onGoAlbumScreen={onGoAlbumScreen} />
+      )}
       keyExtractor={(item, index) => index.toString()}
       ItemSeparatorComponent={() => <View style={styles.divider} />}
       ListHeaderComponent={() => HeaderList(item.name)}

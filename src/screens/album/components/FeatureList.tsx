@@ -1,40 +1,25 @@
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import { Album, AlbumParams } from 'src/models/Album';
 import Layout from 'src/themes/Layout';
 import { BoldText } from 'src/components/text';
 import { AnimatedImage } from 'src/components/image';
 import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
-import { translate } from 'src/common/language/translate';
+import { Spacer } from 'src/components/spacer';
+import { AlbumDataItemFields } from 'src/models/Album';
 
 type Props = {
   item: any;
-  name: string;
-  data: Album[];
-  onGoAlbumScreen: (item: AlbumParams) => void;
+  data: AlbumDataItemFields[];
 };
 
-const RenderItem = ({
-  item,
-  onGoAlbumScreen,
-}: {
-  item: Album;
-  onGoAlbumScreen: (item: AlbumParams) => void;
-}) => {
+const RenderItem = ({ item }: { item: AlbumDataItemFields }) => {
   return (
     <TouchableOpacity
       style={[Layout.colCenter, styles.container]}
-      onPress={() =>
-        onGoAlbumScreen({
-          album: '',
-          id: item?.id,
-          name: item?.name,
-        })
-      }
       activeOpacity={0.6}>
       <AnimatedImage
-        source={{ uri: item?.images[1]?.url }}
+        source={{ uri: item?.images[0]?.url }}
         containerStyle={styles.image}
       />
       <BoldText numberOfLines={1} textStyle={styles.name}>
@@ -43,31 +28,27 @@ const RenderItem = ({
     </TouchableOpacity>
   );
 };
-const AlbumReleateItem = ({ data, name, onGoAlbumScreen }: Props) => {
+const FeatureListItem = ({ data, item }: Props) => {
   const HeaderList = (name: string) => {
-    return (
-      <BoldText textStyle={styles.header}>
-        {translate('library:alBumRelated', { artist: name })}
-      </BoldText>
-    );
+    return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
   return (
     <>
-      {data.length > 0 && HeaderList(name)}
+      {data.length > 0 && HeaderList(item.name)}
       <FlatList
         data={data}
-        renderItem={({ item }: any) => (
-          <RenderItem item={item} onGoAlbumScreen={onGoAlbumScreen} />
-        )}
+        initialNumToRender={5}
+        renderItem={({ item }: any) => <RenderItem item={item} />}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={() => <View style={styles.divider} />}
         horizontal
       />
+      <Spacer size={scale(60)} />
     </>
   );
 };
 
-export default AlbumReleateItem;
+export default FeatureListItem;
 
 const styles = StyleSheet.create({
   container: {

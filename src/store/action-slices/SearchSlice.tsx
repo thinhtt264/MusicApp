@@ -10,6 +10,7 @@ import { TrackDataItemFields } from 'src/models/Track';
 export type FilterParams = 'track' | 'artist';
 export interface SelectTrackFields extends TrackDataItemFields {
   position: number;
+  from: 'search' | 'playlist' | 'album' | 'artist';
 }
 
 export interface SearchStateType {

@@ -1,5 +1,5 @@
 export const optionList = {
-  Card_Music: [
+  SelectTrackOption: [
     {
       id: 0,
       inactiveIcon: 'heart-outline',

@@ -39,7 +39,7 @@ const SearchScreen = (props: Props) => {
       await startAudio({ info: item, from: 'search' });
       await TrackPlayer.setPlayWhenReady(true);
     } else {
-      navigation.navigate({
+      navigation.push({
         name: 'ArtistScreen',
         params: {
           item: item,

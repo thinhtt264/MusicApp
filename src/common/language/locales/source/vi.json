@@ -68,8 +68,9 @@
     "popularAlbum": "Bản phát hành mới phổ biến"
   },
   "album": {
-    "single": "Đĩa Đơn",
+    "single": "Đĩa đơn",
     "album": "Album",
-    "showAllAlbum": "Xem danh sách đĩa nhạc"
+    "showAllAlbum": "Xem danh sách đĩa nhạc",
+    "maybeYouLike": "Có thể bạn cũng sẽ thích"
   }
 }

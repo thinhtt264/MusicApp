@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getAlbumData } from '../action-thunk';
+import { getAlbumData, getSeveralArtists } from '../action-thunk';
 import { AlbumState } from 'src/models/Album';
 
 const initialState: AlbumState = {
@@ -13,6 +13,12 @@ const alBumSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(getAlbumData.fulfilled, (state, action) => {
       state.albumData = action.payload;
+    });
+    builder.addCase(getSeveralArtists.fulfilled, (state, action) => {
+      state.albumData = {
+        ...state.albumData,
+        artists: action.payload.artists as any,
+      };
     });
   },
 });

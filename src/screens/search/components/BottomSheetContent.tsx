@@ -22,9 +22,10 @@ import {
 import Toast from 'react-native-toast-message';
 import { AnimatedImage } from 'src/components/image';
 import { navigation } from 'src/common/navigation';
+import { SelectTrackFields } from 'src/store/action-slices';
 
 type Props = {
-  info: TrackDataItemFields;
+  info: SelectTrackFields;
   onCloseModal: () => void;
   selectArtist?: (item: any) => void;
 };
@@ -61,7 +62,7 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
       selectArtist?.(info.artists);
     } else {
       onCloseModal();
-      navigation.navigate({
+      navigation.push({
         name: 'ArtistScreen',
         params: {
           item: { id: info.artists[0].id, name: info.artists[0].name },
@@ -72,10 +73,14 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
 
   const onShowAlbum = () => {
     onCloseModal();
-    navigation.navigate({
+    navigation.push({
       name: 'AlbumScreen',
       params: {
-        item: { id: info.album?.id, name: info.album?.name },
+        item: {
+          id: info.album?.id,
+          name: info.album?.name,
+          album: info?.album,
+        },
       },
     });
   };
@@ -206,6 +211,24 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
     return <View>{renderIcon()}</View>;
   };
 
+  const RenderOptionList = () => {
+    let list = optionList.SelectTrackOption;
+    if (info.from === 'album') {
+      list = list.filter((_, index) => index !== 3);
+    } else if (info.from === 'artist') {
+      list = list.filter((_, index) => index !== 4);
+    }
+
+    return list.map((i: any, index) => {
+      return (
+        <View key={index} style={{ paddingHorizontal: scale(15) }}>
+          <Spacer size={scale(20)} />
+          <OptionCard item={i} />
+        </View>
+      );
+    });
+  };  
+
   if (!info) return null;
 
   return (
@@ -214,7 +237,7 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
         <AnimatedImage
           containerStyle={styles.img}
           resizeMode="cover"
-          source={info?.album?.images[0]?.url ?? ''}
+          source={info?.album?.images[2]?.url ?? ''}
         />
         <View style={[Layout.colVCenter, styles.cardInfo]}>
           <BoldText textStyle={styles.trackName} numberOfLines={1}>
@@ -227,14 +250,7 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
         </View>
       </View>
       <Spacer size={scale(15)} style={styles.divider} />
-      {optionList.Card_Music.map((i: any, index) => {
-        return (
-          <View key={index} style={{ paddingHorizontal: scale(15) }}>
-            <Spacer size={scale(20)} />
-            <OptionCard item={i} />
-          </View>
-        );
-      })}
+      {RenderOptionList()}
     </View>
   );
 };

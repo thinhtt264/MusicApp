@@ -10,6 +10,12 @@ function navigate({ name, params }: NavigationType) {
   navigationRef?.navigate(name, params);
 }
 
+function push({ name, params }: NavigationType) {
+  if (navigationRef.isReady()) {
+    navigationRef.dispatch(StackActions.push(name, params));
+  }
+}
+
 function replace(name: string, params?: any) {
   navigationRef?.dispatch(StackActions.replace(name, params));
 }
@@ -28,4 +34,5 @@ export const navigation = {
   replace,
   reset,
   goBack,
+  push,
 };

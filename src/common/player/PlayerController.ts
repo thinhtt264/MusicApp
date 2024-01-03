@@ -17,8 +17,9 @@ import { PlayerProps } from './Type';
 
 const ANDROID_HEAD_PATH = 'file://';
 
-export const startAudio = async (info: PlayerProps, signal?: AbortSignal) => {
+export const startAudio = async (info: PlayerProps) => {
   await TrackPlayer.reset();
+    
   await dispatch(
     playerControlActionSaga.setCurrentTrack({ PlayerProps: info }),
   );

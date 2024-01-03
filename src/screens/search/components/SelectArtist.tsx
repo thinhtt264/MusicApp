@@ -13,14 +13,14 @@ type Props = {
     id: string;
     name: string;
   }[];
-  onPressItem: (item: any) => void;
+  onPressItem: (item: { id: string; name: string }) => void;
 };
 
 const SelectArtist = ({ data, onPressItem }: Props) => {
   const RenderItem = ({ id, name }: any) => {
     return (
       <TouchableOpacity
-        onPress={() => onPressItem({ id })}
+        onPress={() => onPressItem({ id, name })}
         style={[Layout.rowVCenter, Layout.fill, styles.item]}
         activeOpacity={0.7}>
         <FastImage

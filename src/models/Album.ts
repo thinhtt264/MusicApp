@@ -20,9 +20,7 @@ type Copyright = {
 };
 
 type Image = {
-  height: number;
   url: string;
-  width: number;
 };
 
 type ExternalIds = {
@@ -42,8 +40,6 @@ export interface Album {
   type: string;
   uri: string;
   artists: ArtistDataItemFields[];
-  album_group: string;
-  is_playable: boolean;
 }
 
 export type AlbumDataItemFields = {

@@ -7,6 +7,7 @@ import {
   authReducer,
   homeReducer,
   playerReducer,
+  playlistReducer,
   profileReducer,
   searchReducer,
 } from './action-slices';
@@ -56,6 +57,7 @@ const rootReducer = persistCombineReducers(rootPersistConfig, {
   profile: persistReducer(profilePersistConfig, profileReducer),
   artist: artistReducer,
   album: alBumReducer,
+  playlist: playlistReducer,
 });
 
 export default rootReducer;

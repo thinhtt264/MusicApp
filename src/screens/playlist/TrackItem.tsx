@@ -1,9 +1,9 @@
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import Layout from 'src/themes/Layout';
 import { BoldText, MediumText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
-import { Artist, TrackDataFields, TrackDataItemFields } from 'src/models/Track';
+import { TrackDataItemFields } from 'src/models/Track';
 import Colors from 'src/themes/Colors';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Animated, {
@@ -13,24 +13,25 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import isEqual from 'react-fast-compare';
+import { AnimatedImage } from 'src/components/image';
 
 type Props = {
   item: any;
-  tracks: TrackDataFields[];
+  tracks: TrackDataItemFields[];
   openBottomModal: (item: TrackDataItemFields) => void;
-  onPlayTrack: (item: TrackDataFields) => void;
+  onPlayTrack: (item: TrackDataItemFields) => void;
 };
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 
-const TopTrackComponent = ({
+const TrackItemComponent = ({
   tracks,
   item,
   openBottomModal,
   onPlayTrack,
 }: Props) => {
   const HeaderList = (name: string) => {
-    return <View style={styles.header} />;
+    return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
 
   return (
@@ -51,7 +52,7 @@ const TopTrackComponent = ({
   );
 };
 
-export const TrackItem = memo(TopTrackComponent, isEqual);
+export const TrackItem = memo(TrackItemComponent, isEqual);
 
 const RenderItem = memo(
   ({
@@ -63,7 +64,7 @@ const RenderItem = memo(
     item: TrackDataItemFields;
     index: number;
     openBottomModal: (item: TrackDataItemFields) => void;
-    onPlayTrack: (item: TrackDataFields) => void;
+    onPlayTrack: (item: TrackDataItemFields) => void;
   }) => {
     const scaleAble = useSharedValue<number>(1);
 
@@ -83,28 +84,28 @@ const RenderItem = memo(
       };
     }, [scaleAble.value]);
 
-    const artistSperator = useCallback((artists: Artist[]) => {
-      return artists.map(artist => artist.name).join(', ');
-    }, []);
-
     return (
       <AnimatedTouchableOpacity
         onPressIn={onPressIn}
         onPressOut={onPressOut}
-        onPress={() => onPlayTrack(item)}
         onLongPress={() => openBottomModal(item)}
+        onPress={() => onPlayTrack(item)}
         activeOpacity={1}
         style={[Layout.rowBetween, stylez]}>
         <View style={[Layout.rowVCenter, styles.container]}>
           <MediumText>{index + 1}</MediumText>
 
           <View style={[Layout.rowVCenter, styles.wrapInfo]}>
+            <AnimatedImage
+              source={{ uri: item?.album?.images[0]?.url }}
+              containerStyle={styles.image}
+            />
             <View style={styles.name}>
               <BoldText numberOfLines={1} textStyle={styles.title}>
                 {item?.name}
               </BoldText>
               <MediumText textStyle={styles.follower}>
-                {artistSperator(item?.artists)}
+                {item?.artists[0]?.name}
               </MediumText>
             </View>
           </View>
@@ -124,7 +125,6 @@ const RenderItem = memo(
   },
   isEqual,
 );
-
 const styles = StyleSheet.create({
   image: {
     width: scale(35),
@@ -148,8 +148,8 @@ const styles = StyleSheet.create({
     fontSize: fontScale(16),
   },
   header: {
+    fontSize: fontScale(20),
     marginBottom: scale(15),
-    marginTop: scale(10),
   },
   container: {
     flex: 1,

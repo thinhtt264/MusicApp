@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { memo } from 'react';
 import Layout from 'src/themes/Layout';
 import Colors from 'src/themes/Colors';
@@ -10,7 +10,7 @@ import { AnimatedImage } from 'src/components/image';
 import { HomeDataItemFields } from 'src/models/Api';
 import Divider from 'src/components/divier';
 
-const TopListComponent = ({ homedata }: any) => {
+const TopListComponent = ({ homedata, onGoPlaylist }: any) => {
   return (
     <View style={[Layout.boxShadow, styles.listContainer]}>
       <AnimatedList
@@ -19,13 +19,16 @@ const TopListComponent = ({ homedata }: any) => {
         ItemSeparatorComponent={() => <Divider width={scale(8)} />}
         renderItem={({ item }: HomeDataItemFields) => {
           return (
-            <View style={styles.listWrapper}>
+            <TouchableOpacity
+              style={styles.listWrapper}
+              activeOpacity={0.5}
+              onPress={() => onGoPlaylist(item)}>
               <AnimatedImage
                 source={item.images[0].url}
                 resizeMode="contain"
                 containerStyle={Layout.fullSize}
               />
-            </View>
+            </TouchableOpacity>
           );
         }}
       />

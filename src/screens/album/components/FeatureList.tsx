@@ -11,11 +11,19 @@ import { AlbumDataItemFields } from 'src/models/Album';
 type Props = {
   item: any;
   data: AlbumDataItemFields[];
+  onGoPlaylist: (item: { id: string }) => void;
 };
 
-const RenderItem = ({ item }: { item: AlbumDataItemFields }) => {
+const RenderItem = ({
+  item,
+  onGoPlaylist,
+}: {
+  item: AlbumDataItemFields;
+  onGoPlaylist: (item: { id: string }) => void;
+}) => {
   return (
     <TouchableOpacity
+      onPress={() => onGoPlaylist(item)}
       style={[Layout.colCenter, styles.container]}
       activeOpacity={0.6}>
       <AnimatedImage
@@ -28,7 +36,7 @@ const RenderItem = ({ item }: { item: AlbumDataItemFields }) => {
     </TouchableOpacity>
   );
 };
-const FeatureListItem = ({ data, item }: Props) => {
+const FeatureListItem = ({ data, item, onGoPlaylist }: Props) => {
   const HeaderList = (name: string) => {
     return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
@@ -38,7 +46,9 @@ const FeatureListItem = ({ data, item }: Props) => {
       <FlatList
         data={data}
         initialNumToRender={5}
-        renderItem={({ item }: any) => <RenderItem item={item} />}
+        renderItem={({ item }: any) => (
+          <RenderItem item={item} onGoPlaylist={onGoPlaylist} />
+        )}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={() => <View style={styles.divider} />}
         horizontal

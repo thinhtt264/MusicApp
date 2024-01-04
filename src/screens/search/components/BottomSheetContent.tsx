@@ -1,6 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { TrackDataItemFields } from 'src/models/Track';
 import Layout from 'src/themes/Layout';
 import { BoldText, RegularText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
@@ -23,6 +22,7 @@ import Toast from 'react-native-toast-message';
 import { AnimatedImage } from 'src/components/image';
 import { navigation } from 'src/common/navigation';
 import { SelectTrackFields } from 'src/store/action-slices';
+import { Album } from 'src/models/Album';
 
 type Props = {
   info: SelectTrackFields;
@@ -227,7 +227,16 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
         </View>
       );
     });
-  };  
+  };
+
+  const selectImageSource = useCallback((album: Album) => {
+    if (album?.images.length > 1) {
+      return { uri: album?.images[2].url };
+    } else if (album?.images.length === 1) {
+      return { uri: album?.images[0].url };
+    }
+    return '';
+  }, []);
 
   if (!info) return null;
 
@@ -237,7 +246,7 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
         <AnimatedImage
           containerStyle={styles.img}
           resizeMode="cover"
-          source={info?.album?.images[2]?.url ?? ''}
+          source={selectImageSource(info.album)}
         />
         <View style={[Layout.colVCenter, styles.cardInfo]}>
           <BoldText textStyle={styles.trackName} numberOfLines={1}>

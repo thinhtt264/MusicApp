@@ -9,6 +9,7 @@ import { dispatch, useAppSelector } from 'src/common/redux';
 import { getFeaturedPlaylist, getHomePlaylist } from 'src/store/action-thunk';
 import { CATEGORY_ID } from 'src/common/api';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { navigation } from 'src/common/navigation';
 
 interface Props {}
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
@@ -69,6 +70,15 @@ const HomeScreen = (props: Props) => {
     }
   };
 
+  const onGoPlaylist = (item: { id: string }) => {
+    navigation.push({
+      name: 'PlaylistScreen',
+      params: {
+        item,
+      },
+    });
+  };
+
   return (
     <Container>
       <AnimatedList
@@ -83,7 +93,9 @@ const HomeScreen = (props: Props) => {
           <View style={styles.wrapper}>
             <FlatList
               data={HomeData}
-              renderItem={({ item }) => <HomeItem item={item} />}
+              renderItem={({ item }) => (
+                <HomeItem item={item} onGoPlaylist={onGoPlaylist} />
+              )}
             />
             {/* <TouchableOpacity
               onPress={onBackToTop}

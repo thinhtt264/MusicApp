@@ -5,13 +5,14 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
-import { LibraryScreen, PlayListScreen } from 'src/screens';
+import { LibraryScreen, LoveListScreen } from 'src/screens';
 
 interface Props {}
 
 export type LibraryStackParamList = {
   LibraryScreen: undefined;
   PlaylistScreen: undefined;
+  LoveListScreen: undefined;
 };
 export type LibraryStackNavigationProp =
   NativeStackNavigationProp<LibraryStackParamList>;
@@ -30,7 +31,7 @@ const LibraryStack = (props: Props) => {
         animation: 'fade',
       }}>
       <Stack.Screen name="LibraryScreen" component={LibraryScreen} />
-      <Stack.Screen name="PlaylistScreen" component={PlayListScreen} />
+      <Stack.Screen name="LoveListScreen" component={LoveListScreen} />
     </Stack.Navigator>
   );
 };

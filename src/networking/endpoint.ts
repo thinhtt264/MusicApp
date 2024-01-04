@@ -24,5 +24,8 @@ const endpoints = {
   album: {
     getAlbum: 'v1/albums/$id?market=VN',
   },
+  playlists:{
+    getPlaylist:'v1/playlists/$id'
+  }
 };
 export { endpoints };

@@ -6,3 +6,4 @@ export * from './SearchSlice';
 export * from './ProfileSlice';
 export * from './ArtistSlice';
 export * from './AlbumSlice';
+export * from './PlaylistSlice';

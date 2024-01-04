@@ -11,7 +11,6 @@ import {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import { Banner } from 'src/components/header';
 import { useScreenController } from 'src/common/hooks';
 import { ArtistDataItemFields } from 'src/models/Artist';
 import { scale } from 'src/common/scale';
@@ -34,6 +33,7 @@ import { startAudio, startPlaylist } from 'src/common/player';
 import { searchActions } from 'src/store/action-slices';
 import TrackPlayer from 'react-native-track-player';
 import { AlbumParams } from 'src/models/Album';
+import { ArtistBanner } from 'src/components/header';
 
 type Props = {};
 
@@ -104,6 +104,15 @@ const ArtistScreen = (props: Props) => {
     );
   };
 
+  const onGoArtistRelate = (artist: ArtistDataItemFields) => {
+    navigation.push({
+      name: 'ArtistScreen',
+      params: {
+        item: { id: artist.id, name: artist.name },
+      },
+    });
+  };
+
   const onPlayTrack = async (item: any) => {
     await startAudio({
       info: item,
@@ -153,6 +162,7 @@ const ArtistScreen = (props: Props) => {
         case 3:
           return (
             <ArtistRelateItem
+              onGoArtistRelate={onGoArtistRelate}
               item={item}
               data={artistData?.relatedArtist ?? []}
             />
@@ -168,7 +178,7 @@ const ArtistScreen = (props: Props) => {
 
   return (
     <View style={[Layout.fill]}>
-      <Banner
+      <ArtistBanner
         blurHashColor={blurHashColor}
         bgColor={bgColor}
         img={artistInfo?.images[0]?.url}

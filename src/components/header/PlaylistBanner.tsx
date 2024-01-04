@@ -14,9 +14,9 @@ import Layout from 'src/themes/Layout';
 import Colors from 'src/themes/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { navigation } from 'src/common/navigation';
-import Constants from 'src/themes/Constants';
 import { BoldText, SemiBoldText } from '../text';
 import LinearGradient from 'react-native-linear-gradient';
+import Constants from 'src/themes/Constants';
 
 type Props = {
   blurHashColor: string;
@@ -25,40 +25,28 @@ type Props = {
   name: string;
   translationY: SharedValue<number>;
 };
-const Header_Max_Height = scale(380);
-export const Header_Min_Height = scale(80);
-const Header_Distance = scale(260);
+const Header_Max_Height = scale(400);
+const Header_Min_Height = scale(80);
+export const Header_Distance = Header_Max_Height - Header_Min_Height;
 
+const scale45 = scale(45);
 const BannerComponent = ({
   bgColor,
   blurHashColor,
   img,
-  name,
   translationY,
+  name,
 }: Props) => {
   const headerStylez = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
-      [0, 140, 150],
+      [0, 230, 240],
       [0, 0, 1],
       Extrapolate.CLAMP,
     );
 
     return {
       opacity,
-    };
-  }, [translationY.value]);
-
-  const buttonStylez = useAnimatedStyle(() => {
-    const left = interpolate(
-      translationY.value,
-      [0, Header_Distance],
-      [Constants.scale15, Constants.scale10],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      left,
     };
   }, [translationY.value]);
 
@@ -78,7 +66,7 @@ const BannerComponent = ({
   const headerNameStylez = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
-      [160, 200, 240],
+      [200, 240, 280],
       [0, 0.5, 1],
       Extrapolate.CLAMP,
     );
@@ -99,8 +87,8 @@ const BannerComponent = ({
 
     const backgroundColor = interpolateColor(
       translationY.value,
-      [0, 300],
-      ['transparent', bgColor],
+      [0, 240, 340],
+      ['transparent', 'transparent', bgColor],
     );
 
     return {
@@ -109,10 +97,10 @@ const BannerComponent = ({
     };
   }, [translationY.value, bgColor]);
 
-  const testStylez = useAnimatedStyle(() => {
+  const fragmentz = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       translationY.value,
-      [0, 220],
+      [0, 260],
       ['transparent', bgColor],
     );
 
@@ -121,20 +109,48 @@ const BannerComponent = ({
     };
   }, [translationY.value, bgColor]);
 
+  const imagez = useAnimatedStyle(() => {
+    const scale = interpolate(
+      translationY.value,
+      [0, Header_Distance - 190],
+      [1, 0.4],
+      Extrapolate.CLAMP,
+    );
+
+    const opacity = interpolate(
+      translationY.value,
+      [0, Header_Distance - 190, Header_Distance - 140],
+      [1, 1, 0],
+      Extrapolate.CLAMP,
+    );
+
+    const translateY = interpolate(
+      translationY.value,
+      [0, Header_Distance - 190],
+      [scale45, -Constants.scale100],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      transform: [{ scale }, { translateY }],
+      opacity,
+    };
+  }, [translationY.value]);
+
   // if (!bgColor) return <></>;
 
   const FragmentView =
     blurHashColor === Colors.grey.player ? (
       <View style={[Layout.fill, { backgroundColor: bgColor }]} />
     ) : (
-      <Animated.View style={[Layout.fill, testStylez]} />
+      <Animated.View style={[Layout.fill, fragmentz]} />
     );
 
   const Header = useCallback(({ name, headerStylez, FragmentView }: any) => {
     return (
       <Animated.View style={[Layout.absolute, styles.header]}>
         <Animated.View style={[Layout.fill]}>
-          <Animated.View style={[Layout.center, styles.backBtn, buttonStylez]}>
+          <View style={[Layout.center, styles.backBtn]}>
             <Icon
               onPress={navigation.goBack}
               name="arrow-back"
@@ -145,10 +161,12 @@ const BannerComponent = ({
             <Animated.View
               style={[Layout.absolute, styles.wrapBtn, wrapButtonStylez]}
             />
-          </Animated.View>
+          </View>
 
           <Animated.View style={headerNameStylez}>
-            <SemiBoldText textStyle={styles.headerName}>{name}</SemiBoldText>
+            <SemiBoldText numberOfLines={1} textStyle={styles.headerName}>
+              {name}
+            </SemiBoldText>
           </Animated.View>
         </Animated.View>
 
@@ -167,19 +185,32 @@ const BannerComponent = ({
         FragmentView={FragmentView}
       />
       <View style={[styles.container, Layout.absolute]}>
-        <Animated.View style={[Layout.absolute, { zIndex: -10 }]}>
-          <FastImage
-            source={{ uri: img }}
-            resizeMode="cover"
-            style={styles.background}
+        <Animated.View style={[Layout.absolute, styles.wrapBackground]}>
+          {/* <Blurhash
+            blurhash={blurHashColor}
+            style={[Layout.absolute, { flex: 1 }]}
+          /> */}
+
+          <Animated.View
+            style={[Layout.absolute, Layout.fill, { backgroundColor: bgColor }]}
           />
+
+          <Animated.View style={imagez}>
+            <FastImage
+              source={{ uri: img }}
+              resizeMode="cover"
+              style={styles.background}
+            />
+          </Animated.View>
         </Animated.View>
 
         <Animated.View style={[styles.title, titleStylez]}>
           <LinearGradient
             style={styles.gradient}
-            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.6)']}>
-            <BoldText textStyle={styles.name}>{name}</BoldText>
+            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.4)']}>
+            <BoldText numberOfLines={1} textStyle={styles.name}>
+              {name}
+            </BoldText>
           </LinearGradient>
         </Animated.View>
       </View>
@@ -187,7 +218,7 @@ const BannerComponent = ({
   );
 };
 
-export const Banner = memo(BannerComponent, isEqual);
+export const PlaylistBanner = memo(BannerComponent, isEqual);
 
 const styles = StyleSheet.create({
   container: {
@@ -197,9 +228,8 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   background: {
-    width: '100%',
-    height: '100%',
-    paddingTop: 30,
+    width: Header_Distance - scale(70),
+    height: Header_Distance - scale(90),
   },
   header: {
     zIndex: 1,
@@ -212,19 +242,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: scale(4),
     zIndex: 2,
+    left: scale(10),
   },
   wrapBtn: {
     height: scale(42),
     width: scale(42),
-    borderRadius: scale(42) / 2,
     zIndex: -2,
-    backgroundColor: Colors.black.lighter1,
   },
   headerName: {
     position: 'absolute',
     bottom: scale(14),
     left: scale(62),
     fontSize: fontScale(16),
+    paddingRight: scale(100),
   },
   title: {
     height: Header_Distance,
@@ -235,7 +265,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   name: {
-    fontSize: fontScale(42),
+    fontSize: fontScale(26),
     paddingHorizontal: scale(10),
+  },
+  wrapBackground: {
+    flex: 1,
+    zIndex: -10,
+    alignItems: 'center',
   },
 });

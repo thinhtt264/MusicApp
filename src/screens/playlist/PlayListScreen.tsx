@@ -1,87 +1,204 @@
-import { StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import { StatusBar, StyleSheet, View } from 'react-native';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react';
+import Layout from 'src/themes/Layout';
+import {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
 import { useScreenController } from 'src/common/hooks';
-import { getTrackFormPlayList } from 'src/common/firebase';
-import { BackHeader } from 'src/components/header';
-import { RegularText } from 'src/components/text';
-import { scale } from 'src/common/scale';
-import { FlatList } from 'react-native';
-import { HeaderList, TrackCard } from './components';
-import { Spacer } from 'src/components/spacer';
-import { startPlaylist } from 'src/common/player';
-import { ScreenLoader } from 'src/components/loader';
+import { getPlaylistData } from 'src/store/action-thunk';
 import { useAppSelector } from 'src/common/redux';
+import { isIos } from 'src/common/device';
+import Colors from 'src/themes/Colors';
+import { getBackGroundPlayer, getBlurhashColor } from 'src/common/helper';
+import { ScreenLoader } from 'src/components/loader';
+import { fontScale, scale } from 'src/common/scale';
+import { Header_Distance } from 'src/components/header/AlbumBanner';
+import {
+  FeatureListItem,
+  FloatingButton,
+  HeaderList,
+  PlayListData,
+  TrackItem,
+} from './components';
 import { searchActions } from 'src/store/action-slices';
-import { TAB_HEIGHT } from 'src/common/constants';
-import { MINIPLAYER_HEIGHT } from 'src/themes/Constants';
+import { startAudio, startPlaylist } from 'src/common/player';
+import TrackPlayer from 'react-native-track-player';
+import { AnimatedList } from 'src/components/list';
+import { PlaylistBanner } from 'src/components/header';
+import isEqual from 'react-fast-compare';
 
 type Props = {};
 
-const PlayListScreen = (props: Props) => {
-  const { translate, route, dispatch } = useScreenController();
-  const [listTrack, setListTrack] = useState<any>();
-  const [totalItems, setTotalItems] = useState(0);
-  const { currentTrack } = useAppSelector(state => state.player);
+const PlayListComponent = (props: Props) => {
+  const { dispatch, navigation, route } = useScreenController();
+  const playlistData = useAppSelector(state => state.playlist?.playlistData);
+  const featurePlaylist = useAppSelector(state => state.home.playlist) as any;
 
-  const { id: playlistId, name } = route.params?.data;
+  const [isLoading, setLoading] = useState(true);
+  const [blurHashColor, setBlurHashColor] = useState('');
+  const [bgColor, setBgColor] = useState('');
 
-  const onOpenModal = (item: any, position = 1) => {
-    dispatch(searchActions.onSelectTrack({ ...item, position }));
-  };
+  const playlistParams = route?.params?.item as any;
 
-  getTrackFormPlayList(playlistId, ({ data, totalItems }) => {
-    setListTrack(data);
-    setTotalItems(totalItems);
+  const translationY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    translationY.value = event.contentOffset.y;
   });
 
-  const onPlayQueue = () => {
-    startPlaylist(listTrack);
+  useLayoutEffect(() => {
+    if (!isIos) {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    Promise.all([getData()]).then(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  const getData = async () => {
+    const response = await dispatch(getPlaylistData({ id: playlistParams.id }));
+    await getContainerColor(response?.payload?.images[0]?.url);
   };
 
-  return (
-    <View style={styles.container}>
-      <BackHeader title={name} />
-      <View style={styles.body}>
-        <RegularText>
-          {totalItems} {translate('library:song').toLowerCase()}
-        </RegularText>
-        <FlatList
-          data={listTrack}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => <HeaderList onPlayQueue={onPlayQueue} />}
-          renderItem={({ item }) => (
-            <TrackCard
+  const getContainerColor = useCallback(
+    async (imgUrl: string) => {
+      const bgColor = await getBackGroundPlayer(imgUrl);
+      const blurHashColor =
+        bgColor !== Colors.grey.player ? await getBlurhashColor(imgUrl) : false;
+      setBgColor(bgColor ?? '');
+      setBlurHashColor(blurHashColor !== false ? blurHashColor : '');
+    },
+    [playlistParams, playlistData],
+  );
+
+  const openBottomModal = (item: any, position = 1) => {
+    dispatch(
+      searchActions.onSelectTrack({
+        ...item,
+        position,
+        from: 'playlist',
+      }),
+    );
+  };
+
+  const onPlayQeue = () => {
+    startPlaylist(playlistData.tracks.items.map(t => t.track) ?? []);
+  };
+
+  const onPlayTrack = async (item: any) => {
+    await startAudio({
+      info: item,
+      from: 'playlist',
+    });
+    await TrackPlayer.setPlayWhenReady(true);
+  };
+
+  const onGoPlaylist = (item: any) => {
+    navigation.push({
+      name: 'PlaylistScreen',
+      params: {
+        item,
+      },
+    });
+  };
+
+  const renderSwitchedItem = useCallback(
+    (index: number, item: any) => {
+      switch (index) {
+        case 0:
+          return (
+            <TrackItem
+              onPlayTrack={onPlayTrack}
               item={item}
-              onOpenModal={(item: any) => onOpenModal(item)}
+              tracks={playlistData?.tracks?.items.map(t => t.track) ?? []}
+              openBottomModal={openBottomModal}
             />
-          )}
-          ItemSeparatorComponent={() => <Spacer size={scale(12)} />}
-          ListFooterComponent={() => (
-            <Spacer
-              size={
-                currentTrack.id ? MINIPLAYER_HEIGHT + scale(60) : TAB_HEIGHT
-              }
+          );
+        case 1:
+          return (
+            <FeatureListItem
+              item={item}
+              data={featurePlaylist?.items ?? []}
+              onGoPlaylist={onGoPlaylist}
             />
-          )}
-          ListEmptyComponent={
-            <View style={{ marginTop: '40%' }}>
-              <ScreenLoader />
+          );
+        default:
+          return null;
+      }
+    },
+    [playlistData],
+  );
+
+  if (isLoading) return <ScreenLoader style={styles.loading} />;
+
+  return (
+    <View style={[Layout.fill]}>
+      <PlaylistBanner
+        name={playlistParams?.name ?? ''}
+        img={playlistData?.images[0]?.url ?? ''}
+        bgColor={bgColor}
+        blurHashColor={blurHashColor}
+        translationY={translationY}
+      />
+
+      <FloatingButton translationY={translationY} onPress={onPlayQeue} />
+
+      <AnimatedList
+        bounces={false}
+        overScrollMode="never"
+        keyExtractor={item => item.id}
+        data={PlayListData}
+        onScroll={scrollHandler}
+        contentContainerStyle={styles.wrapContent}
+        scrollEventThrottle={16}
+        ListHeaderComponent={() => (
+          <HeaderList info={playlistData} bgColor={bgColor} />
+        )}
+        style={styles.item}
+        ItemSeparatorComponent={() => <View style={styles.divider} />}
+        renderItem={({ item, index }: any) => {
+          return (
+            <View style={styles.renderItem}>
+              {renderSwitchedItem(index, item)}
             </View>
-          }
-        />
-      </View>
+          );
+        }}
+      />
     </View>
   );
 };
 
-export default PlayListScreen;
+export const PlayListScreen = memo(PlayListComponent, isEqual);
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  body: {
-    paddingHorizontal: scale(15),
+  wrapContent: {
+    backgroundColor: Colors.black.default,
+    marginTop: Header_Distance,
+    paddingBottom: scale(360),
+  },
+  renderItem: { paddingHorizontal: scale(10) },
+  divider: {
+    height: scale(30),
+  },
+  loading: {
     flex: 1,
-    gap: scale(10),
+  },
+  item: {
+    marginBottom: scale(80),
+  },
+  footer: {
+    fontSize: fontScale(18),
+    paddingLeft: scale(10),
   },
 });

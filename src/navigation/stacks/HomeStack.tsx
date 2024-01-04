@@ -5,13 +5,14 @@ import {
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import { HomeTab } from '../tab';
-import { AlbumScreen, ArtistScreen } from 'src/screens';
+import { AlbumScreen, ArtistScreen, PlayListScreen } from 'src/screens';
 
 export type HomeStackParamList = {
   HomeTab: undefined;
   PlayerStack: undefined;
   ArtistScreen: undefined;
   AlbumScreen: undefined;
+  PlaylistScreen: undefined;
 };
 export type HomeStackNavigationProp =
   NativeStackNavigationProp<HomeStackParamList>;
@@ -31,6 +32,7 @@ const HomeStack = () => {
       <Stack.Screen name="HomeTab" component={HomeTab} />
       <Stack.Screen name="ArtistScreen" component={ArtistScreen} />
       <Stack.Screen name="AlbumScreen" component={AlbumScreen} />
+      <Stack.Screen name="PlaylistScreen" component={PlayListScreen} />
       {/* <Stack.Screen name="PlayerStack" component={PlayerStack} /> */}
     </Stack.Navigator>
   );

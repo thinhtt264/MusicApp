@@ -1,6 +1,7 @@
 import { Header } from './Header';
 import { BackHeader } from './BackHeader';
-import { Banner } from './Banner';
+import { ArtistBanner } from './ArtistBanner';
 import { AlbumBanner } from './AlbumBanner';
+import { PlaylistBanner } from './PlaylistBanner';
 
-export { Header, BackHeader, Banner, AlbumBanner };
+export { Header, BackHeader, ArtistBanner, AlbumBanner, PlaylistBanner };

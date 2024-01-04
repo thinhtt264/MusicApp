@@ -11,7 +11,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import isEqual from 'react-fast-compare';
-import { Header_Min_Height } from 'src/components/header/Banner';
+import { Header_Min_Height } from 'src/components/header/ArtistBanner';
 import Constants from 'src/themes/Constants';
 
 type Props = {

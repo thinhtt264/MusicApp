@@ -85,8 +85,6 @@ const AlbumScreen = (props: Props) => {
 
   const getContainerColor = useCallback(
     async (imgUrl: string) => {
-      console.log(imgUrl);
-
       const bgColor = await getBackGroundPlayer(imgUrl);
       const blurHashColor =
         bgColor !== Colors.grey.player ? await getBlurhashColor(imgUrl) : false;
@@ -128,6 +126,15 @@ const AlbumScreen = (props: Props) => {
     await TrackPlayer.setPlayWhenReady(true);
   };
 
+  const onGoPlaylist = (item: { id: string }) => {
+    navigation.push({
+      name: 'PlaylistScreen',
+      params: {
+        item,
+      },
+    });
+  };
+
   const renderSwitchedItem = useCallback(
     (index: number, item: any) => {
       switch (index) {
@@ -150,7 +157,11 @@ const AlbumScreen = (props: Props) => {
           );
         case 2:
           return (
-            <FeatureListItem item={item} data={featurePlaylist?.items ?? []} />
+            <FeatureListItem
+              item={item}
+              data={featurePlaylist?.items ?? []}
+              onGoPlaylist={onGoPlaylist}
+            />
           );
         default:
           return null;

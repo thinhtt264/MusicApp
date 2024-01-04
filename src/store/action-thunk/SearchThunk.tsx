@@ -7,6 +7,7 @@ import {
   GetTopTracksFields,
   GetTopTracksResponseFields,
   getAlBumResponseFields,
+  getPlaylistResponseFields,
 } from 'src/models/Api';
 import { NetWorkService } from 'src/networking/RestFulApi';
 import { endpoints } from 'src/networking/endpoint';
@@ -96,8 +97,19 @@ export const getAlbumData = createAsyncThunk<
   getAlBumResponseFields,
   GetTopTracksFields
 >('album/getAlbum', async fields => {
-  const response = await NetWorkService.Get<GetArtistInfoResponseFields>({
+  const response = await NetWorkService.Get<getAlBumResponseFields>({
     url: endpoints.album.getAlbum.replace('$id', fields.id.toString()),
+  });
+
+  return { ...response, id: fields.id.toString() };
+});
+
+export const getPlaylistData = createAsyncThunk<
+  getPlaylistResponseFields,
+  GetTopTracksFields
+>('playlist/getPlaylistData', async fields => {
+  const response = await NetWorkService.Get<getPlaylistResponseFields>({
+    url: endpoints.playlists.getPlaylist.replace('$id', fields.id.toString()),
   });
 
   return { ...response, id: fields.id.toString() };

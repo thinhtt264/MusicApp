@@ -25,7 +25,7 @@ const LibraryScreen = (props: Props) => {
   const onNavigate = (data: any) => {
     navigation.navigate({
       name: 'LibraryStack',
-      params: { screen: 'PlaylistScreen', params: { data } },
+      params: { screen: 'LoveListScreen', params: { data } },
     });
   };
 

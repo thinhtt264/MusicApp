@@ -1,5 +1,6 @@
 import { AlbumDataItemFields, AlbumState } from './Album';
 import { ArtistDataField, ArtistDataItemFields } from './Artist';
+import { PlaylistDataItemFields } from './Playlist';
 import { TrackDataItemFields } from './Track';
 
 export interface ResponseBase<T = any> {
@@ -128,3 +129,5 @@ export interface GetSeveralArtistInfoResponseFields {
 export interface GetTopTracksResponseFields extends ArtistDataField {}
 
 export interface getAlBumResponseFields extends AlbumDataItemFields {}
+
+export interface getPlaylistResponseFields extends PlaylistDataItemFields {}

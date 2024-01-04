@@ -1,46 +1,42 @@
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import { ArtistDataItemFields } from 'src/models/Artist';
 import Layout from 'src/themes/Layout';
-import { BoldText, MediumText } from 'src/components/text';
-import { fontScale, scale } from 'src/common/scale';
+import { BoldText } from 'src/components/text';
 import { AnimatedImage } from 'src/components/image';
+import { fontScale, scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
+import { Spacer } from 'src/components/spacer';
+import { AlbumDataItemFields } from 'src/models/Album';
 
 type Props = {
   item: any;
-  data: ArtistDataItemFields[];
-  onGoArtistRelate: (item: ArtistDataItemFields) => void;
+  data: AlbumDataItemFields[];
+  onGoPlaylist: (item: { id: string }) => void;
 };
 
 const RenderItem = ({
   item,
-  onGoArtistRelate,
+  onGoPlaylist,
 }: {
-  item: ArtistDataItemFields;
-  onGoArtistRelate: (item: ArtistDataItemFields) => void;
+  item: AlbumDataItemFields;
+  onGoPlaylist: (item: { id: string }) => void;
 }) => {
   return (
     <TouchableOpacity
-      onPress={() => onGoArtistRelate(item)}
+      onPress={() => onGoPlaylist(item)}
       style={[Layout.colCenter, styles.container]}
       activeOpacity={0.6}>
       <AnimatedImage
-        source={{ uri: item?.images[1]?.url }}
+        source={{ uri: item?.images[0]?.url }}
         containerStyle={styles.image}
       />
-      <BoldText textStyle={styles.name}>{item?.name}</BoldText>
+      <BoldText numberOfLines={1} textStyle={styles.name}>
+        {item?.name}
+      </BoldText>
     </TouchableOpacity>
   );
 };
-const ArtistRelateItem = ({ item, data, onGoArtistRelate }: Props) => {
+const FeatureListItem = ({ data, item, onGoPlaylist }: Props) => {
   const HeaderList = (name: string) => {
     return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
@@ -49,22 +45,25 @@ const ArtistRelateItem = ({ item, data, onGoArtistRelate }: Props) => {
       {data.length > 0 && HeaderList(item.name)}
       <FlatList
         data={data}
+        initialNumToRender={5}
         renderItem={({ item }: any) => (
-          <RenderItem item={item} onGoArtistRelate={onGoArtistRelate} />
+          <RenderItem onGoPlaylist={onGoPlaylist} item={item} />
         )}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={() => <View style={styles.divider} />}
         horizontal
       />
+      <Spacer size={scale(60)} />
     </>
   );
 };
 
-export default ArtistRelateItem;
+export default FeatureListItem;
 
 const styles = StyleSheet.create({
   container: {
     width: scale(120),
+    justifyContent: 'flex-start',
   },
   header: {
     fontSize: fontScale(20),
@@ -73,7 +72,6 @@ const styles = StyleSheet.create({
   image: {
     width: scale(120),
     height: scale(120),
-    borderRadius: scale(60),
     overflow: 'hidden',
   },
   divider: {

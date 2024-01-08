@@ -7,13 +7,12 @@ import { appInit } from 'src/store/action-thunk/AppThunk';
 import RootNavigator from './root-navigator';
 import { MyAppTheme } from 'src/themes';
 import TrackPlayer from 'react-native-track-player';
-import { Host } from 'react-native-portalize';
-import { getTimeSinceStartup } from 'react-native-startup-time';
+import { Host, Portal } from 'react-native-portalize';
 import { SnackBar } from 'src/components/snack-bar';
 import { SelectTrackModal } from 'src/components/modal';
 
 export const AppNavigation = () => {
-  const { loadingApp, theme, env } = useAppSelector(state => state.app);
+  const { theme, env } = useAppSelector(state => state.app);
   const [init, setInit] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -27,10 +26,6 @@ export const AppNavigation = () => {
       setInit(true);
       RNBootSplash.hide({ fade: true });
     });
-    // getTimeSinceStartup().then(time => {
-    //   console.log(`Time since startup: ${time} ms`);
-    //   alert(time);
-    // });
   }, []);
 
   return (
@@ -38,7 +33,11 @@ export const AppNavigation = () => {
       {init && env && (
         <Host>
           <RootNavigator />
-          <SelectTrackModal />
+          {/* Select track modal */}
+          <Portal>
+            <SelectTrackModal />
+          </Portal>
+          {/* số lượng thẻ portal biểu thị thứ tự xuất hiện trên UI*/}
         </Host>
       )}
       {/* Snack bar */}

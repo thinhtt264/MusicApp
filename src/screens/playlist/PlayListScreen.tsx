@@ -162,6 +162,7 @@ const PlayListComponent = (props: Props) => {
         onScroll={scrollHandler}
         contentContainerStyle={styles.wrapContent}
         scrollEventThrottle={16}
+        renderFooter={() => <View style={styles.footer} />}
         ListHeaderComponent={() => (
           <HeaderList info={playlistData} bgColor={bgColor} />
         )}
@@ -194,11 +195,8 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
   },
-  item: {
-    marginBottom: scale(80),
-  },
+  item: {},
   footer: {
-    fontSize: fontScale(18),
-    paddingLeft: scale(10),
+    height: scale(80),
   },
 });

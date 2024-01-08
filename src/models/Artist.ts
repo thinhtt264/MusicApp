@@ -49,6 +49,15 @@ export interface ArtistDataField {
   id: string;
 }
 
+export interface ArtistAlbumFields {
+  limit: number;
+  offset: number;
+  next: string;
+  total: number;
+  items: Album[];
+}
+
 export interface ArtistState {
   artistData: ArtistDataField;
+  artistAlbum: ArtistAlbumFields;
 }

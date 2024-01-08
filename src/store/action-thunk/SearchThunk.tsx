@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  GetArtistAlbumResponseFields,
   GetArtistInfoFields,
   GetArtistInfoResponseFields,
   GetSeveralArtistInfoFields,
@@ -73,6 +74,20 @@ export const getArtistInfo = createAsyncThunk<
 >('artist/getArtistInfo', async fields => {
   const response = await NetWorkService.Get<GetArtistInfoResponseFields>({
     url: endpoints.artist.getArtist.replace('$id', fields.id.toString()),
+  });
+
+  return response;
+});
+
+export const getArtistAblum = createAsyncThunk<
+  GetArtistAlbumResponseFields,
+  GetTopTracksFields
+>('artist/getArtistAlbum', async fields => {
+  const response = await NetWorkService.Get<GetArtistAlbumResponseFields>({
+    url: endpoints.artist.artistAlbum
+      .replace('$id', fields.id.toString())
+      .replace('$limit', fields.limit?.toString() ?? '10')
+      .replace('$offset', fields.offset?.toString() ?? '0'),
   });
 
   return response;

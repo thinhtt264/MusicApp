@@ -1,3 +1,4 @@
 import AnimatedList from './AnimatedList';
+import LoadMoreList from './LoadMoreList';
 
-export { AnimatedList };
+export { AnimatedList, LoadMoreList };

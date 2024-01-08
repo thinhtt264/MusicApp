@@ -1,17 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import Layout from 'src/themes/Layout';
 import ShuffleRepeatButton from 'src/screens/player/components/ShuffleRepeatButton';
 import { scale } from 'src/common/scale';
-import { SharedValue } from 'react-native-reanimated';
 import Colors from 'src/themes/Colors';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
-type Props = {
-  onPlayQueue: () => void;
-};
+type Props = {};
 
-const HeaderList = ({ onPlayQueue }: Props) => {
+const HeaderList = ({}: Props) => {
   return (
     <View style={[Layout.rowVCenter, styles.container]}>
       <FontAwesome6

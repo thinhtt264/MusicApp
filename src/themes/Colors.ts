@@ -11,7 +11,7 @@ const Colors = {
     error: '#E73232',
   },
   grey: {
-    default: '#666666',
+    default: '#282828',
     heading: '#3E4145',
     body: '#2b2b2b',
     placeHolder: '#656565',

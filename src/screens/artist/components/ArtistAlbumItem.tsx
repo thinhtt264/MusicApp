@@ -18,6 +18,7 @@ type Props = {
   item: any;
   data: Album[];
   onGoAlbumScreen: (item: AlbumParams) => void;
+  onGoAlbumListScreen: () => void;
 };
 
 const RenderItem = ({
@@ -51,7 +52,12 @@ const RenderItem = ({
   );
 };
 
-const ArtistAlbumItem = ({ item, data, onGoAlbumScreen }: Props) => {
+const ArtistAlbumList = ({
+  item,
+  data,
+  onGoAlbumScreen,
+  onGoAlbumListScreen,
+}: Props) => {
   const HeaderList = (name: string) => {
     return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
@@ -59,6 +65,7 @@ const ArtistAlbumItem = ({ item, data, onGoAlbumScreen }: Props) => {
   const FooterList = () => {
     return (
       <TouchableOpacity
+        onPress={onGoAlbumListScreen}
         style={[Layout.fill, Layout.center, styles.footer]}
         activeOpacity={0.6}>
         <BoldText textStyle={styles.footerLabel}>
@@ -82,7 +89,7 @@ const ArtistAlbumItem = ({ item, data, onGoAlbumScreen }: Props) => {
   );
 };
 
-export default ArtistAlbumItem;
+export default ArtistAlbumList;
 
 const styles = StyleSheet.create({
   image: {

@@ -130,6 +130,15 @@ const ArtistScreen = (props: Props) => {
     });
   };
 
+  const onGoAlbumListScreen = () => {
+    navigation.push({
+      name: 'AlbumListScreen',
+      params: {
+        item: artistParams,
+      },
+    });
+  };
+
   const renderSwitchedItem = useCallback(
     (index: number, item: any) => {
       switch (index) {
@@ -145,6 +154,7 @@ const ArtistScreen = (props: Props) => {
         case 1:
           return (
             <ArtistAlbumItem
+              onGoAlbumListScreen={onGoAlbumListScreen}
               onGoAlbumScreen={onGoAlbumScreen}
               item={item}
               data={artistData?.artistAlbum?.items ?? []}

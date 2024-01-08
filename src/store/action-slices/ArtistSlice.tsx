@@ -1,9 +1,10 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { getArtistData } from '../action-thunk';
+import { createSlice } from '@reduxjs/toolkit';
+import { getArtistAblum, getArtistData } from '../action-thunk';
 import { ArtistState } from 'src/models/Artist';
 
 const initialState: ArtistState = {
   artistData: {} as any,
+  artistAlbum: {} as any,
 };
 
 const artistSlice = createSlice({
@@ -13,6 +14,9 @@ const artistSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(getArtistData.fulfilled, (state, action) => {
       state.artistData = action.payload;
+    });
+    builder.addCase(getArtistAblum.fulfilled, (state, action) => {
+      state.artistAlbum = action.payload;
     });
   },
 });

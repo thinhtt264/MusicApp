@@ -12,7 +12,6 @@ import { scale } from 'src/common/scale';
 import Colors from 'src/themes/Colors';
 import isEqual from 'react-fast-compare';
 import Constants from 'src/themes/Constants';
-import { Header_Distance } from 'src/components/header/AlbumBanner';
 import { Header_Height } from './BackHeader';
 
 type Props = {

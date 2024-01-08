@@ -7,6 +7,7 @@ import ArtistScreen from './artist/ArtistScreen';
 import AlbumScreen from './album/AlbumScreen';
 import LoveListScreen from 'src/screens/lovelist/LoveList';
 import { PlayListScreen } from 'src/screens/playlist/PlayListScreen';
+import AlbumListScreen from 'src/screens/albumList/AlbumListScreen';
 
 export {
   HomeScreen,
@@ -18,4 +19,5 @@ export {
   ArtistScreen,
   AlbumScreen,
   PlayListScreen,
+  AlbumListScreen,
 };

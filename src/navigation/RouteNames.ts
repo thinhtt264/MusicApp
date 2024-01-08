@@ -16,6 +16,7 @@ export type ScreenNames = {
   RegisterScreen: undefined;
   PlaylistScreen: undefined;
   LoveListScreen: undefined;
+  AlbumListScreen: undefined;
   Home: undefined;
   SearchScreen: undefined;
   ArtistScreen: undefined;

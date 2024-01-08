@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import React, { useState } from 'react';
 import { useScreenController } from 'src/common/hooks';
 import { getTrackFormPlayList } from 'src/common/firebase';
-import { BackHeader } from 'src/components/header';
+import { BackHeader } from './components';
 import { RegularText } from 'src/components/text';
 import { scale } from 'src/common/scale';
 import { FloatingButton, HeaderList, TrackCard } from './components';
@@ -59,7 +59,7 @@ const LoveListScreen = (props: Props) => {
           onScroll={scrollHandler}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          renderHeader={() => <HeaderList onPlayQueue={onPlayQueue} />}
+          renderHeader={() => <HeaderList />}
           renderItem={({ item }: any) => (
             <TrackCard
               item={item}

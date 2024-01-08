@@ -53,7 +53,7 @@ const homeSlice = createSlice({
 
   extraReducers: builder => {
     builder.addCase(getHomePlaylist.fulfilled, (state, action) => {
-      const { items, total, offset } = action.payload.playlists;
+      const { items, total, offset } = action.payload?.playlists;
       if (offset === 0) {
         state.homedata.items = items;
         state.homedata.total = total;
@@ -64,7 +64,7 @@ const homeSlice = createSlice({
     });
 
     builder.addCase(getFeaturedPlaylist.fulfilled, (state, action) => {
-      const { items, total } = action.payload.playlists;
+      const { items, total } = action.payload?.playlists;
       state.playlist.items = items;
       state.playlist.total = total;
     });

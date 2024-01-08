@@ -18,8 +18,12 @@ const AlbumListScreen = (props: Props) => {
   const params = route?.params?.item;
 
   useEffect(() => {
-    dispatch(getArtistAblum({ id: params.id }));
+    onGetData()
   }, []);
+
+  const onGetData = (page = 1) => {
+    dispatch(getArtistAblum({ id: params.id, offset: page }));
+  }
 
   return (
     <Container>
@@ -27,12 +31,12 @@ const AlbumListScreen = (props: Props) => {
 
       <LoadMoreList
         data={artistAlbum.items}
-        onGetData={page => getArtistAblum({ id: params.id, offset: page })}
+        onGetData={page => onGetData(page)}
         totalPages={artistAlbum.total}
         ItemSeparatorComponent={() => <View style={styles.divider} />}
         style={styles.item}
         renderItem={({ item }: any) => (
-          <ArtistAlbumItem item={item} onGoAlbumScreen={() => {}} />
+          <ArtistAlbumItem item={item} onGoAlbumScreen={() => { }} />
         )}
       />
     </Container>

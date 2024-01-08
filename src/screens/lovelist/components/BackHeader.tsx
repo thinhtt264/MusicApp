@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, { useEffect } from 'react';
 import Layout from 'src/themes/Layout';
-import { BoldText } from '../text';
+import { BoldText } from '../../../components/text';
 import { fontScale, scale } from 'src/common/scale';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from 'src/themes/Colors';
@@ -21,6 +21,7 @@ interface Props {
   title: string;
   RightContentStyle?: StyleProp<ViewStyle>;
 }
+export const Header_Height = scale(160);
 
 const HeaderComponent = (props: Props) => {
   const { RightContent, title, RightContentStyle } = props;
@@ -36,7 +37,11 @@ const HeaderComponent = (props: Props) => {
         style={styles.linearGradient}
         locations={[0.2, 1]}
         colors={['#223379', 'black']}></LinearGradient>
-      <View style={[styles.body, { marginTop: useSafeAreaInsets().top + scale(15) }]}>
+      <View
+        style={[
+          styles.body,
+          { marginTop: useSafeAreaInsets().top + scale(15) },
+        ]}>
         <View style={[Layout.rowBetween]}>
           <TouchableOpacity onPress={navigation.goBack}>
             <Ionicons
@@ -65,6 +70,7 @@ export const BackHeader = HeaderComponent;
 const styles = StyleSheet.create({
   container: {
     marginBottom: scale(5),
+    height: Header_Height,
   },
   body: {
     paddingHorizontal: scale(15),

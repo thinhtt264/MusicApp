@@ -11,7 +11,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { fontScale, scale } from 'src/common/scale';
 import Layout from 'src/themes/Layout';
-import Colors from 'src/themes/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { navigation } from 'src/common/navigation';
 import { BoldText, SemiBoldText } from '../text';
@@ -19,7 +18,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Constants from 'src/themes/Constants';
 
 type Props = {
-  blurHashColor: string;
   bgColor: string;
   img: string;
   name: string;
@@ -30,13 +28,7 @@ const Header_Min_Height = scale(80);
 export const Header_Distance = Header_Max_Height - Header_Min_Height;
 
 const scale45 = scale(45);
-const BannerComponent = ({
-  bgColor,
-  blurHashColor,
-  img,
-  translationY,
-  name,
-}: Props) => {
+const BannerComponent = ({ bgColor, img, translationY, name }: Props) => {
   const headerStylez = useAnimatedStyle(() => {
     const opacity = interpolate(
       translationY.value,
@@ -139,12 +131,7 @@ const BannerComponent = ({
 
   // if (!bgColor) return <></>;
 
-  const FragmentView =
-    blurHashColor === Colors.grey.player ? (
-      <View style={[Layout.fill, { backgroundColor: bgColor }]} />
-    ) : (
-      <Animated.View style={[Layout.fill, fragmentz]} />
-    );
+  const FragmentView = <Animated.View style={[Layout.fill, fragmentz]} />;
 
   const Header = useCallback(({ name, headerStylez, FragmentView }: any) => {
     return (
@@ -186,11 +173,6 @@ const BannerComponent = ({
       />
       <View style={[styles.container, Layout.absolute]}>
         <Animated.View style={[Layout.absolute, styles.wrapBackground]}>
-          {/* <Blurhash
-            blurhash={blurHashColor}
-            style={[Layout.absolute, { flex: 1 }]}
-          /> */}
-
           <Animated.View
             style={[Layout.absolute, Layout.fill, { backgroundColor: bgColor }]}
           />

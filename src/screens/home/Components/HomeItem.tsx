@@ -36,12 +36,6 @@ const HomeItemComponent = ({ item, onGoPlaylist }: Props) => {
           },
         ]}>
         <BoldText textStyle={styles.title}>{item.title}</BoldText>
-
-        <TouchableOpacity delayPressIn={100} onPress={onNavigate}>
-          <SemiBoldText textStyle={styles.viewText}>
-            {translate('home:viewAll')}
-          </SemiBoldText>
-        </TouchableOpacity>
       </View>
       {item.type === 'toplist' && (
         <TopList onGoPlaylist={onGoPlaylist} homedata={toplist} />

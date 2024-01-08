@@ -1,3 +1,4 @@
 import TrackCard from './TrackCard';
 import HeaderList from './HeaderList';
-export { TrackCard, HeaderList };
+import { FloatingButton } from './FloatingButton';
+export { TrackCard, HeaderList, FloatingButton };

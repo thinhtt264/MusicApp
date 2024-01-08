@@ -43,7 +43,6 @@ const AlbumScreen = (props: Props) => {
   const featurePlaylist = useAppSelector(state => state.home.playlist) as any;
 
   const [isLoading, setLoading] = useState(true);
-  const [blurHashColor, setBlurHashColor] = useState('');
   const [bgColor, setBgColor] = useState('');
   const [artists, setArtists] = useState<ArtistDataItemFields[]>(
     albumData.artists as ArtistDataItemFields[],
@@ -86,10 +85,7 @@ const AlbumScreen = (props: Props) => {
   const getContainerColor = useCallback(
     async (imgUrl: string) => {
       const bgColor = await getBackGroundPlayer(imgUrl);
-      const blurHashColor =
-        bgColor !== Colors.grey.player ? await getBlurhashColor(imgUrl) : false;
       setBgColor(bgColor ?? '');
-      setBlurHashColor(blurHashColor !== false ? blurHashColor : '');
     },
     [albumParams, albumData],
   );
@@ -178,7 +174,6 @@ const AlbumScreen = (props: Props) => {
         name={albumParams?.name ?? ''}
         img={albumData?.images[1]?.url ?? ''}
         bgColor={bgColor}
-        blurHashColor={blurHashColor}
         translationY={translationY}
       />
 

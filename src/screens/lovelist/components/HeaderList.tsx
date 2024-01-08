@@ -3,7 +3,7 @@ import React from 'react';
 import Layout from 'src/themes/Layout';
 import ShuffleRepeatButton from 'src/screens/player/components/ShuffleRepeatButton';
 import { scale } from 'src/common/scale';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { SharedValue } from 'react-native-reanimated';
 import Colors from 'src/themes/Colors';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
@@ -20,21 +20,8 @@ const HeaderList = ({ onPlayQueue }: Props) => {
         name={'download'}
         color={Colors.unActive}
       />
-      <View style={[Layout.rowVCenter, { gap: scale(20) }]}>
+      <View style={[Layout.rowVCenter, styles.wrapIcon]}>
         <ShuffleRepeatButton option="shuffle" size={scale(22)} />
-        <TouchableOpacity onPress={onPlayQueue}>
-          <Animated.View
-            style={[styles.playButton]}
-            entering={FadeIn.duration(500)}
-            exiting={FadeOut}>
-            <FontAwesome6
-              size={scale(20)}
-              style={[{ marginLeft: scale(2) }]}
-              name={'play'}
-              color={Colors.black.default}
-            />
-          </Animated.View>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -47,12 +34,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: scale(20),
   },
-  playButton: {
-    height: scale(48),
-    width: scale(48),
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.green.default,
-    borderRadius: scale(25),
+  wrapIcon: {
+    gap: scale(20),
+    marginRight: scale(48),
   },
 });

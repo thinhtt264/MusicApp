@@ -5,13 +5,16 @@ import { getTrackFormPlayList } from 'src/common/firebase';
 import { BackHeader } from 'src/components/header';
 import { RegularText } from 'src/components/text';
 import { scale } from 'src/common/scale';
-import { FlatList } from 'react-native';
-import { HeaderList, TrackCard } from './components';
+import { FloatingButton, HeaderList, TrackCard } from './components';
 import { Spacer } from 'src/components/spacer';
 import { startPlaylist } from 'src/common/player';
 import { ScreenLoader } from 'src/components/loader';
-import { useAppSelector } from 'src/common/redux';
 import { searchActions } from 'src/store/action-slices';
+import {
+  useAnimatedScrollHandler,
+  useSharedValue,
+} from 'react-native-reanimated';
+import { AnimatedList } from 'src/components/list';
 
 type Props = {};
 
@@ -21,6 +24,11 @@ const LoveListScreen = (props: Props) => {
   const [totalItems, setTotalItems] = useState(0);
 
   const { id: playlistId, name } = route.params?.data;
+
+  const translationY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    translationY.value = event.contentOffset.y;
+  });
 
   const onOpenModal = (item: any, position = 1) => {
     dispatch(searchActions.onSelectTrack({ ...item, position }));
@@ -38,23 +46,28 @@ const LoveListScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <BackHeader title={name} />
+
+      <FloatingButton translationY={translationY} onPress={onPlayQueue} />
+
       <View style={styles.body}>
         <RegularText>
           {totalItems} {translate('library:song').toLowerCase()}
         </RegularText>
-        <FlatList
+
+        <AnimatedList
           data={listTrack}
+          onScroll={scrollHandler}
           keyExtractor={(item, index) => index.toString()}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={() => <HeaderList onPlayQueue={onPlayQueue} />}
-          renderItem={({ item }) => (
+          renderHeader={() => <HeaderList onPlayQueue={onPlayQueue} />}
+          renderItem={({ item }: any) => (
             <TrackCard
               item={item}
               onOpenModal={(item: any) => onOpenModal(item)}
             />
           )}
           ItemSeparatorComponent={() => <Spacer size={scale(12)} />}
-          ListFooterComponent={() => <View style={styles.footer} />}
+          renderFooter={() => <View style={styles.footer} />}
           ListEmptyComponent={
             <View style={{ marginTop: '40%' }}>
               <ScreenLoader />
@@ -76,6 +89,6 @@ const styles = StyleSheet.create({
     gap: scale(10),
   },
   footer: {
-    height: scale(80),
+    height: scale(140),
   },
 });

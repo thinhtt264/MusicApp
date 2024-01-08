@@ -1,5 +1,5 @@
 import { Header } from './Header';
-import { BackHeader } from './BackHeader';
+import { BackHeader } from '../../screens/lovelist/components/BackHeader';
 import { ArtistBanner } from './ArtistBanner';
 import { AlbumBanner } from './AlbumBanner';
 import { PlaylistBanner } from './PlaylistBanner';

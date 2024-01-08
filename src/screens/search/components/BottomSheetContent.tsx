@@ -230,9 +230,9 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
   };
 
   const selectImageSource = useCallback((album: Album) => {
-    if (album?.images.length > 1) {
+    if (album?.images?.length > 1) {
       return { uri: album?.images[2].url };
-    } else if (album?.images.length === 1) {
+    } else if (album?.images?.length === 1) {
       return { uri: album?.images[0].url };
     }
     return '';
@@ -243,11 +243,14 @@ const BottomSheetContent = ({ info, onCloseModal, selectArtist }: Props) => {
   return (
     <View style={styles.container}>
       <View style={[Layout.rowVCenter, styles.header]}>
-        <AnimatedImage
-          containerStyle={styles.img}
-          resizeMode="cover"
-          source={selectImageSource(info.album)}
-        />
+        {selectImageSource(info.album) ? (
+          <AnimatedImage
+            containerStyle={styles.img}
+            resizeMode="cover"
+            source={selectImageSource(info.album)}
+          />
+        ) : null}
+
         <View style={[Layout.colVCenter, styles.cardInfo]}>
           <BoldText textStyle={styles.trackName} numberOfLines={1}>
             {info.name}

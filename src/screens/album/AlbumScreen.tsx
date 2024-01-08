@@ -229,11 +229,10 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
   },
-  item: {
-    marginBottom: scale(80),
-  },
+  item: {},
   footer: {
     fontSize: fontScale(18),
     paddingLeft: scale(10),
+    marginBottom: scale(80),
   },
 });

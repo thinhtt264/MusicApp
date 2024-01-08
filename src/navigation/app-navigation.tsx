@@ -33,11 +33,6 @@ export const AppNavigation = () => {
       {init && env && (
         <Host>
           <RootNavigator />
-          {/* Select track modal */}
-          <Portal>
-            <SelectTrackModal />
-          </Portal>
-          {/* số lượng thẻ portal biểu thị thứ tự xuất hiện trên UI*/}
         </Host>
       )}
       {/* Snack bar */}

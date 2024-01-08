@@ -12,8 +12,6 @@ import { startPlaylist } from 'src/common/player';
 import { ScreenLoader } from 'src/components/loader';
 import { useAppSelector } from 'src/common/redux';
 import { searchActions } from 'src/store/action-slices';
-import { TAB_HEIGHT } from 'src/common/constants';
-import { MINIPLAYER_HEIGHT } from 'src/themes/Constants';
 
 type Props = {};
 
@@ -21,7 +19,6 @@ const LoveListScreen = (props: Props) => {
   const { translate, route, dispatch } = useScreenController();
   const [listTrack, setListTrack] = useState<any>();
   const [totalItems, setTotalItems] = useState(0);
-  const { currentTrack } = useAppSelector(state => state.player);
 
   const { id: playlistId, name } = route.params?.data;
 
@@ -57,13 +54,7 @@ const LoveListScreen = (props: Props) => {
             />
           )}
           ItemSeparatorComponent={() => <Spacer size={scale(12)} />}
-          ListFooterComponent={() => (
-            <Spacer
-              size={
-                currentTrack.id ? MINIPLAYER_HEIGHT + scale(60) : TAB_HEIGHT
-              }
-            />
-          )}
+          ListFooterComponent={() => <View style={styles.footer} />}
           ListEmptyComponent={
             <View style={{ marginTop: '40%' }}>
               <ScreenLoader />
@@ -83,5 +74,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(15),
     flex: 1,
     gap: scale(10),
+  },
+  footer: {
+    height: scale(80),
   },
 });

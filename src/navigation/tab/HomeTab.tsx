@@ -17,6 +17,7 @@ import { Miniplayer } from 'src/components/mini-player';
 import { useAppSelector } from 'src/common/redux';
 import { LibraryStack, SearchStack } from '../stacks';
 import { Portal } from 'react-native-portalize';
+import { SelectTrackModal } from 'src/components/modal';
 
 interface Props {
   size: number;
@@ -139,6 +140,7 @@ const HomeTab = () => {
           <Portal>
             {currentTrack.id && <Miniplayer />}
             <TabBar {...props} />
+            <SelectTrackModal />
           </Portal>
         )}>
         <Tab.Screen name="Home" component={HomeScreen} />

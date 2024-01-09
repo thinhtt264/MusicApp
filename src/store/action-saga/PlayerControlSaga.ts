@@ -18,7 +18,7 @@ export function* setCurrentTrackWorker(
   if (from === 'search') {
     yield put(playerActions.onResetQueue(trackInfo));
     yield put(searchActions.addSearchRecentList(trackInfo));
-  } else {
+  } else if (from !== 'queue') {
     yield put(playerActions.onResetQueue(trackInfo));
   }
 }
@@ -74,7 +74,7 @@ function* handleChangeCurrentTrackInQueue({
   let newTrack = {};
   let newTrackQueue = trackQueue;
 
-  if (trackQueue.length === 1 || loadmoreRecommend) {
+  if (newTrackQueue.length === 1 || loadmoreRecommend) {
     //nếu không phát từ playlist thì sẽ auto get recommend
     const response = yield call(getRecommend, {
       artists: currentTrack?.artists[0]?.id ?? '',

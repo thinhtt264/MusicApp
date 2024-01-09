@@ -19,6 +19,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useAppSelector } from 'src/common/redux';
 
 type Props = {
   item: any;
@@ -35,6 +36,7 @@ const TopTrackComponent = ({
   openBottomModal,
   onPlayTrack,
 }: Props) => {
+  const currentTrack = useAppSelector(state => state.player.currentTrack);
   const HeaderList = (name: string) => {
     return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
@@ -43,6 +45,7 @@ const TopTrackComponent = ({
     <FlatList
       renderItem={({ item, index }) => (
         <RenderItem
+          currentTrack={currentTrack}
           openBottomModal={openBottomModal}
           onPlayTrack={onPlayTrack}
           item={item}
@@ -64,11 +67,13 @@ const RenderItem = ({
   index,
   openBottomModal,
   onPlayTrack,
+  currentTrack,
 }: {
   item: TrackDataItemFields;
   index: number;
   openBottomModal: (item: TrackDataItemFields) => void;
   onPlayTrack: (item: TrackDataItemFields) => void;
+  currentTrack: TrackDataItemFields;
 }) => {
   const scaleAble = useSharedValue<number>(1);
 
@@ -105,7 +110,17 @@ const RenderItem = ({
             style={styles.image}
           />
           <View style={styles.name}>
-            <BoldText numberOfLines={1} textStyle={styles.title}>
+            <BoldText
+              numberOfLines={1}
+              textStyle={[
+                styles.title,
+                {
+                  color:
+                    currentTrack.id === item.id
+                      ? Colors.green.default
+                      : Colors.white.default,
+                },
+              ]}>
               {item?.name}
             </BoldText>
             <MediumText textStyle={styles.follower}>

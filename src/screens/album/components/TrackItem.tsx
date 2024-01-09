@@ -13,6 +13,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import isEqual from 'react-fast-compare';
+import { useAppSelector } from 'src/common/redux';
 
 type Props = {
   item: any;
@@ -29,6 +30,8 @@ const TopTrackComponent = ({
   openBottomModal,
   onPlayTrack,
 }: Props) => {
+  const currentTrack = useAppSelector(state => state.player.currentTrack);
+
   const HeaderList = (name: string) => {
     return <View style={styles.header} />;
   };
@@ -41,6 +44,7 @@ const TopTrackComponent = ({
           onPlayTrack={onPlayTrack}
           item={item}
           index={index}
+          currentTrack={currentTrack}
         />
       )}
       data={tracks}
@@ -59,11 +63,13 @@ const RenderItem = memo(
     index,
     openBottomModal,
     onPlayTrack,
+    currentTrack,
   }: {
     item: TrackDataItemFields;
     index: number;
     openBottomModal: (item: TrackDataItemFields) => void;
     onPlayTrack: (item: TrackDataFields) => void;
+    currentTrack: TrackDataItemFields;
   }) => {
     const scaleAble = useSharedValue<number>(1);
 
@@ -100,7 +106,17 @@ const RenderItem = memo(
 
           <View style={[Layout.rowVCenter, styles.wrapInfo]}>
             <View style={styles.name}>
-              <BoldText numberOfLines={1} textStyle={styles.title}>
+              <BoldText
+                numberOfLines={1}
+                textStyle={[
+                  styles.title,
+                  {
+                    color:
+                      currentTrack.id === item.id
+                        ? Colors.green.default
+                        : Colors.white.default,
+                  },
+                ]}>
                 {item?.name}
               </BoldText>
               <MediumText textStyle={styles.follower}>

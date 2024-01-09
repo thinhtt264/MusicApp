@@ -1,4 +1,4 @@
-import { call, put, delay, takeLatest } from 'redux-saga/effects';
+import { call, put, delay, takeLatest, race, take } from 'redux-saga/effects';
 import { createAction } from '@reduxjs/toolkit';
 import { TrackDataFields } from 'src/models/Track';
 import { NetWorkService } from 'src/networking/RestFulApi';
@@ -20,7 +20,16 @@ function* fetchAudioWorker(
     });
 
   try {
-    const trackFilePath = yield call(downloadTrack, TrackInfo);
+    const { trackFilePath, cancel }: any = yield race({
+      trackFilePath: call(downloadTrack, TrackInfo),
+      cancel: take(fetchAudioSagaAction.fetch),
+    });
+
+    if (cancel) {
+      // user gọi bài khác trước khi bài đó được tải xong
+      return;
+    }
+
     console.log(trackFilePath);
 
     if (trackFilePath) {
@@ -32,7 +41,7 @@ function* fetchAudioWorker(
       action.payload.callback?.(TrackInfoWithUrl);
     } else {
       const response: any = yield call(fetchApi);
-      
+
       if (response && response?.youtubeVideo?.audio[0]?.url) {
         const TrackInfoWithUrl = {
           ...TrackInfo,

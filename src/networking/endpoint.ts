@@ -15,7 +15,7 @@ const endpoints = {
   artist: {
     topTrack: 'v1/artists/$id/top-tracks?market=VN',
     relatedArtist: 'v1/artists/$id/related-artists',
-    artistAlbum: 'v1/artists/$id/albums?market=VN&limit=$limit&offset=$offset',
+    artistAlbum: 'v1/artists/$id/albums?include_groups=album%2Csingle&market=VN&limit=$limit&offset=$offset',
     relatedAlbum:
       'v1/artists/$id/albums?include_groups=appears_on&market=VN&limit=10&offset=0',
     getArtist: 'v1/artists/$id',

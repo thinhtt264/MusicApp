@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { StyleSheet, ActivityIndicator } from 'react-native';
+import { StyleSheet, ActivityIndicator, View } from 'react-native';
 import Colors from 'src/themes/Colors';
 import { isIos } from 'src/common/device/index';
 import { scale } from 'src/common/scale/index';
@@ -10,7 +10,12 @@ interface Props {
 }
 
 const LoatMoreFooterComponent = ({ page, totalPages }: Props) => {
-  if (page < totalPages && page !== 1 && totalPages > 10) {
+  if (
+    page < totalPages &&
+    page !== 0 &&
+    totalPages > 10 &&
+    totalPages - page >= 10
+  ) {
     return (
       <ActivityIndicator
         style={styles.indicator}
@@ -19,7 +24,7 @@ const LoatMoreFooterComponent = ({ page, totalPages }: Props) => {
       />
     );
   }
-  return null;
+  return <View style={styles.divider} />;
 };
 
 export const LoatMoreFooter = LoatMoreFooterComponent;
@@ -29,5 +34,8 @@ const styles = StyleSheet.create({
     marginVertical: scale(20),
     alignSelf: 'center',
     marginBottom: isIos ? scale(40) : 55,
+  },
+  divider: {
+    height: scale(120),
   },
 });

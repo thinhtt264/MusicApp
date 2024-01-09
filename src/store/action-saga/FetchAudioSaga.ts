@@ -5,6 +5,7 @@ import { NetWorkService } from 'src/networking/RestFulApi';
 import { selector } from 'src/common/redux';
 import { playerActions } from '../action-slices';
 import { downloadTrack } from 'src/common/player';
+import { playerControlActionSaga } from './PlayerControlSaga';
 
 function* fetchAudioWorker(
   action: ReturnType<typeof fetchAudioSagaAction.fetch>,
@@ -22,7 +23,7 @@ function* fetchAudioWorker(
   try {
     const { trackFilePath, cancel }: any = yield race({
       trackFilePath: call(downloadTrack, TrackInfo),
-      cancel: take(fetchAudioSagaAction.fetch),
+      cancel: take(playerControlActionSaga.onChangeCurrentTrack.type),
     });
 
     if (cancel) {

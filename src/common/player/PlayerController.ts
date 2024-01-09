@@ -18,11 +18,12 @@ import { PlayerProps } from './Type';
 const ANDROID_HEAD_PATH = 'file://';
 
 export const startAudio = async (info: PlayerProps) => {
-  await TrackPlayer.reset();
-    
-  await dispatch(
-    playerControlActionSaga.setCurrentTrack({ PlayerProps: info }),
-  );
+  if (info.from !== 'home') {
+    await TrackPlayer.reset();
+    await dispatch(
+      playerControlActionSaga.setCurrentTrack({ PlayerProps: info }),
+    );
+  }
 
   await dispatch(
     fetchAudioSagaAction.fetch({
@@ -32,10 +33,9 @@ export const startAudio = async (info: PlayerProps) => {
       },
     }),
   );
-
 };
 
-export const startPlaylist = async (queue: TrackDataFields[]) => {  
+export const startPlaylist = async (queue: TrackDataFields[]) => {
   await TrackPlayer.reset();
   await dispatch(playerActions.onResetQueue(queue));
   await startAudio({ from: 'queue', info: queue[0] });

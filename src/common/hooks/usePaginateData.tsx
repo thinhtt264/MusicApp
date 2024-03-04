@@ -9,22 +9,24 @@ export const usePaginateData = ({ orgData, limit = 10 }: {
 
     const [data, setData] = useState<any>([])
     const [offset, setOffset] = useState(0)
+    let limitx = 15 //lần đầu 15
 
-    const totalPages = Math.ceil(orgData.length / limit) * limit;
+    const totalPages = Math.ceil(orgData.length / limitx) * limitx;
 
     useEffect(() => {
         const startIndex = offset;
-        const endIndex = Math.min(startIndex + limit, orgData.length);
+        const endIndex = Math.min(startIndex + limitx, orgData.length);
 
         const paginatedData = orgData.slice(startIndex, endIndex);
 
         setData((prev: any) => {
             return [...prev, ...paginatedData]
         })
+        limitx = limit
     }, [offset])
 
     const handleLoadMore = () => {
-        setOffset((prev) => prev + limit)
+        setOffset((prev) => prev + limitx)
     }
 
     return { handleLoadMore, data, totalPages };

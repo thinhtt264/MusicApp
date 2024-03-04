@@ -23,7 +23,6 @@ const HomeItemComponent = ({ item, onGoPlaylist }: Props) => {
   const recommend = homedata.items.slice(10);
   const popular = playlist.items;
 
-  const onNavigate = (): void => {};
   return (
     <View>
       <View

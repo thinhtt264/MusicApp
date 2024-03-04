@@ -44,6 +44,7 @@ const AlbumListScreen = (props: Props) => {
       <LoadMoreList
         flatListRef={flatListRef}
         data={artistAlbum.items}
+        onEndReachedThreshold={0.5}
         onGetData={page => onGetData(page)}
         totalPages={artistAlbum.total}
         ItemSeparatorComponent={() => <View style={styles.divider} />}

@@ -8,6 +8,7 @@ export interface LoadMoreListProps<T> extends AnimatedListProps<T> {
   // handleLoadMore: Function;
   // refresh: boolean;
   // handleRefresh: Function;
+  noMomentum?: boolean;
   onGetData: (pageNumber: number) => void;
 }
 

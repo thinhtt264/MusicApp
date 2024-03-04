@@ -5,7 +5,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { LoadMoreListProps } from './type';
-import { LoatMoreFooter } from '../loader';
+import { LoadMoreFooter } from '../loader';
 import { ToTopButton } from '../button';
 
 const AnimatedList = Animated.createAnimatedComponent(FlatList);
@@ -18,6 +18,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
     renderHeader,
     flatListRef,
     totalPages,
+    noMomentum = false,
     onGetData,
   } = props;
 
@@ -87,7 +88,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
         removeClippedSubviews
         scrollEventThrottle={16}
         ListFooterComponent={
-          renderFooter ?? <LoatMoreFooter totalPages={totalPages} page={page} />
+          renderFooter ?? <LoadMoreFooter totalPages={totalPages} page={page} />
         }
         {...(renderHeader && { ListHeaderComponent: renderHeader })}
         onRefresh={handleRefresh}
@@ -97,7 +98,7 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
           canMomentum.current = false;
         }}
         onEndReached={() => {
-          if (!canMomentum.current) {
+          if (!canMomentum.current || noMomentum) {
             handleLoadMore();
             canMomentum.current = true;
           }

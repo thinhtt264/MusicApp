@@ -9,7 +9,7 @@ interface Props {
   totalPages: number;
 }
 
-const LoatMoreFooterComponent = ({ page, totalPages }: Props) => {
+const LoadMoreFooterComponent = ({ page, totalPages }: Props) => {
   if (
     page < totalPages &&
     page !== 0 &&
@@ -27,7 +27,7 @@ const LoatMoreFooterComponent = ({ page, totalPages }: Props) => {
   return <View style={styles.divider} />;
 };
 
-export const LoatMoreFooter = LoatMoreFooterComponent;
+export const LoadMoreFooter = LoadMoreFooterComponent;
 
 const styles = StyleSheet.create({
   indicator: {

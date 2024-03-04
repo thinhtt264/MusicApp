@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import Layout from 'src/themes/Layout';
 import { BoldText, MediumText } from 'src/components/text';
 import { fontScale, scale } from 'src/common/scale';
@@ -15,6 +15,8 @@ import Animated, {
 import isEqual from 'react-fast-compare';
 import { AnimatedImage } from 'src/components/image';
 import { useAppSelector } from 'src/common/redux';
+import { usePaginateData } from 'src/common/hooks';
+import { LoadMoreList } from 'src/components/list';
 
 type Props = {
   item: any;
@@ -32,14 +34,19 @@ const TrackItemComponent = ({
   onPlayTrack,
 }: Props) => {
   const currentTrack = useAppSelector(state => state.player.currentTrack);
-
+  const { data, handleLoadMore, totalPages } = usePaginateData({ orgData: tracks, limit: 10 })
   const HeaderList = (name: string) => {
     return <BoldText textStyle={styles.header}>{name}</BoldText>;
   };
 
   return (
-    <FlatList
-      renderItem={({ item, index }) => (
+    <LoadMoreList
+      renderFooter={() => { }}
+      noMomentum={true}
+      onGetData={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      totalPages={totalPages}
+      renderItem={({ item, index }: any) => (
         <RenderItem
           openBottomModal={openBottomModal}
           onPlayTrack={onPlayTrack}
@@ -48,7 +55,7 @@ const TrackItemComponent = ({
           currentTrack={currentTrack}
         />
       )}
-      data={tracks}
+      data={data}
       keyExtractor={(item, index) => index.toString()}
       ItemSeparatorComponent={() => <View style={styles.divider} />}
       ListHeaderComponent={() => HeaderList(item.name)}
@@ -121,7 +128,7 @@ const RenderItem = memo(
                 {item?.name}
               </BoldText>
               <MediumText textStyle={styles.follower}>
-                {item?.artists[0]?.name}
+                {item?.artists?.[0]?.name}
               </MediumText>
             </View>
           </View>

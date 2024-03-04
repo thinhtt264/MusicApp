@@ -5,7 +5,7 @@ export const usePaginateData = ({ orgData, limit = 10 }: {
     orgData: any[],
     limit?: number
 }) => {
-    if (orgData.length > 15) return { handleLoadMore: () => { }, data: orgData, totalPages: 0 };
+    if (orgData.length < 15) return { handleLoadMore: () => { }, data: orgData, totalPages: 0 };
 
     const [data, setData] = useState<any>([])
     const [offset, setOffset] = useState(0)
@@ -26,8 +26,6 @@ export const usePaginateData = ({ orgData, limit = 10 }: {
     const handleLoadMore = () => {
         setOffset((prev) => prev + limit)
     }
-
-
 
     return { handleLoadMore, data, totalPages };
 }

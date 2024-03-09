@@ -16,5 +16,5 @@ export const appInit = createAsyncThunk('app/init', async () => {
   }
   const response = await getRapidApiKey({});
 
-  return { ...env, RAPID_API_KEY: response?.data()?.key ?? env?.RAPID_API_KEY };
+  return { ...env, RAPID_API_KEY: response?.data()?.key || env?.RAPID_API_KEY };
 });

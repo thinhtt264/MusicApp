@@ -21,7 +21,7 @@ A Spotify clone App
 
 ## APK file
 
-- (Link-APK)(https://drive.google.com/file/d/1GYfY16EirR4_iZBU5rAa8T36xbL_zSYC/view?usp=sharing)
+- [Link-APK](https://drive.google.com/file/d/1GYfY16EirR4_iZBU5rAa8T36xbL_zSYC/view?usp=sharing)
 
 ## Authors
 

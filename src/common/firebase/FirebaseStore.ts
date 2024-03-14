@@ -60,8 +60,7 @@ export const useTrackFromPlayList = async (
         let data: FirebaseFirestoreTypes.DocumentData[] = [];
         documentSnapshot.docs.map(t => data.push(t.data()));
         const totalItems = documentSnapshot.size;
-
-        setData?.({ data, totalItems });
+        setData?.({ data, totalItem: totalItems });
       },
     );
     // Stop listening for updates when no longer required

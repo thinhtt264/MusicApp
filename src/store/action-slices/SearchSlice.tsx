@@ -110,11 +110,13 @@ const searchSlice = createSlice({
         if (state.selectedFilter === 'track') {
           state.searchData.tracks = {
             ...state.searchData.tracks,
+            total: payload.tracks.total,
             items: [...state.searchData.tracks.items, ...payload.tracks.items],
           };
         } else if (state.selectedFilter === 'artist') {
           state.searchData.artists = {
             ...state.searchData.artists,
+            total: payload.tracks.total,
             items: [
               ...state.searchData?.artists?.items,
               ...payload.artists?.items,

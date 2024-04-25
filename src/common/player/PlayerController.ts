@@ -1,10 +1,4 @@
 import TrackPlayer, { Track } from 'react-native-track-player';
-import {
-  add,
-  getActiveTrackIndex,
-  remove,
-  setQueue,
-} from 'react-native-track-player/lib/trackPlayer';
 import { dispatch } from '../redux';
 import { formatSearchData, playerActions } from 'src/store/action-slices';
 import { TrackDataFields } from 'src/models/Track';
@@ -14,8 +8,12 @@ import {
   playerControlActionSaga,
 } from 'src/store/action-saga';
 import { PlayerProps } from './Type';
-
-const ANDROID_HEAD_PATH = 'file://';
+import {
+  add,
+  getActiveTrackIndex,
+  remove,
+  setQueue,
+} from 'react-native-track-player/lib/src/trackPlayer';
 
 export const startAudio = async (info: PlayerProps) => {
   if (info.from !== 'home') {
@@ -129,7 +127,6 @@ export async function setQueueUninterrupted(tracks: Track[]): Promise<void> {
   if (currentTrackNewIndex < 0) return await setQueue(tracks);
   // else, splice that all others are removed, new track list spliced
   // that the currentTrack becomes the first element.
-  // eslint-disable-next-line prefer-const
   let removeTrackIndices = [...Array(currentQueue.length).keys()];
   removeTrackIndices.splice(currentTrackIndex, 1);
   await remove(removeTrackIndices);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FlatList, Keyboard } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -79,6 +79,9 @@ const LoadMoreList = React.forwardRef((props: LoadMoreListProps<any>, ref) => {
     <>
       <AnimatedList
         {...props}
+        windowSize={data.length > 50 ? data.length / 4 : 21}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={5}
         onScroll={scrollHandler}
         onScrollBeginDrag={Keyboard.dismiss}
         keyExtractor={(item, index) => index.toString()}

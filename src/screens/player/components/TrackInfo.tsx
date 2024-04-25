@@ -204,8 +204,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     width: '100%',
     overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: 'red',
   },
   trackInfo: {
     flex: 1,
